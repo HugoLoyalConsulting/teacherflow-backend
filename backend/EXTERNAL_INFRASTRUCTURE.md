@@ -103,7 +103,7 @@ postgresql://username:password@host:port/database?sslmode=require
    ```
 5. Deploy
 
-**Your Backend URL:** `https://teacherflow-api.onrender.com`
+**Your Backend URL:** `https://teacherflow-backend.onrender.com`
 
 **Add to Frontend:** Update API client to use this URL
 
@@ -145,7 +145,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
    - Output directory: `dist`
 5. Environment variables:
    ```
-   VITE_API_URL=https://teacherflow-api.onrender.com
+   VITE_API_URL=https://teacherflow-backend.onrender.com
    ```
 6. Deploy
 
@@ -227,7 +227,7 @@ API_V1_STR=/api/v1
 ### Frontend (.env at Vercel)
 
 ```env
-VITE_API_URL=https://teacherflow-api.onrender.com
+VITE_API_URL=https://teacherflow-backend.onrender.com
 ```
 
 ---

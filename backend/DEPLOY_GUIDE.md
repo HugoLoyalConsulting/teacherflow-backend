@@ -112,7 +112,7 @@ CORS_ORIGINS=["https://teacherflow-app.vercel.app"]
 
 Quando o Render terminar o deploy, você receberá uma URL tipo:
 ```
-https://teacherflow-api.onrender.com
+https://teacherflow-backend.onrender.com
 ```
 
 **Atualize o frontend:**
@@ -121,13 +121,13 @@ https://teacherflow-api.onrender.com
 2. **Settings → Environment Variables**
 3. **Adicione:**
    - Key: `VITE_API_URL`
-   - Value: `https://teacherflow-api.onrender.com` (sua URL do Render)
+   - Value: `https://teacherflow-backend.onrender.com` (sua URL do Render)
    - Environment: Production
 4. **Salve e Redeploy**
 
 ### PASSO 5: Criar Primeiro Usuário
 
-1. **Acesse:** `https://teacherflow-api.onrender.com/docs` (Swagger UI)
+1. **Acesse:** `https://teacherflow-backend.onrender.com/docs` (Swagger UI)
 2. **Endpoint:** `POST /api/auth/register`
 3. **Request Body:**
 ```json

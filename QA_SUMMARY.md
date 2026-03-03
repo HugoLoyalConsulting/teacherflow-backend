@@ -204,7 +204,7 @@ GitHub Actions vai automaticamente:
 - [ ] Rodar: `git add . && git commit -m "feat: QA complete" && git push origin main`
 - [ ] Aguardar: GitHub Actions completar deploys
 - [ ] Verificar: https://teacherflow.vercel.app (frontend online)
-- [ ] Verificar: https://teacherflow-api.onrender.com/api/v1/health (backend online)
+- [ ] Verificar: https://teacherflow-backend.onrender.com/api/v1/health (backend online)
 
 **Todos os checkboxes acima = SISTEMA PRONTO PARA USUÁRIOS REAIS** ✅
 

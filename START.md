@@ -61,7 +61,7 @@ GitHub Actions automaticamente:
 
 Após deploy:
 - **Frontend:** https://teacherflow.vercel.app
-- **API:** https://teacherflow-api.onrender.com/api/v1/docs
+- **API:** https://teacherflow-backend.onrender.com/api/v1/docs
 - **GitHub:** https://github.com/HugoLoyalConsulting/teacherflow-backend
 
 ---

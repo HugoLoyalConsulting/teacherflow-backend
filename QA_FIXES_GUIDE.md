@@ -254,7 +254,7 @@ Vá para: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 ```
 Frontend: https://teacherflow.vercel.app
-Backend:  https://teacherflow-api.onrender.com/api/v1/health
+Backend:  https://teacherflow-backend.onrender.com/api/v1/health
 ```
 
 ---

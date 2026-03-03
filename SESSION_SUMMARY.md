@@ -82,7 +82,7 @@ git push -u origin main
 
 # 4. Testar Online (5 min)
 # Frontend:  https://teacherflow.vercel.app
-# Backend:   https://teacherflow-api.onrender.com/api/v1/health
+# Backend:   https://teacherflow-backend.onrender.com/api/v1/health
 
 # 5. Enviar para Testers (2 min)
 # URL: https://teacherflow.vercel.app
@@ -197,8 +197,8 @@ Para agora (beta): Está ok deixar public (testers não vão abusar)
 
 ```
 🌐 Frontend    https://teacherflow.vercel.app
-🔗 Backend API https://teacherflow-api.onrender.com
-📊 Docs        https://teacherflow-api.onrender.com/api/v1/docs
+🔗 Backend API https://teacherflow-backend.onrender.com
+📊 Docs        https://teacherflow-backend.onrender.com/api/v1/docs
 💻 GitHub      https://github.com/HugoLoyalConsulting/teacherflow-backend
 ```
 

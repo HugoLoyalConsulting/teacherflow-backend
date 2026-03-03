@@ -128,7 +128,7 @@ Write-Host "   4. Deploy automático vai iniciar!" -ForegroundColor Green
 
 Write-Host "`n✨ Seu app estará em:" -ForegroundColor Green
 Write-Host "   Frontend:  https://teacherflow.vercel.app"
-Write-Host "   Backend:   https://teacherflow-api.onrender.com"
-Write-Host "   Docs:      https://teacherflow-api.onrender.com/api/v1/docs"
+Write-Host "   Backend:   https://teacherflow-backend.onrender.com"
+Write-Host "   Docs:      https://teacherflow-backend.onrender.com/api/v1/docs"
 
 Write-Host "`n🟢 STATUS: PRONTO PARA DEPLOY`n" -ForegroundColor Green

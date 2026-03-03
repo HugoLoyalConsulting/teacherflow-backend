@@ -97,8 +97,8 @@ Seu app estará em:
 
 ```
 Frontend:  https://teacherflow.vercel.app
-Backend:   https://teacherflow-api.onrender.com
-API Docs:  https://teacherflow-api.onrender.com/api/v1/docs
+Backend:   https://teacherflow-backend.onrender.com
+API Docs:  https://teacherflow-backend.onrender.com/api/v1/docs
 GitHub:    https://github.com/HugoLoyalConsulting/teacherflow-backend
 ```
 

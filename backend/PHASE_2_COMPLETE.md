@@ -90,7 +90,7 @@
    - `DEBUG` = false
 6. Deploy
 
-**Your API:** `https://teacherflow-api.onrender.com`
+**Your API:** `https://teacherflow-backend.onrender.com`
 
 ### 3. **Frontend Hosting** - Vercel (FREE)
 
@@ -99,7 +99,7 @@
 2. Import your GitHub repo
 3. Select `TeacherFlow App` folder
 4. Add environment variable:
-   - `VITE_API_URL` = `https://teacherflow-api.onrender.com`
+   - `VITE_API_URL` = `https://teacherflow-backend.onrender.com`
 5. Deploy
 
 **Your App:** `https://teacherflow.vercel.app`
@@ -238,7 +238,7 @@ Then visit: http://localhost:8000/api/v1/docs
 
 ```typescript
 // Frontend (React)
-const response = await axios.post('https://teacherflow-api.onrender.com/api/v1/auth/login', {
+const response = await axios.post('https://teacherflow-backend.onrender.com/api/v1/auth/login', {
   email: 'teacher@example.com',
   password: 'SecurePassword123!'
 });
@@ -246,7 +246,7 @@ const response = await axios.post('https://teacherflow-api.onrender.com/api/v1/a
 const { access_token } = response.data;
 
 // Now use token for all requests
-const students = await axios.get('https://teacherflow-api.onrender.com/api/v1/students', {
+const students = await axios.get('https://teacherflow-backend.onrender.com/api/v1/students', {
   headers: {
     'Authorization': `Bearer ${access_token}`
   }

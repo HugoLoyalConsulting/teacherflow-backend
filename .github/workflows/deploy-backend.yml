@@ -2,7 +2,7 @@ name: Deploy Backend to Render
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ main ]
     paths:
       - 'backend/**'
       - '.github/workflows/deploy-backend.yml'
@@ -17,12 +17,12 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Trigger Render Deploy
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && secrets.RENDER_DEPLOY_HOOK != ''
+        if: github.ref == 'refs/heads/main' && secrets.RENDER_DEPLOY_HOOK != ''
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
 
       - name: Skip webhook when secret missing
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && secrets.RENDER_DEPLOY_HOOK == ''
+        if: github.ref == 'refs/heads/main' && secrets.RENDER_DEPLOY_HOOK == ''
         run: |
           echo "RENDER_DEPLOY_HOOK not configured."
           echo "If Render auto-deploy is enabled for branch main, this is expected."

@@ -131,7 +131,7 @@ git push -u origin main
 
 # 4. Testar
 # Frontend:  https://teacherflow.vercel.app
-# Backend:   https://teacherflow-api.onrender.com/api/v1/health
+# Backend:   https://teacherflow-backend.onrender.com/api/v1/health
 
 # 5. Enviar para testers
 # URL: https://teacherflow.vercel.app
@@ -194,7 +194,7 @@ Você primeiro prova conceito! 💡
 - **Seu Repo GitHub:** https://github.com/HugoLoyalConsulting/teacherflow-backend
 - **Actions (deploys):** https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 - **Frontend Online:** https://teacherflow.vercel.app
-- **Backend Online:** https://teacherflow-api.onrender.com
+- **Backend Online:** https://teacherflow-backend.onrender.com
 - **Vercel Dashboard:** https://vercel.com/hugoloyalconsulting-8127s-projects/teacherflow-app
 - **Render Dashboard:** https://dashboard.render.com
 

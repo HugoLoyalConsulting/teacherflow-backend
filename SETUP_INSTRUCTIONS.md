@@ -94,8 +94,8 @@ Seu app estará em:
 
 ```
 Frontend:  https://teacherflow.vercel.app
-Backend:   https://teacherflow-api.onrender.com
-API Docs:  https://teacherflow-api.onrender.com/api/v1/docs
+Backend:   https://teacherflow-backend.onrender.com
+API Docs:  https://teacherflow-backend.onrender.com/api/v1/docs
 GitHub:    https://github.com/HugoLoyalConsulting/teacherflow-backend
 ```
 
@@ -189,7 +189,7 @@ git commit -m "Fix lesson creation logic"
 git push
 
 # 4. Espere 4 minutos
-# 5. Acesse https://teacherflow-api.onrender.com/api/v1/docs
+# 5. Acesse https://teacherflow-backend.onrender.com/api/v1/docs
 # 6. Mudança em produção! ✅
 ```
 

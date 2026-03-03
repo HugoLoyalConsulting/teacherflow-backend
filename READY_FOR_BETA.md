@@ -88,7 +88,7 @@ Se pedir autenticação:
 
 GitHub Actions vai rodando:
 - ✅ Frontend → https://teacherflow.vercel.app
-- ✅ Backend → https://teacherflow-api.onrender.com
+- ✅ Backend → https://teacherflow-backend.onrender.com
 
 Acompanhe em: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
@@ -96,7 +96,7 @@ Acompanhe em: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 ```
 Frontend: https://teacherflow.vercel.app/login
-Backend:  https://teacherflow-api.onrender.com/api/v1/health
+Backend:  https://teacherflow-backend.onrender.com/api/v1/health
 ```
 
 Tente:
@@ -170,10 +170,10 @@ type feedback.jsonl
 ### Opção 2: API
 ```bash
 # GET todos os feedbacks
-curl https://teacherflow-api.onrender.com/api/v1/feedback
+curl https://teacherflow-backend.onrender.com/api/v1/feedback
 
 # Atualizar status de um feedback
-curl -X PUT https://teacherflow-api.onrender.com/api/v1/feedback/0 -d '{"status": "reviewed"}'
+curl -X PUT https://teacherflow-backend.onrender.com/api/v1/feedback/0 -d '{"status": "reviewed"}'
 ```
 
 ---
@@ -195,7 +195,7 @@ curl -X PUT https://teacherflow-api.onrender.com/api/v1/feedback/0 -d '{"status"
 - [ ] `git push` enviou para GitHub
 - [ ] GitHub Actions completou (verifica status em Actions)
 - [ ] Frontend online: https://teacherflow.vercel.app
-- [ ] Backend online: https://teacherflow-api.onrender.com/api/v1/health
+- [ ] Backend online: https://teacherflow-backend.onrender.com/api/v1/health
 - [ ] Consegue registrar usuário
 - [ ] Consegue fazer login
 - [ ] Widget de feedback aparece

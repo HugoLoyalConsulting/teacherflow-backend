@@ -61,7 +61,7 @@ git push origin main
 
 ### 5️⃣ Acessa online
 - Frontend: **https://teacherflow.vercel.app**
-- Backend: **https://teacherflow-api.onrender.com/api/v1/docs**
+- Backend: **https://teacherflow-backend.onrender.com/api/v1/docs**
 
 ---
 
@@ -154,7 +154,7 @@ git commit -m "Fix lesson creation validation"
 git push
 
 # 5. Espere 3 minutos
-# 6. Acesse https://teacherflow-api.onrender.com/api/v1/docs
+# 6. Acesse https://teacherflow-backend.onrender.com/api/v1/docs
 # 7. Mudança está produção! ✅
 ```
 
@@ -230,7 +230,7 @@ git push origin feature/my-feature
 | Recurso | URL |
 |---------|-----|
 | **Frontend** | https://teacherflow.vercel.app |
-| **API Docs** | https://teacherflow-api.onrender.com/api/v1/docs |
+| **API Docs** | https://teacherflow-backend.onrender.com/api/v1/docs |
 | **Dashboard de Pagamentos** | https://teacherflow.vercel.app/dashboard |
 | **GitHub** | https://github.com/HugoLoyalConsulting/teacherflow-backend |
 

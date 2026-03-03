@@ -112,7 +112,7 @@ git push
 
 Espete 5 minutos e veja sua mudança em:
 - **Frontend:** https://teacherflow.vercel.app
-- **Backend:** https://teacherflow-api.onrender.com
+- **Backend:** https://teacherflow-backend.onrender.com
 
 ---
 

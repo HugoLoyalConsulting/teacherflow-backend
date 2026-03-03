@@ -139,7 +139,7 @@ App online com dados intactos ✅
 Depois de deploy:
 
 ```
-GET https://teacherflow-api.onrender.com/api/v1/dashboard/payment-summary
+GET https://teacherflow-backend.onrender.com/api/v1/dashboard/payment-summary
 ```
 
 Response:
@@ -157,7 +157,7 @@ Response:
 ### Alunos Pausados
 
 ```
-GET https://teacherflow-api.onrender.com/api/v1/dashboard/paused-students
+GET https://teacherflow-backend.onrender.com/api/v1/dashboard/paused-students
 ```
 
 Response:

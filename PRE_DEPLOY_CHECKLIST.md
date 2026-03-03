@@ -239,11 +239,11 @@ Frontend:
 https://teacherflow.vercel.app/login
 
 Backend Health:
-https://teacherflow-api.onrender.com/api/v1/health
+https://teacherflow-backend.onrender.com/api/v1/health
 # Esperado: {"status":"ok"}
 
 Feedback Endpoint:
-https://teacherflow-api.onrender.com/api/v1/feedback
+https://teacherflow-backend.onrender.com/api/v1/feedback
 # Sem teste agora, será usado pelo widget
 ```
 

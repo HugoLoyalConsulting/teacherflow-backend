@@ -93,7 +93,7 @@ https://teacherflow.vercel.app
 
 ### Backend Health Check
 ```
-https://teacherflow-api.onrender.com/api/v1/health
+https://teacherflow-backend.onrender.com/api/v1/health
 ```
 
 Deve retornar: `{"status":"ok"}`
@@ -115,7 +115,7 @@ Vai mostrar todos os feedbacks: Email, Mensagem, Categoria, Status
 ### Opção 2: Via API
 
 ```bash
-curl https://teacherflow-api.onrender.com/api/v1/feedback
+curl https://teacherflow-backend.onrender.com/api/v1/feedback
 ```
 
 Retorna JSON com todos os feedbacks
@@ -157,7 +157,7 @@ Você está ajudando a moldar o app! Obrigado 🙏
 ## MONITORAR FEEDBACKS
 
 ### Diariamente
-1. Vá para: https://teacherflow-api.onrender.com/api/v1/feedback
+1. Vá para: https://teacherflow-backend.onrender.com/api/v1/feedback
 2. Copie o JSON
 3. Cole em um editor e leia
 4. OU rode: `python read_feedback.py` no backend
@@ -185,7 +185,7 @@ Com base no feedback dos usuários:
 
 ### Erro: "404 Not Found" em endpoints
 - Verifique se backend realmente deployou
-- Tente: `https://teacherflow-api.onrender.com/api/v1/health`
+- Tente: `https://teacherflow-backend.onrender.com/api/v1/health`
 
 ### Feedback não salva
 - Verifique logs do Render: https://dashboard.render.com

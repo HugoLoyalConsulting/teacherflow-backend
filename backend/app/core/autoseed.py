@@ -39,7 +39,7 @@ def auto_seed_if_empty():
             print("  • 3 students marked as PAUSED (60+ days without payment)")
             print("  • Total pending: R$ 2.400")
             print("\nYou can see this in:")
-            print("  GET https://teacherflow-api.onrender.com/api/v1/dashboard/paused-students")
+            print("  GET https://teacherflow-backend.onrender.com/api/v1/dashboard/paused-students")
             print("="*60 + "\n")
         else:
             # Database already has data

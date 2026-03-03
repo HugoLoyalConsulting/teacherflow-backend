@@ -99,8 +99,8 @@ Simples assim. Nada de rodar servidor local.
 | Recurso | URL |
 |---------|-----|
 | **Frontend** | https://teacherflow.vercel.app |
-| **API** | https://teacherflow-api.onrender.com |
-| **API Docs** | https://teacherflow-api.onrender.com/api/v1/docs |
+| **API** | https://teacherflow-backend.onrender.com |
+| **API Docs** | https://teacherflow-backend.onrender.com/api/v1/docs |
 | **GitHub** | https://github.com/HugoLoyalConsulting/teacherflow-backend |
 
 ---

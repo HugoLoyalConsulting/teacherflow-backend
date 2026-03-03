@@ -130,7 +130,7 @@ https://teacherflow.vercel.app
 Acessa ONLINE, não localhost:3000.
 
 ```
-https://teacherflow-api.onrender.com/api/v1/docs
+https://teacherflow-backend.onrender.com/api/v1/docs
 ```
 
 Acessa ONLINE, não localhost:8000.
