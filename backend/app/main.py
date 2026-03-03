@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.routers import auth, students, locations, groups, schedules, lessons, payments, dashboard
+from app.routers import auth, students, locations, groups, schedules, lessons, payments, dashboard, feedback
 from app.core.autoseed import auto_seed_if_empty
 import logging
 
@@ -48,6 +48,7 @@ app.include_router(schedules.router, prefix=settings.API_V1_STR)
 app.include_router(lessons.router, prefix=settings.API_V1_STR)
 app.include_router(payments.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard.router, prefix=settings.API_V1_STR)
+app.include_router(feedback.router, prefix=settings.API_V1_STR)
 
 
 @app.get("/")

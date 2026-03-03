@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { useAuthStore } from './store/authStore'
 import { useTheme } from './hooks/useTheme'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { FeedbackWidget } from './components/FeedbackWidget'
 import { Layout } from './components/Layout/Layout'
 import { GOOGLE_CLIENT_ID, isGoogleOAuthConfigured } from './config/googleAuth'
 import { LoginPage } from './pages/LoginPage'
@@ -80,6 +81,7 @@ function App() {
   const appContent = (
     <ErrorBoundary>
       <AppContent />
+      <FeedbackWidget />
     </ErrorBoundary>
   )
 
