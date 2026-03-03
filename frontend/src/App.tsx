@@ -1,0 +1,98 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { useAuthStore } from './store/authStore'
+import { useTheme } from './hooks/useTheme'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { Layout } from './components/Layout/Layout'
+import { GOOGLE_CLIENT_ID, isGoogleOAuthConfigured } from './config/googleAuth'
+import { LoginPage } from './pages/LoginPage'
+import { DashboardPage } from './pages/DashboardPage'
+import { StudentsPage } from './pages/StudentsPage'
+import { StudentDetailsPage } from './pages/StudentDetailsPage'
+import { CalendarPage } from './pages/CalendarPage'
+import { PaymentsPage } from './pages/PaymentsPage'
+import { LocationsPage } from './pages/LocationsPage'
+import { GroupsPage } from './pages/GroupsPage'
+import { SettingsPage } from './pages/SettingsPage'
+import { ProfilePage } from './pages/ProfilePage'
+import { OnboardingPage } from './pages/OnboardingPage'
+import { validateConfig, logConfig } from './config/env'
+
+// Validate and log configuration on startup
+validateConfig()
+logConfig()
+
+function AppContent() {
+  const { isAuthenticated, user } = useAuthStore()
+  const { mounted } = useTheme()
+
+  // Prevent flash of unstyled content
+  useEffect(() => {
+    if (!mounted) {
+      document.documentElement.style.visibility = 'hidden'
+    } else {
+      document.documentElement.style.visibility = 'visible'
+    }
+  }, [mounted])
+
+  if (!mounted) {
+    return null
+  }
+
+  return (
+    <Router>
+      {isAuthenticated ? (
+        <>
+          {!user?.onboardingComplete ? (
+            <Routes>
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route path="*" element={<Navigate to="/onboarding" replace />} />
+            </Routes>
+          ) : (
+            <Layout>
+              <Routes>
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/students" element={<StudentsPage />} />
+                <Route path="/students/:id" element={<StudentDetailsPage />} />
+                <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/payments" element={<PaymentsPage />} />
+                <Route path="/locations" element={<LocationsPage />} />
+                <Route path="/groups" element={<GroupsPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Layout>
+          )}
+        </>
+      ) : (
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      )}
+    </Router>
+  )
+}
+
+function App() {
+  const appContent = (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  )
+
+  // Wrap with GoogleOAuthProvider if configured
+  if (isGoogleOAuthConfigured()) {
+    return (
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        {appContent}
+      </GoogleOAuthProvider>
+    )
+  }
+
+  return appContent
+}
+
+export default App

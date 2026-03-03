@@ -1,0 +1,39 @@
+{
+  "name": "teacherflow",
+  "version": "1.0.0",
+  "description": "TeacherFlow: Complete SaaS platform for teacher management",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "npm run dev --workspace=frontend & npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "test": "npm run test --workspace=frontend && npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "test:backend": "pytest backend/tests -v",
+    "lint": "npm run lint --workspace=frontend",
+    "clean": "rm -rf frontend/dist frontend/node_modules backend/.venv backend/__pycache__"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "teacherflow",
+    "saas",
+    "education",
+    "management"
+  ],
+  "author": "Hugo Loyal Consulting",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HugoLoyalConsulting/teacherflow-backend.git"
+  }
+}

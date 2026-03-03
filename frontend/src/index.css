@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply transition-colors duration-200;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-white text-gray-900;
+  @apply dark:bg-slate-950 dark:text-gray-50;
+  background-image: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08), transparent 35%),
+    radial-gradient(circle at 85% 10%, rgba(168, 85, 247, 0.08), transparent 40%);
+}
+
+/* Garantir que TUDO em dark mode tenha texto claro */
+html.dark {
+  color: rgb(243, 244, 246); /* gray-50 */
+}
+
+html.dark * {
+  @apply dark:text-gray-50;
+}
+
+/* Inputs, textareas e selects com texto claro em dark mode */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  @apply dark:text-gray-50;
+}
+
+input, textarea, select {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply dark:focus:ring-blue-400;
+}
+
+/* Dark mode adjustments for common elements */
+@layer components {
+  .card {
+    @apply bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700 shadow-lg;
+  }
+
+  .input-base {
+    @apply bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-900 dark:text-gray-50;
+  }
+
+  .btn-base {
+    @apply transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  /* Garantir todas as tags semânticas */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+
+  p, span, div {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+
+  label {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+
+  /* Select options em dark mode - TEXTO CLARO */
+  select option {
+    background-color: #ffffff;
+    color: #111827;
+  }
+
+  html.dark select option {
+    background-color: #1e293b;
+    color: #f3f4f6;
+  }
+
+  /* Selected option também em dark mode */
+  select option:checked {
+    background: linear-gradient(#3b82f6, #3b82f6);
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+
+  html.dark select option:checked {
+    background: linear-gradient(#3b82f6, #3b82f6);
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+}
+
+html.palette-vaporwave .bg-blue-600,
+html.palette-vaporwave .dark\:bg-blue-600,
+html.palette-vaporwave .dark\:bg-blue-500 {
+  background-color: #d946ef !important;
+}
+
+html.palette-vaporwave .hover\:bg-blue-700:hover,
+html.palette-vaporwave .dark\:hover\:bg-blue-700:hover,
+html.palette-vaporwave .dark\:hover\:bg-blue-400:hover {
+  background-color: #c026d3 !important;
+}
+
+html.palette-vaporwave .text-blue-600,
+html.palette-vaporwave .dark\:text-blue-400 {
+  color: #e879f9 !important;
+}
+
+html.palette-vaporwave .focus\:ring-blue-500:focus,
+html.palette-vaporwave .dark\:focus\:ring-blue-400:focus {
+  --tw-ring-color: #e879f9 !important;
+}
