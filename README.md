@@ -101,7 +101,7 @@ Simples assim. Nada de rodar servidor local.
 | **Frontend** | https://teacherflow.vercel.app |
 | **API** | https://teacherflow-api.onrender.com |
 | **API Docs** | https://teacherflow-api.onrender.com/api/v1/docs |
-| **GitHub** | https://github.com/seu-usuario/teacherflow |
+| **GitHub** | https://github.com/HugoLoyalConsulting/teacherflow-backend |
 
 ---
 

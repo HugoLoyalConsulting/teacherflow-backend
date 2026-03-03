@@ -7,7 +7,7 @@ Você precisa adicionar 4 variáveis de ambiente no GitHub para o deploy automá
 ## Passo 1: Vá para Settings → Secrets
 
 ```
-https://github.com/SEU-USUARIO/teacherflow/settings/secrets/actions
+https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions
 ```
 
 Clique em **"New repository secret"**
@@ -103,7 +103,7 @@ Este é a webhook URL do seu serviço Backend no Render.
 
 Vá para:
 ```
-https://github.com/SEU-USUARIO/teacherflow/settings/secrets/actions
+https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions
 ```
 
 Você deve ver:

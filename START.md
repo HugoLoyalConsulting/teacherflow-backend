@@ -22,7 +22,7 @@ teacherflow/
 
 ### Passo 1: Configure secrets no GitHub
 ```
-https://github.com/seu-usuario/teacherflow/settings/secrets/actions
+https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions
 ```
 
 Adicione 4 variáveis:
@@ -37,7 +37,7 @@ cd c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow
 
 git config user.email "seu.email@example.com"
 git config user.name "Seu Nome"
-git remote add origin https://github.com/seu-usuario/teacherflow.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 
 git add .
 git commit -m "Initial monorepo setup"
@@ -62,7 +62,7 @@ GitHub Actions automaticamente:
 Após deploy:
 - **Frontend:** https://teacherflow.vercel.app
 - **API:** https://teacherflow-api.onrender.com/api/v1/docs
-- **GitHub:** https://github.com/seu-usuario/teacherflow
+- **GitHub:** https://github.com/HugoLoyalConsulting/teacherflow-backend
 
 ---
 

@@ -11,7 +11,7 @@ Seu commit foi criado com sucesso! Agora falta configurar a origem remota e faze
    - **Visibility:** Public (recomendado para deploy automático)
    - **Initialize with README:** ❌ NÃO marque (já temos arquivos)
 3. Clique "Create repository"
-4. Copie a URL que aparecerá (algo como: `https://github.com/seu-usuario/teacherflow.git`)
+4. Copie a URL que aparecerá (algo como: `https://github.com/HugoLoyalConsulting/teacherflow-backend.git`)
 
 ## PASSO 2: Adicionar Remote (2 min)
 
@@ -22,12 +22,12 @@ cd 'c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow'
 
 git remote remove origin  # Remove o placeholder que adicionamos
 
-git remote add origin https://github.com/seu-usuario/teacherflow.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 ```
 
 **Exemplo real:**
 ```powershell
-git remote add origin https://github.com/hugo-souza/teacherflow.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 ```
 
 ## PASSO 3: Fazer Push (5 min - pode pedir autenticação)
@@ -50,7 +50,7 @@ Se pedir **autenticação**:
 Enumerating objects: XXX, done.
 Counting objects: 100% (XXX/XXX), done.
 ...
-To https://github.com/seu-usuario/teacherflow.git
+To https://github.com/HugoLoyalConsulting/teacherflow-backend.git
  * [new branch]      master -> master
 Branch 'master' set up to track remote tracking branch 'master' from 'origin'.
 ```
@@ -89,4 +89,4 @@ git push -u origin master
 3. Deploy backend → Render
 4. Auto-seed no banco de dados
 
-Você pode acompanhar em: https://github.com/seu-usuario/teacherflow/actions
+Você pode acompanhar em: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions

@@ -78,7 +78,7 @@ git commit -m "feat: Feedback system + ready for beta"
 git push -u origin main
 
 # 3. Aguardar Deploy (10-15 min)
-# Vá em: https://github.com/seu-usuario/teacherflow/actions
+# Vá em: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 # 4. Testar Online (5 min)
 # Frontend:  https://teacherflow.vercel.app
@@ -199,7 +199,7 @@ Para agora (beta): Está ok deixar public (testers não vão abusar)
 🌐 Frontend    https://teacherflow.vercel.app
 🔗 Backend API https://teacherflow-api.onrender.com
 📊 Docs        https://teacherflow-api.onrender.com/api/v1/docs
-💻 GitHub      https://github.com/seu-usuario/teacherflow
+💻 GitHub      https://github.com/HugoLoyalConsulting/teacherflow-backend
 ```
 
 ---
@@ -236,7 +236,7 @@ python backend/read_feedback.py --csv
 tail -f ~/teacherflow/output.log
 
 # Vercel frontend logs
-Acesse: https://vercel.com/seu-usuario/teacherflow/deployments
+Acesse: https://vercel.com/hugoloyalconsulting-8127s-projects/teacherflow-app/deployments
 ```
 
 ### Reset rápido (se precisar)
@@ -260,7 +260,7 @@ Adicione `@require_auth` no router. Por enquanto (beta), público é fine.
 Não! Email/senha funciona 100%. Google é só conveniência extra.
 
 **P: E se der erro no deploy?**
-Cheque: `github.com/seu-usuario/teacherflow/actions` para ver logs
+Cheque: `github.com/HugoLoyalConsulting/teacherflow-backend/actions` para ver logs
 
 **P: Preciso fazer mais algo no local?**
 Não! Tudo é CI/CD automático após git push.

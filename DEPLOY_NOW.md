@@ -67,7 +67,7 @@ git push -u origin main
 
 ## STEP 3: Aguardar Deploy (10-15 min)
 
-**Vá para:** https://github.com/seu-usuario/teacherflow/actions
+**Vá para:** https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 Vai ver 2 workflows rodando:
 1. `deploy-frontend` → Enviando para Vercel

@@ -244,7 +244,7 @@ git push -u origin main
 
 ### 6.2 Verificar Deploy Automático
 
-Vá para: https://github.com/seu-usuario/teacherflow/actions
+Vá para: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 - GitHub Actions deve iniciar deploys automaticamente
 - Frontend deploy → Vercel

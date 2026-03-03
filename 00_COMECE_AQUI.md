@@ -26,7 +26,7 @@ cd c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow
 
 git config user.email "seu.email@example.com"
 git config user.name "Seu Nome"
-git remote add origin https://github.com/seu-usuario/teacherflow.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 
 git add .
 git commit -m "Initial monorepo setup"

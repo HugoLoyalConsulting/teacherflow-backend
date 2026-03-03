@@ -31,7 +31,7 @@ Sem portas abertas no seu PC ✅
 
 ### 1️⃣ Clone o repositório
 ```bash
-git clone https://github.com/hugosouza/teacherflow.git
+git clone https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 cd teacherflow
 ```
 
@@ -182,7 +182,7 @@ Mas **não é necessário**. Você pode:
 ## 🚨 Se Algo der Errado
 
 ### Ver logs de deploy
-1. Vá para https://github.com/hugosouza/teacherflow/actions
+1. Vá para https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 2. Clique na build que falhou
 3. Veja o erro
 
@@ -232,7 +232,7 @@ git push origin feature/my-feature
 | **Frontend** | https://teacherflow.vercel.app |
 | **API Docs** | https://teacherflow-api.onrender.com/api/v1/docs |
 | **Dashboard de Pagamentos** | https://teacherflow.vercel.app/dashboard |
-| **GitHub** | https://github.com/hugosouza/teacherflow |
+| **GitHub** | https://github.com/HugoLoyalConsulting/teacherflow-backend |
 
 ---
 
@@ -293,7 +293,7 @@ Opcional. Se quiser: `python main.py` + `npm run dev`. Mas não é necessário.
 Sim: `git revert HEAD && git push`
 
 ### E se GitHub Actions falhar?
-Veja logs em https://github.com/hugosouza/teacherflow/actions
+Veja logs em https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 ---
 

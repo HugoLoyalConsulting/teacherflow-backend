@@ -57,7 +57,7 @@ postgresql://neondb_owner:npg_jZGViq4QOTA7@ep-royal-lab-ac3axf9o-pooler.sa-east-
 cd "C:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow-backend"
 
 # Adicionar remote (SUBSTITUA 'SEU-USUARIO' pelo seu username do GitHub)
-git remote add origin https://github.com/SEU-USUARIO/teacherflow-backend.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend-backend.git
 
 # Renomear branch para main (se necessário)
 git branch -M main

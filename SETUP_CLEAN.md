@@ -40,7 +40,7 @@ git config user.email "seu.email@gmail.com"
 git config user.name "Hugo Souza"
 
 # Conectar ao repositório GitHub
-git remote add origin https://github.com/seu-usuario/teacherflow.git
+git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 ```
 
 **Nota:** Crie o repositório em https://github.com/new antes se não tiver criado.
@@ -56,7 +56,7 @@ git push -u origin main
 ```
 
 ### Passo 4: Configurar Secrets no GitHub (crítico!)
-Vá para: `https://github.com/seu-usuario/teacherflow/settings/secrets/actions`
+Vá para: `https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions`
 
 Clique em "New repository secret" e adicione:
 
@@ -99,7 +99,7 @@ Seu app estará em:
 Frontend:  https://teacherflow.vercel.app
 Backend:   https://teacherflow-api.onrender.com
 API Docs:  https://teacherflow-api.onrender.com/api/v1/docs
-GitHub:    https://github.com/seu-usuario/teacherflow
+GitHub:    https://github.com/HugoLoyalConsulting/teacherflow-backend
 ```
 
 ---

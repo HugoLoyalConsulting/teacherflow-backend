@@ -191,11 +191,11 @@ Você primeiro prova conceito! 💡
 
 ## 📞 Alguns Links Úteis
 
-- **Seu Repo GitHub:** https://github.com/seu-usuario/teacherflow
-- **Actions (deploys):** https://github.com/seu-usuario/teacherflow/actions
+- **Seu Repo GitHub:** https://github.com/HugoLoyalConsulting/teacherflow-backend
+- **Actions (deploys):** https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 - **Frontend Online:** https://teacherflow.vercel.app
 - **Backend Online:** https://teacherflow-api.onrender.com
-- **Vercel Dashboard:** https://vercel.com/seu-usuario/teacherflow
+- **Vercel Dashboard:** https://vercel.com/hugoloyalconsulting-8127s-projects/teacherflow-app
 - **Render Dashboard:** https://dashboard.render.com
 
 ---

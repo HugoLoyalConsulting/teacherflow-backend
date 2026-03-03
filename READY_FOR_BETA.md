@@ -90,7 +90,7 @@ GitHub Actions vai rodando:
 - ✅ Frontend → https://teacherflow.vercel.app
 - ✅ Backend → https://teacherflow-api.onrender.com
 
-Acompanhe em: https://github.com/seu-usuario/teacherflow/actions
+Acompanhe em: https://github.com/HugoLoyalConsulting/teacherflow-backend/actions
 
 ### 4. Testar Online (5 min)
 

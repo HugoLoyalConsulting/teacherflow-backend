@@ -58,7 +58,7 @@ if ($remotes -match "origin") {
 } else {
     Write-Host "   ⚠️  Git remote não configurado" -ForegroundColor Yellow
     Write-Host "   Para configurar, rode:" -ForegroundColor Cyan
-    Write-Host "      git remote add origin https://github.com/SEU-USUARIO/teacherflow.git" -ForegroundColor Cyan
+    Write-Host "      git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git" -ForegroundColor Cyan
 }
 
 # 4. Contar arquivos
@@ -113,16 +113,16 @@ if ($modified -gt 0) {
 
 Write-Host "`n📌 Próximos passos:" -ForegroundColor Yellow
 Write-Host "   1. Configure secrets no GitHub:" -ForegroundColor Cyan
-Write-Host "      https://github.com/SEU-USUARIO/teacherflow/settings/secrets/actions"
+Write-Host "      https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions"
 Write-Host ""
 Write-Host "   2. Faça primeiro push:" -ForegroundColor Cyan
 Write-Host "      git add ."
 Write-Host "      git commit -m 'Initial monorepo'"
-Write-Host "      git remote add origin https://github.com/SEU-USUARIO/teacherflow.git"
+Write-Host "      git remote add origin https://github.com/HugoLoyalConsulting/teacherflow-backend.git"
 Write-Host "      git push -u origin main"
 Write-Host ""
 Write-Host "   3. Acesse GitHub Actions:" -ForegroundColor Cyan
-Write-Host "      https://github.com/SEU-USUARIO/teacherflow/actions"
+Write-Host "      https://github.com/HugoLoyalConsulting/teacherflow-backend/actions"
 Write-Host ""
 Write-Host "   4. Deploy automático vai iniciar!" -ForegroundColor Green
 
