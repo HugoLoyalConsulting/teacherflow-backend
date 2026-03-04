@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Schedule, Group, Location
 from app.schemas.schedules import ScheduleCreate, ScheduleUpdate, ScheduleResponse
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/schedules", tags=["schedules"])
 async def list_schedules(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List all schedules for current user"""
@@ -31,7 +31,7 @@ async def list_schedules(
 @router.get("/{schedule_id}", response_model=ScheduleResponse)
 async def get_schedule(
     schedule_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get schedule by ID"""
@@ -50,7 +50,7 @@ async def get_schedule(
 @router.post("/", response_model=ScheduleResponse)
 async def create_schedule(
     request: ScheduleCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create new schedule"""
@@ -90,7 +90,7 @@ async def create_schedule(
 async def update_schedule(
     schedule_id: str,
     request: ScheduleUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update schedule"""
@@ -115,7 +115,7 @@ async def update_schedule(
 @router.delete("/{schedule_id}")
 async def delete_schedule(
     schedule_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete schedule"""

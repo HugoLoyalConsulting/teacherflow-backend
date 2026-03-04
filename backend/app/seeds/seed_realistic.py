@@ -6,16 +6,16 @@ import uuid
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
 import random
-import hashlib
 
 from sqlalchemy.orm import Session
 from app.models import User, Student, Group, Location, Payment, GroupStudent, Schedule, Lesson, StudentLesson
 from app.core.database import SessionLocal
+from app.security import PasswordManager
 
 
 def hash_password(password: str) -> str:
-    """Hash password for storage"""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash password for storage using bcrypt"""
+    return PasswordManager.hash_password(password)
 
 
 def seed_realistic_data(db: Session = None):
@@ -89,7 +89,7 @@ def seed_realistic_data(db: Session = None):
         
         # 3. Criar 4 turmas
         print("📚 Criando 4 turmas...")
-        prices = [70, 80, 90, 100]  # R$/hora para cada turma
+        prices = [50, 60, 70, 80]  # R$/hora para cada turma (valores razoáveis)
         groups = []
         
         group_names = ["Iniciantes", "Intermediário", "Avançado", "Especializado"]
@@ -101,6 +101,7 @@ def seed_realistic_data(db: Session = None):
                 location_id=locations[i % 2].id,
                 name=name,
                 description=f"Turma de {name} - R${price}/hora",
+                hourly_rate=float(price),
                 max_students=10,
                 active=True
             )
@@ -247,10 +248,10 @@ def seed_realistic_data(db: Session = None):
         print("✅ SEED CRIADO COM SUCESSO!")
         print("="*60)
         print(f"✓ Professor: {teacher.full_name}")
-        print(f"✓ Turmas: 4 (Iniciantes R$70, Intermediário R$80, Avançado R$90, Especializado R$100)")
+        print(f"✓ Turmas: 4 (Iniciantes R$50/h, Intermediário R$60/h, Avançado R$70/h, Especializado R$80/h)")
         print(f"✓ Alunos: 20 (5 por turma)")
         print(f"✓ Locais: 2")
-        print(f"✓ Pagamentos: ~{len(students) * 4} (maioria em dia, alguns vencidos)")
+        print(f"✓ Pagamentos mensais: R$200, R$240, R$280, R$320 (4 aulas/mês)")
         
         # Estatísticas de inadimplência
         from app.services.payment_status import get_paused_students, get_all_inadimplent_students

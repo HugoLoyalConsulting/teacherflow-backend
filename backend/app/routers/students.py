@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Student
 from app.schemas.students import StudentCreate, StudentUpdate, StudentResponse
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/students", tags=["students"])
 async def list_students(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List all students for current user"""
@@ -31,7 +31,7 @@ async def list_students(
 @router.get("/{student_id}", response_model=StudentResponse)
 async def get_student(
     student_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get student by ID"""
@@ -50,7 +50,7 @@ async def get_student(
 @router.post("/", response_model=StudentResponse)
 async def create_student(
     request: StudentCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create new student"""
@@ -69,7 +69,7 @@ async def create_student(
 async def update_student(
     student_id: str,
     request: StudentUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update student"""
@@ -94,7 +94,7 @@ async def update_student(
 @router.delete("/{student_id}")
 async def delete_student(
     student_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete student"""

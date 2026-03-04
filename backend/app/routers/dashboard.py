@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.services.payment_status import (
     get_student_payment_summary,
     get_all_inadimplent_students,
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 @router.get("/payment-status/{student_id}")
 async def get_student_status(
     student_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -57,7 +57,7 @@ async def get_student_status(
 
 @router.get("/inadimplent-students")
 async def list_inadimplent_students(
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -75,7 +75,7 @@ async def list_inadimplent_students(
 
 @router.get("/paused-students")
 async def list_paused_students(
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -95,7 +95,7 @@ async def list_paused_students(
 
 @router.get("/payment-summary")
 async def get_payment_summary(
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """

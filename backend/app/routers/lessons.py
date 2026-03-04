@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import date
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Lesson, Schedule, Group, GroupStudent, Student
 from app.schemas.lessons import (
     LessonCreate, LessonUpdate, LessonAttendanceUpdate, LessonResponse
@@ -20,7 +20,7 @@ async def list_lessons(
     limit: int = Query(50, ge=1, le=100),
     date_from: date = None,
     date_to: date = None,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List lessons for current user"""
@@ -38,7 +38,7 @@ async def list_lessons(
 @router.get("/{lesson_id}", response_model=LessonResponse)
 async def get_lesson(
     lesson_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get lesson by ID"""
@@ -57,7 +57,7 @@ async def get_lesson(
 @router.post("/", response_model=LessonResponse)
 async def create_lesson(
     request: LessonCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """
@@ -112,7 +112,7 @@ async def create_lesson(
 async def update_lesson(
     lesson_id: str,
     request: LessonUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update lesson"""
@@ -138,7 +138,7 @@ async def update_lesson(
 async def update_attendance(
     lesson_id: str,
     request: LessonAttendanceUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update lesson attendance"""
@@ -164,7 +164,7 @@ async def update_attendance(
 @router.delete("/{lesson_id}")
 async def delete_lesson(
     lesson_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete lesson"""

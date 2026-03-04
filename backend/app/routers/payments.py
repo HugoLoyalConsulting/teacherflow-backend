@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from datetime import date
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Payment, Student
 from app.schemas.payments import PaymentCreate, PaymentUpdate, PaymentResponse
 from app.services.payment_recurrence import generate_recurring_payments
@@ -19,7 +19,7 @@ async def list_payments(
     student_id: str = None,
     date_from: date = None,
     date_to: date = None,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List payments for current user"""
@@ -39,7 +39,7 @@ async def list_payments(
 @router.get("/{payment_id}", response_model=PaymentResponse)
 async def get_payment(
     payment_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get payment by ID"""
@@ -58,7 +58,7 @@ async def get_payment(
 @router.post("/", response_model=PaymentResponse)
 async def create_payment(
     request: PaymentCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create new payment (or payment series if recurrence is set)"""
@@ -123,7 +123,7 @@ async def create_payment(
 async def update_payment(
     payment_id: str,
     request: PaymentUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update payment"""
@@ -148,7 +148,7 @@ async def update_payment(
 @router.delete("/{payment_id}")
 async def delete_payment(
     payment_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete payment"""

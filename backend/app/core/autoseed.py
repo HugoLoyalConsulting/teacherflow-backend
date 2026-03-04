@@ -34,12 +34,13 @@ def auto_seed_if_empty():
             print("="*60)
             print("\nYour database now has:")
             print("  • 20 students distributed in 4 groups")
-            print("  • Groups: Iniciantes (R$70), Intermediário (R$80),")
-            print("            Avançado (R$90), Especializado (R$100)")
+            print("  • Groups: Iniciantes (R$50/h), Intermediário (R$60/h),")
+            print("            Avançado (R$70/h), Especializado (R$80/h)")
+            print("  • Monthly payments: R$200, R$240, R$280, R$320 (4 classes/month)")
             print("  • 3 students marked as PAUSED (60+ days without payment)")
-            print("  • Total pending: R$ 2.400")
+            print("  • Total pending: R$ 960")
             print("\nYou can see this in:")
-            print("  GET https://teacherflow-backend.onrender.com/api/v1/dashboard/paused-students")
+            print("  GET https://teacherflow-backend.onrender.com/api/dashboard/paused-students")
             print("="*60 + "\n")
         else:
             # Database already has data

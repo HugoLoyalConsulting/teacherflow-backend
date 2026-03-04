@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Group, Location
 from app.schemas.groups import GroupCreate, GroupUpdate, GroupResponse
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/groups", tags=["groups"])
 async def list_groups(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List all groups for current user"""
@@ -31,7 +31,7 @@ async def list_groups(
 @router.get("/{group_id}", response_model=GroupResponse)
 async def get_group(
     group_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get group by ID"""
@@ -50,7 +50,7 @@ async def get_group(
 @router.post("/", response_model=GroupResponse)
 async def create_group(
     request: GroupCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create new group"""
@@ -80,7 +80,7 @@ async def create_group(
 async def update_group(
     group_id: str,
     request: GroupUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update group"""
@@ -117,7 +117,7 @@ async def update_group(
 @router.delete("/{group_id}")
 async def delete_group(
     group_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete group"""

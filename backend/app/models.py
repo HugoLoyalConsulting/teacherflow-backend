@@ -119,6 +119,7 @@ class Group(Base):
     location_id = Column(String, ForeignKey("locations.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
+    hourly_rate = Column(Float, nullable=True, default=0.0)  # Valor por hora da aula
     max_students = Column(Integer, nullable=True)
     active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)

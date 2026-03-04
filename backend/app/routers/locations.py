@@ -3,7 +3,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import verify_token
+from app.core.security import get_current_user
 from app.models import Location
 from app.schemas.locations import LocationCreate, LocationUpdate, LocationResponse
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/locations", tags=["locations"])
 async def list_locations(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """List all locations for current user"""
@@ -31,7 +31,7 @@ async def list_locations(
 @router.get("/{location_id}", response_model=LocationResponse)
 async def get_location(
     location_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get location by ID"""
@@ -50,7 +50,7 @@ async def get_location(
 @router.post("/", response_model=LocationResponse)
 async def create_location(
     request: LocationCreate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Create new location"""
@@ -69,7 +69,7 @@ async def create_location(
 async def update_location(
     location_id: str,
     request: LocationUpdate,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Update location"""
@@ -94,7 +94,7 @@ async def update_location(
 @router.delete("/{location_id}")
 async def delete_location(
     location_id: str,
-    user_id: str = Depends(verify_token),
+    user_id: str = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Delete location"""

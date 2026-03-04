@@ -55,10 +55,10 @@ def create_refresh_token(subject: str) -> str:
 
 
 def verify_token(token: str) -> str:
-    """Verify a JWT token and return the subject (user_id)"""
+    """Verify a JWT token and return the user_id"""
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        user_id: str = payload.get("sub")
+        user_id: str = payload.get("user_id")
         if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
