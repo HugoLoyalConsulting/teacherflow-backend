@@ -13,7 +13,7 @@ O sistema agora detecta automaticamente dados não realistas ao iniciar:
 - Se houver > 10 pagamentos vencidos (> 30 dias), faz reset automático
 - Roda no próximo deploy ou restart do Render
 
-**Arquivo**: [autoseed.py](../backend/app/core/autoseed.py)
+**Arquivo**: [autoseed.py](../../backend/create_demo_data.py)
 
 ### 2. **Endpoint Administrativo para Reset Manual** ✅
 Novo endpoint para forçar reset imediatamente:
@@ -22,7 +22,7 @@ Novo endpoint para forçar reset imediatamente:
 POST /api/v1/admin/reset-demo-data
 ```
 
-**Arquivo**: [admin.py](../backend/app/routers/admin.py)
+**Arquivo**: [admin.py](../../backend/app/routers/admin.py)
 
 ### 3. **Endpoint para Verificar Status** ✅
 Verificar se dados precisam de reset:

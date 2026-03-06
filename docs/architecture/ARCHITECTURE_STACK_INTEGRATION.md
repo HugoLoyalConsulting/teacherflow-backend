@@ -516,9 +516,9 @@ psql <connection_string> -c "SELECT 1;"
 
 - [Backend API Documentation](../../backend/README.md)
 - [Frontend Setup Guide](../../frontend/README.md)
-- [Database Schema](../../backend/docs/DATABASE_SCHEMA.md)
+- [Database Schema](../DATABASE_SCHEMA.md)
 - [Security Best Practices](../../backend/AUTH_SECURITY.md)
-- [Deployment Checklist](./deployment/PRE_DEPLOY_CHECKLIST.md)
+- [Deployment Checklist](../deployment/PRE_DEPLOY_CHECKLIST.md)
 
 ---
 
@@ -535,4 +535,4 @@ psql <connection_string> -c "SELECT 1;"
 
 ---
 
-**For questions or issues, see:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+**For questions or issues, see:** [TROUBLESHOOTING.md](../TROUBLESHOOTING.md)

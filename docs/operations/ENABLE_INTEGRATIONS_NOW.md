@@ -285,7 +285,7 @@ ORDER BY date
 For more information, see:
 - **Complete Setup:** [docs/STACK_INTEGRATION_SETUP.md](../STACK_INTEGRATION_SETUP.md)
 - **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](../architecture/ARCHITECTURE_STACK_INTEGRATION.md)
-- **Metabase:** [METABASE_SETUP.md](./deployment/METABASE_SETUP.md)
+- **Metabase:** [METABASE_SETUP.md](../deployment/METABASE_SETUP.md)
 - **All Docs:** [docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)
 
 ---

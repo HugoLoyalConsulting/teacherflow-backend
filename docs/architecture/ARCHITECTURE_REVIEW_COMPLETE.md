@@ -24,7 +24,7 @@ This report documents the comprehensive architecture review and stack integratio
 - ✅ Security measures (password hashing, rate limiting prep)
 
 **Created:**
-- [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md) - Complete architecture documentation with diagrams
+- [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md) - Complete architecture documentation with diagrams
 
 ---
 
@@ -55,7 +55,7 @@ This report documents the comprehensive architecture review and stack integratio
 - Updated: `render.yaml` with PostHog variables
 
 **Documentation:**
-- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
+- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
 - Event tracking guide
 - KPI recommendations
 
@@ -91,7 +91,7 @@ This report documents the comprehensive architecture review and stack integratio
 - Updated: `render.yaml` with Sentry variables
 
 **Documentation:**
-- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
+- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
 - Error handling best practices
 - Alert configuration guide
 
@@ -100,7 +100,7 @@ This report documents the comprehensive architecture review and stack integratio
 ### 4. Metabase Setup Documentation ✅
 
 **Created:**
-- [METABASE_SETUP.md](./deployment/METABASE_SETUP.md) - 400+ line comprehensive guide
+- [METABASE_SETUP.md](../deployment/METABASE_SETUP.md) - 400+ line comprehensive guide
 
 **Contents:**
 - Installation options (Cloud vs Self-hosted vs Docker)
@@ -300,7 +300,7 @@ VITE_SENTRY_DSN=...
 ## 📖 Documentation Created
 
 ### Core Documents
-1. **[ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)** (800+ lines)
+1. **[ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)** (800+ lines)
    - Complete architecture overview
    - Data flow diagrams
    - Integration status
@@ -308,7 +308,7 @@ VITE_SENTRY_DSN=...
    - Observability setup
    - Troubleshooting guide
 
-2. **[METABASE_SETUP.md](./deployment/METABASE_SETUP.md)** (400+ lines)
+2. **[METABASE_SETUP.md](../deployment/METABASE_SETUP.md)** (400+ lines)
    - Installation options
    - Database connection
    - Dashboard templates
@@ -462,8 +462,8 @@ Current architecture supports:
 ## 🆘 Support & Resources
 
 ### Documentation
-- **Quick Start:** [QUICKSTART.md](./overview/QUICKSTART.md)
-- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
+- **Quick Start:** [QUICKSTART.md](../overview/QUICKSTART.md)
+- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)
 - **All Docs:** [docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)
 
 ### External Resources

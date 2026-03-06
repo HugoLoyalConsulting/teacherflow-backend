@@ -108,7 +108,7 @@ Tente:
 ### 5. Google OAuth Setup (5 min - OPCIONAL)
 
 Se quiser login via Google agora:
-- Abra: [`GOOGLE_OAUTH_SETUP.md`](./deployment/GOOGLE_OAUTH_SETUP.md)
+- Abra: [`GOOGLE_OAUTH_SETUP.md`](../deployment/GOOGLE_OAUTH_SETUP.md)
 - Siga os passos
 
 ---
@@ -247,9 +247,9 @@ Obrigado por testar! 🙏
 ## Dúvidas?
 
 Consulte:
-- [`GOOGLE_OAUTH_SETUP.md`](./deployment/GOOGLE_OAUTH_SETUP.md) - Para Google Login
-- [`QA_FIXES_GUIDE.md`](./qa/QA_FIXES_GUIDE.md) - Se algo não funcionar
-- [`GIT_PUSH_GUIDE.md`](./deployment/GIT_PUSH_GUIDE.md) - Se tiver dúvida em git
+- [`GOOGLE_OAUTH_SETUP.md`](../deployment/GOOGLE_OAUTH_SETUP.md) - Para Google Login
+- [`QA_FIXES_GUIDE.md`](../qa/QA_FIXES_GUIDE.md) - Se algo não funcionar
+- [`GIT_PUSH_GUIDE.md`](../deployment/GIT_PUSH_GUIDE.md) - Se tiver dúvida em git
 
 ---
 
