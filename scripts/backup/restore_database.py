@@ -213,7 +213,7 @@ def main():
     if not backups:
         print("❌ Nenhum backup encontrado!")
         print(f"📁 Procurado em: {BACKUP_DIR.absolute()}")
-        print("\n💡 Execute primeiro: python backup_database.py")
+        print("\n💡 Execute primeiro: python scripts/backup/backup_database.py")
         sys.exit(1)
     
     print("📦 Backups disponíveis:\n")

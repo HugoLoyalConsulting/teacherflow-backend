@@ -208,7 +208,7 @@ exit()
 
 ```powershell
 cd "c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow"
-.\test-backend.ps1
+.\scripts\quality\test-backend.ps1
 ```
 
 **Todos os testes devem passar:**
@@ -352,7 +352,7 @@ Marque cada item:
 
 **Arquivos de referência criados:**
 - ✅ `RENDER_SETUP_CHECKLIST.md` - Checklist técnico detalhado
-- ✅ `test-backend.ps1` - Script de teste automatizado
+- ✅ `scripts/quality/test-backend.ps1` - Script de teste automatizado
 - ✅ Este arquivo - Guia visual passo a passo
 
 **Comandos úteis:**
@@ -367,7 +367,7 @@ curl https://teacherflow-backend.onrender.com/api/v1/subscriptions/tiers
 curl https://teacherflow-backend.onrender.com/ | ConvertFrom-Json
 
 # Rodar script de teste completo
-.\test-backend.ps1
+.\scripts\quality\test-backend.ps1
 ```
 
 ---

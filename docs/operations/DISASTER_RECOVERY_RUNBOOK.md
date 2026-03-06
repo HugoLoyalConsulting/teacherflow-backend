@@ -43,7 +43,7 @@ This runbook covers recovery of:
 ### C) Full account lockout/provider outage
 1. Recreate repo from local `.bundle`.
 2. Provision new PostgreSQL and restore SQL backup.
-3. Recreate Render service with `backend/render.yaml`.
+3. Recreate Render service with `render.yaml`.
 4. Recreate Vercel project and set required env vars.
 5. Point DNS/app URLs to new environment.
 
@@ -51,7 +51,7 @@ This runbook covers recovery of:
 ### 1) Restore database from SQL backup
 ```bash
 # local
-python restore_database.py
+python scripts/backup/restore_database.py
 ```
 Select latest `teacherflow_backup_*.sql.gz` and confirm.
 
@@ -89,10 +89,10 @@ alembic upgrade head
 
 ## Immediate Next Setup (Manual)
 1. Add GitHub secret `NEON_DATABASE_URL`.
-2. Optionally configure backup remotes with `setup-backup-remotes.ps1`.
+2. Optionally configure backup remotes with `scripts/backup/setup-backup-remotes.ps1`.
 3. Run first local backups:
 ```powershell
-.\backup_code.ps1
-python backup_database.py
+.\scripts\backup\backup_code.ps1
+python scripts/backup/backup_database.py
 ```
 4. Trigger workflow manually: `Actions -> Automated Database & Code Backup -> Run workflow`.

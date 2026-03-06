@@ -81,7 +81,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
         run: |
-          python backup_database.py
+          python scripts/backup/backup_database.py
         continue-on-error: true
       
       - name: 📋 Create backup manifest
@@ -135,7 +135,7 @@ jobs:
             gh release download backup-${{ github.run_number }}-$(date +%Y%m)
             
             # Restaurar banco
-            python restore_database.py teacherflow_db_*.sql.gz
+            python scripts/backup/restore_database.py teacherflow_db_*.sql.gz
             ```
           files: backups/database/*
           draft: false
@@ -209,7 +209,7 @@ jobs:
           # Backup de arquivos de configuração (sem secrets)
           cp backend/.env.example backups/config/
           cp frontend/.env.example backups/config/
-          cp backend/render.yaml backups/config/
+          cp render.yaml backups/config/
           cp frontend/vercel.json backups/config/
           cp backend/alembic.ini backups/config/ 2>/dev/null || true
           

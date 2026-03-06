@@ -27,7 +27,7 @@
 ### **3. Arquivos de Suporte**
 - ✅ `RENDER_SETUP_CHECKLIST.md` - Checklist técnico completo
 - ✅ `GUIA_DEPLOY_FINAL.md` - Guia visual passo a passo
-- ✅ `test-backend.ps1` - Script de teste automatizado
+- ✅ `scripts/quality/test-backend.ps1` - Script de teste automatizado
 
 ---
 
@@ -82,7 +82,7 @@ exit()
 ```bash
 # No PowerShell local:
 cd "c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow"
-.\test-backend.ps1
+.\scripts\quality\test-backend.ps1
 ```
 
 **Todos devem passar:**
@@ -170,7 +170,7 @@ VITE_ENVIRONMENT=production
 
 1. **Leia:** `GUIA_DEPLOY_FINAL.md` (guia passo a passo com imagens conceituais)
 2. **Execute:** Manual deploy no Render (Passo 1 do guia)
-3. **Teste:** `.\test-backend.ps1` (após deploy concluir)
+3. **Teste:** `.\scripts\quality\test-backend.ps1` (após deploy concluir)
 4. **Acesse:** https://teacherflow-app.vercel.app/ (frontend em produção)
 
 **Se já conhece o projeto:**
@@ -206,7 +206,7 @@ Senha: demo123
 ### **Comandos Úteis**
 ```powershell
 # Testar backend
-.\test-backend.ps1
+.\scripts\quality\test-backend.ps1
 
 # Ver branches
 git branch -a

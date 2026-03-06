@@ -374,7 +374,7 @@ def main():
     print("")
     print("💡 Próximos passos:")
     print("   1. Copiar backups para local seguro (S3, Google Drive, etc.)")
-    print("   2. Testar restore: python restore_database.py <backup_file>")
+    print("   2. Testar restore: python scripts/backup/restore_database.py <backup_file>")
     print("   3. Agendar backups automáticos (cron, GitHub Actions)")
     print("")
 
