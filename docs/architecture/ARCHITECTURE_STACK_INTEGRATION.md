@@ -514,11 +514,11 @@ psql <connection_string> -c "SELECT 1;"
 
 ## 📚 Additional Resources
 
-- [Backend API Documentation](./backend/README.md)
-- [Frontend Setup Guide](./frontend/README.md)
-- [Database Schema](./backend/docs/DATABASE_SCHEMA.md)
-- [Security Best Practices](./backend/AUTH_SECURITY.md)
-- [Deployment Checklist](./PRE_DEPLOY_CHECKLIST.md)
+- [Backend API Documentation](../../backend/README.md)
+- [Frontend Setup Guide](../../frontend/README.md)
+- [Database Schema](../../backend/docs/DATABASE_SCHEMA.md)
+- [Security Best Practices](../../backend/AUTH_SECURITY.md)
+- [Deployment Checklist](./deployment/PRE_DEPLOY_CHECKLIST.md)
 
 ---
 

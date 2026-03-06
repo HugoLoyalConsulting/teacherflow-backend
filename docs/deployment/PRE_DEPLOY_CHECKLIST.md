@@ -182,7 +182,7 @@ print('✅ Database reset OK')
 - Quando deploy acontece, schema no Render também fica certo (auto-seed)
 
 ✅ **Você deve ver:** `✅ Database reset OK`  
-❌ **Se ver erro:** Leia [QA_FIXES_GUIDE.md](./QA_FIXES_GUIDE.md)
+❌ **Se ver erro:** Leia [QA_FIXES_GUIDE.md](./qa/QA_FIXES_GUIDE.md)
 
 ---
 
@@ -265,10 +265,10 @@ https://teacherflow-backend.onrender.com/api/v1/feedback
 
 | Pergunta | Ver Arquivo |
 |----------|------------|
-| Como fazer git push? | [GIT_PUSH_GUIDE.md](./GIT_PUSH_GUIDE.md) |
-| Tive erro no deploy | [QA_FIXES_GUIDE.md](./QA_FIXES_GUIDE.md) |
+| Como fazer git push? | [GIT_PUSH_GUIDE.md](./deployment/GIT_PUSH_GUIDE.md) |
+| Tive erro no deploy | [QA_FIXES_GUIDE.md](./qa/QA_FIXES_GUIDE.md) |
 | Como funciona feedback? | [SESSION_SUMMARY.md](./SESSION_SUMMARY.md) |
-| Steps detalhados deploy | [DEPLOY_NOW.md](./DEPLOY_NOW.md) |
+| Steps detalhados deploy | [DEPLOY_NOW.md](./deployment/DEPLOY_NOW.md) |
 
 ---
 

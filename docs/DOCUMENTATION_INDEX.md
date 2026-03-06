@@ -8,56 +8,57 @@ Welcome to the TeacherFlow documentation! This guide will help you navigate all 
 
 **New to TeacherFlow?** Start here:
 
-1. [README.md](./README.md) - Project overview
-2. [QUICKSTART.md](./QUICKSTART.md) - Get running in 10 minutes
-3. [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) - Detailed setup guide
+1. [README.md](./overview/README.md) - Project overview
+2. [QUICKSTART.md](./overview/QUICKSTART.md) - Get running in 10 minutes
+3. [SETUP_INSTRUCTIONS.md](./deployment/SETUP_INSTRUCTIONS.md) - Detailed setup guide
+4. [FOLDER_STRUCTURE.md](./overview/FOLDER_STRUCTURE.md) - Official folder organization guide
 
 ---
 
 ## 🏗️ Architecture & Infrastructure
 
 ### Core Architecture
-- [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md) ⭐ **Main architecture guide**
+- [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md) ⭐ **Main architecture guide**
   - Complete stack overview
   - Integration status
   - Data flow diagrams
   - Troubleshooting
 
 ### Database
-- [DATABASE_SCHEMA.md](./backend/docs/DATABASE_SCHEMA.md) - Database structure
-- Backend [models.py](./backend/app/models.py) - SQLAlchemy models
-- [Alembic migrations](./backend/alembic/versions/) - Schema versioning
+- [DATABASE_SCHEMA.md](../backend/docs/DATABASE_SCHEMA.md) - Database structure
+- Backend [models.py](../backend/app/models.py) - SQLAlchemy models
+- [Alembic migrations](../backend/alembic/versions/) - Schema versioning
 
 ### Deployment
-- [PRE_DEPLOY_CHECKLIST.md](./PRE_DEPLOY_CHECKLIST.md) - Pre-deployment checklist
-- [DEPLOY_NOW.md](./DEPLOY_NOW.md) - Quick deploy guide
-- [PRODUCTION_DEPLOYMENT_GUIDE.md](./backend/PRODUCTION_DEPLOYMENT_GUIDE.md) - Production setup
+- [PRE_DEPLOY_CHECKLIST.md](./deployment/PRE_DEPLOY_CHECKLIST.md) - Pre-deployment checklist
+- [DEPLOY_NOW.md](./deployment/DEPLOY_NOW.md) - Quick deploy guide
+- [PRODUCTION_DEPLOYMENT_GUIDE.md](../backend/PRODUCTION_DEPLOYMENT_GUIDE.md) - Production setup
 
 ---
 
 ## 🔐 Authentication & Security
 
-- [AUTH_SECURITY.md](./backend/AUTH_SECURITY.md) - Security implementation
-- [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) - Google login setup
-- [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) - CI/CD secrets
-- [SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md) - Zero-trust security
+- [AUTH_SECURITY.md](../backend/AUTH_SECURITY.md) - Security implementation
+- [GOOGLE_OAUTH_SETUP.md](./deployment/GOOGLE_OAUTH_SETUP.md) - Google login setup
+- [GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md) - CI/CD secrets
+- [SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md) - Zero-trust security
 
 ---
 
 ## 📊 Observability & Monitoring
 
 ### Analytics (PostHog)
-- **Backend:** [backend/app/core/telemetry.py](./backend/app/core/telemetry.py)
-- **Frontend:** [frontend/src/services/analytics.ts](./frontend/src/services/analytics.ts)
-- **Setup:** See [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
+- **Backend:** [backend/app/core/telemetry.py](../backend/app/core/telemetry.py)
+- **Frontend:** [frontend/src/services/analytics.ts](../frontend/src/services/analytics.ts)
+- **Setup:** See [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
 
 ### Error Monitoring (Sentry)
-- **Backend:** [backend/app/core/monitoring.py](./backend/app/core/monitoring.py)
-- **Frontend:** [frontend/src/services/monitoring.ts](./frontend/src/services/monitoring.ts)
-- **Setup:** See [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
+- **Backend:** [backend/app/core/monitoring.py](../backend/app/core/monitoring.py)
+- **Frontend:** [frontend/src/services/monitoring.ts](../frontend/src/services/monitoring.ts)
+- **Setup:** See [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
 
 ### Business Intelligence (Metabase)
-- [METABASE_SETUP.md](./METABASE_SETUP.md) ⭐ **Complete Metabase guide**
+- [METABASE_SETUP.md](./deployment/METABASE_SETUP.md) ⭐ **Complete Metabase guide**
   - Installation options
   - Dashboard creation
   - SQL queries
@@ -68,38 +69,38 @@ Welcome to the TeacherFlow documentation! This guide will help you navigate all 
 ## 🖥️ Backend Documentation
 
 ### Getting Started
-- [backend/README.md](./backend/README.md) - Backend overview
-- [backend/QUICK_START.md](./backend/QUICK_START.md) - Quick start guide
-- [backend/requirements.txt](./backend/requirements.txt) - Python dependencies
+- [backend/README.md](../backend/README.md) - Backend overview
+- [backend/QUICK_START.md](../backend/QUICK_START.md) - Quick start guide
+- [backend/requirements.txt](../backend/requirements.txt) - Python dependencies
 
 ### API Reference
-- [backend/app/routers/](./backend/app/routers/) - API endpoints
+- [backend/app/routers/](../backend/app/routers/) - API endpoints
 - **API Docs (live):** `http://localhost:8000/api/v1/docs` (local)
 - **API Docs (prod):** `https://teacherflow-backend.onrender.com/api/v1/docs`
 
 ### Development
-- [backend/DEVELOPMENT.md](./backend/DEVELOPMENT.md) - Development guide
-- [backend/TESTING.md](./backend/TESTING.md) - Testing guide
-- [backend/alembic/](./backend/alembic/) - Database migrations
+- [backend/DEVELOPMENT.md](../backend/DEVELOPMENT.md) - Development guide
+- [backend/TESTING.md](../backend/TESTING.md) - Testing guide
+- [backend/alembic/](../backend/alembic/) - Database migrations
 
 ---
 
 ## 🎨 Frontend Documentation
 
 ### Getting Started
-- [frontend/README.md](./frontend/README.md) - Frontend overview
-- [frontend/QUICKSTART.md](./frontend/QUICKSTART.md) - Quick start
-- [frontend/package.json](./frontend/package.json) - NPM dependencies
+- [frontend/README.md](../frontend/README.md) - Frontend overview
+- [frontend/QUICKSTART.md](../frontend/QUICKSTART.md) - Quick start
+- [frontend/package.json](../frontend/package.json) - NPM dependencies
 
 ### Development
-- [frontend/DEVELOPMENT.md](./frontend/DEVELOPMENT.md) - Development guide
-- [frontend/src/](./frontend/src/) - Source code
-- [frontend/TESTING_CHECKLIST.md](./frontend/TESTING_CHECKLIST.md) - QA checklist
+- [frontend/DEVELOPMENT.md](../frontend/DEVELOPMENT.md) - Development guide
+- [frontend/src/](../frontend/src/) - Source code
+- [frontend/TESTING_CHECKLIST.md](../frontend/TESTING_CHECKLIST.md) - QA checklist
 
 ### Components
-- [frontend/src/components/](./frontend/src/components/) - React components
-- [frontend/src/pages/](./frontend/src/pages/) - Page components
-- [frontend/src/services/](./frontend/src/services/) - API services
+- [frontend/src/components/](../frontend/src/components/) - React components
+- [frontend/src/pages/](../frontend/src/pages/) - Page components
+- [frontend/src/services/](../frontend/src/services/) - API services
 
 ---
 
@@ -120,13 +121,13 @@ postgresql://neondb_owner:npg_jZGViq4QOTA7@ep-mute-glade-actrhygq-pooler.sa-east
 
 ### Management
 - **Console:** https://console.neon.tech/app/projects/rapid-forest-55425359
-- **Migrations:** [backend/alembic/](./backend/alembic/)
-- **Seeding:** [backend/app/seeds/](./backend/app/seeds/)
+- **Migrations:** [backend/alembic/](../backend/alembic/)
+- **Seeding:** [backend/app/seeds/](../backend/app/seeds/)
 
 ### Tools
-- [POPULATE_RENDER_DB.py](./POPULATE_RENDER_DB.py) - Populate production DB
-- [RESET_RENDER_BANCO.md](./RESET_RENDER_BANCO.md) - Reset database guide
-- [insert_neon_data.py](./insert_neon_data.py) - Insert data script
+- [POPULATE_RENDER_DB.py](../scripts/database/POPULATE_RENDER_DB.py) - Populate production DB
+- [RESET_RENDER_BANCO.md](./deployment/RESET_RENDER_BANCO.md) - Reset database guide
+- [insert_neon_data.py](../scripts/database/insert_neon_data.py) - Insert data script
 
 ---
 
@@ -138,44 +139,44 @@ postgresql://neondb_owner:npg_jZGViq4QOTA7@ep-mute-glade-actrhygq-pooler.sa-east
 - **Database:** Neon PostgreSQL
 
 ### Workflows
-- [.github/workflows/deploy-frontend.yml](./.github/workflows/deploy-frontend.yml)
-- [.github/workflows/deploy-backend.yml](./.github/workflows/deploy-backend.yml)
+- [.github/workflows/deploy-frontend.yml](../.github/workflows/deploy-frontend.yml)
+- [.github/workflows/deploy-backend.yml](../.github/workflows/deploy-backend.yml)
 
 ### Guides
-- [GIT_PUSH_GUIDE.md](./GIT_PUSH_GUIDE.md) - Git workflow
-- [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) - Secrets configuration
-- [PRE_DEPLOY_CHECKLIST.md](./PRE_DEPLOY_CHECKLIST.md) - Before deploying
+- [GIT_PUSH_GUIDE.md](./deployment/GIT_PUSH_GUIDE.md) - Git workflow
+- [GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md) - Secrets configuration
+- [PRE_DEPLOY_CHECKLIST.md](./deployment/PRE_DEPLOY_CHECKLIST.md) - Before deploying
 
 ---
 
 ## 🧪 Testing & QA
 
 ### Backend
-- [backend/QUICK_START_TESTING.md](./backend/QUICK_START_TESTING.md)
-- [backend/QA_INTEGRATION_TEST_PLAN.md](./backend/QA_INTEGRATION_TEST_PLAN.md)
-- [backend/qa_manual_test.py](./backend/qa_manual_test.py)
+- [backend/QUICK_START_TESTING.md](../backend/QUICK_START_TESTING.md)
+- [backend/QA_INTEGRATION_TEST_PLAN.md](../backend/QA_INTEGRATION_TEST_PLAN.md)
+- [backend/qa_manual_test.py](../backend/qa_manual_test.py)
 
 ### Frontend
-- [frontend/TESTING_CHECKLIST.md](./frontend/TESTING_CHECKLIST.md)
-- [frontend/QA_REPORT.md](./frontend/QA_REPORT.md)
-- [frontend/QA_SECURITY_REVIEW.md](./frontend/QA_SECURITY_REVIEW.md)
+- [frontend/TESTING_CHECKLIST.md](../frontend/TESTING_CHECKLIST.md)
+- [frontend/QA_REPORT.md](../frontend/QA_REPORT.md)
+- [frontend/QA_SECURITY_REVIEW.md](../frontend/QA_SECURITY_REVIEW.md)
 
 ### Complete QA
-- [QA_COMPLETE_FINDINGS.md](./QA_COMPLETE_FINDINGS.md)
-- [QA_FIXES_GUIDE.md](./QA_FIXES_GUIDE.md)
-- [QA_SUMMARY.md](./QA_SUMMARY.md)
+- [QA_COMPLETE_FINDINGS.md](./qa/QA_COMPLETE_FINDINGS.md)
+- [QA_FIXES_GUIDE.md](./qa/QA_FIXES_GUIDE.md)
+- [QA_SUMMARY.md](./qa/QA_SUMMARY.md)
 
 ---
 
 ## 🚨 Troubleshooting & Support
 
 ### Common Issues
-- [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
-- [DIAGNOSTICO_FINAL.md](./DIAGNOSTICO_FINAL.md) - System diagnostics
+- [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
+- [DIAGNOSTICO_FINAL.md](./status/DIAGNOSTICO_FINAL.md) - System diagnostics
 
 ### Debug Tools
-- [backend/debug_routes.py](./backend/debug_routes.py) - Debug endpoints
-- [validate.ps1](./validate.ps1) - Validation script
+- [backend/debug_routes.py](../backend/debug_routes.py) - Debug endpoints
+- [validate.ps1](../scripts/quality/validate.ps1) - Validation script
 
 ### Health Checks
 ```bash
@@ -196,19 +197,19 @@ psql <connection-string> -c "SELECT 1;"
 ### Status Reports
 - [READY_FOR_BETA.md](./READY_FOR_BETA.md) ⭐ Production readiness
 - [SESSION_SUMMARY.md](./SESSION_SUMMARY.md) - Development summary
-- [PHASE_4_COMPLETION_REPORT.md](./backend/PHASE_4_COMPLETION_REPORT.md)
+- [PHASE_4_COMPLETION_REPORT.md](../backend/PHASE_4_COMPLETION_REPORT.md)
 
 ### Planning
-- [NEXT_STEPS.md](./backend/NEXT_STEPS.md) - Roadmap
-- [EXECUTION_QUEUE.md](./frontend/EXECUTION_QUEUE.md) - Task queue
+- [NEXT_STEPS.md](../backend/NEXT_STEPS.md) - Roadmap
+- [EXECUTION_QUEUE.md](../frontend/EXECUTION_QUEUE.md) - Task queue
 
 ---
 
 ## 🔧 Reference Guides
 
 ### Quick References
-- [backend/QUICK_REFERENCE.md](./backend/QUICK_REFERENCE.md) - Backend quick ref
-- [frontend/QUICK_REFERENCE.md](./frontend/QUICK_REFERENCE.md) - Frontend quick ref
+- [backend/QUICK_REFERENCE.md](../backend/QUICK_REFERENCE.md) - Backend quick ref
+- [frontend/QUICK_REFERENCE.md](../frontend/QUICK_REFERENCE.md) - Frontend quick ref
 - [QUICK_START_AUTODEPLOY.md](./QUICK_START_AUTODEPLOY.md) - Auto-deploy setup
 
 ### Complete Guides
@@ -231,7 +232,7 @@ psql <connection-string> -c "SELECT 1;"
 
 ### Tutorials
 - [00_COMECE_AQUI.md](./00_COMECE_AQUI.md) - Start here
-- [START.md](./START.md) - Getting started
+- [START.md](./overview/START.md) - Getting started
 - [SETUP_CLEAN.md](./SETUP_CLEAN.md) - Clean setup
 
 ### External Resources
@@ -293,11 +294,11 @@ teacherflow/
 
 For a quick understanding of the project, read these first:
 
-1. **[README.md](./README.md)** - Project overview
-2. **[ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)** - Complete architecture
-3. **[QUICKSTART.md](./QUICKSTART.md)** - Get started quickly
-4. **[METABASE_SETUP.md](./METABASE_SETUP.md)** - Business intelligence
-5. **[PRE_DEPLOY_CHECKLIST.md](./PRE_DEPLOY_CHECKLIST.md)** - Deploy safely
+1. **[README.md](./overview/README.md)** - Project overview
+2. **[ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)** - Complete architecture
+3. **[QUICKSTART.md](./overview/QUICKSTART.md)** - Get started quickly
+4. **[METABASE_SETUP.md](./deployment/METABASE_SETUP.md)** - Business intelligence
+5. **[PRE_DEPLOY_CHECKLIST.md](./deployment/PRE_DEPLOY_CHECKLIST.md)** - Deploy safely
 
 ---
 
@@ -316,8 +317,8 @@ Looking for something specific?
 
 ## 🤝 Contributing
 
-1. Read [DEVELOPMENT.md](./backend/DEVELOPMENT.md)
-2. Check [GIT_PUSH_GUIDE.md](./GIT_PUSH_GUIDE.md)
+1. Read [DEVELOPMENT.md](../backend/DEVELOPMENT.md)
+2. Check [GIT_PUSH_GUIDE.md](./deployment/GIT_PUSH_GUIDE.md)
 3. Follow code style in existing files
 4. Write tests for new features
 5. Update documentation
@@ -327,9 +328,9 @@ Looking for something specific?
 ## 📞 Support
 
 **Issues?** See:
-- [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
-- [DIAGNOSTICO_FINAL.md](./DIAGNOSTICO_FINAL.md)
-- [QA_COMPLETE_FINDINGS.md](./QA_COMPLETE_FINDINGS.md)
+- [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
+- [DIAGNOSTICO_FINAL.md](./status/DIAGNOSTICO_FINAL.md)
+- [QA_COMPLETE_FINDINGS.md](./qa/QA_COMPLETE_FINDINGS.md)
 
 **Questions?**
 - Check existing documentation first

@@ -433,7 +433,7 @@ def update_all_students():
 
 ## 📚 Related Documentation
 
-- [Architecture Overview](../ARCHITECTURE_STACK_INTEGRATION.md)
+- [Architecture Overview](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
 - [Database Models](./DATABASE_SCHEMA.md)
 - [Payment Processing](./PAYMENT_PROCESSING.md)
 - [Subscription System](./SUBSCRIPTION_SYSTEM.md)

@@ -416,8 +416,8 @@ Each environment has separate secrets:
 ## 📚 Additional Resources
 
 - **Environment Variables:** [docs/VERCEL_ENVIRONMENT_VARIABLES.md](./VERCEL_ENVIRONMENT_VARIABLES.md)
-- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](../ARCHITECTURE_STACK_INTEGRATION.md)
-- **CI/CD Workflows:** [.github/workflows/](./.github/workflows/)
+- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
+- **CI/CD Workflows:** [.github/workflows/](../.github/workflows/)
 - **Vercel Docs:** https://vercel.com/docs
 
 ---
@@ -447,4 +447,4 @@ git push origin main --tags
 
 ---
 
-**Questions?** Check [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](../ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
+**Questions?** Check [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)

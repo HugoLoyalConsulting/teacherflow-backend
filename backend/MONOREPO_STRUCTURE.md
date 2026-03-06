@@ -160,8 +160,8 @@ ENVIRONMENT=development
 
 - [Setup Local Dev](./SETUP_LOCAL_DEV.md) - Como rodar na sua máquina
 - [Deploy Guide](./DEPLOY_GUIDE.md) - Como fazer deploy
-- [API Documentation](./backend/README.md) - Docs da API
-- [Frontend Guidelines](./frontend/README.md) - Guia frontend
+- [API Documentation](./README.md) - Docs da API
+- [Frontend Guidelines](../frontend/README.md) - Guia frontend
 
 ---
 

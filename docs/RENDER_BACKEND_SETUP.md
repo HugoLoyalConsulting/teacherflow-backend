@@ -492,7 +492,7 @@ Interval: Every 10 minutes
 
 - [Environment Variables Guide](./VERCEL_ENVIRONMENT_VARIABLES.md)
 - [Deployment Workflow](./DEPLOYMENT_WORKFLOW.md)
-- [Architecture Overview](../ARCHITECTURE_STACK_INTEGRATION.md)
+- [Architecture Overview](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
 
 ---
 

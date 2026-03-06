@@ -266,7 +266,7 @@ After setting variables:
 - **Vercel Docs:** https://vercel.com/docs/concepts/projects/environment-variables
 - **Vite Docs:** https://vitejs.dev/guide/env-and-mode.html
 - **Security Guide:** [backend/AUTH_SECURITY.md](../backend/AUTH_SECURITY.md)
-- **Stack Integration:** [ARCHITECTURE_STACK_INTEGRATION.md](../ARCHITECTURE_STACK_INTEGRATION.md)
+- **Stack Integration:** [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
 
 ---
 

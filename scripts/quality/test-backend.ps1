@@ -200,7 +200,7 @@ Write-Host ""
 # Abrir checklist detalhado
 $openChecklist = Read-Host "Deseja abrir o checklist detalhado de setup? (S/N)"
 if ($openChecklist -eq "S" -or $openChecklist -eq "s") {
-    $checklistPath = Join-Path $PSScriptRoot "RENDER_SETUP_CHECKLIST.md"
+    $checklistPath = Join-Path $PSScriptRoot "..\\..\\docs\\deployment\\RENDER_SETUP_CHECKLIST.md"
     if (Test-Path $checklistPath) {
         code $checklistPath
     } else {

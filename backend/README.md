@@ -1,223 +1,75 @@
 # TeacherFlow Backend
 
-FastAPI backend for TeacherFlow SaaS platform. Production-ready with PostgreSQL, JWT authentication, Docker support, and cloud deployment ready.
+Backend FastAPI do TeacherFlow (monorepo), com foco em deploy no Render e banco PostgreSQL (Neon).
 
-## Features
+## Escopo
 
-- ✅ FastAPI 0.104+ with async/await
-- ✅ SQLAlchemy ORM with PostgreSQL
-- ✅ JWT authentication (access + refresh tokens)
-- ✅ Password hashing with bcrypt
-- ✅ CORS middleware configured
-- ✅ Docker & docker-compose included
-- ✅ Alembic migrations ready
-- ✅ Environment-based configuration
-- ✅ API documentation (Swagger/ReDoc)
+- API REST em `app/`
+- Migrations em `alembic/`
+- Configuracao por variaveis de ambiente
+- Integracao com autenticacao, assinatura e LGPD
 
-## Quick Start (Local Dev)
+## Estrutura Interna
 
-### 1. Setup Python Environment
-
-```bash
-# Clone/navigate to backend
-cd teacherflow-backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+```
+backend/
+   app/
+      routers/
+      services/
+      schemas/
+      core/
+      models.py
+   alembic/
+   requirements.txt
+   render.yaml (legado; referencia principal fica em ../render.yaml)
 ```
 
-### 2. Install Dependencies
+## Execucao Local
 
 ```bash
+cd backend
+python -m venv .venv
+.venv/Scripts/activate  # Windows
 pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 3. Configure Environment
+Documentacao local da API:
 
-```bash
-# Copy example to .env
-cp .env.example .env
+- `http://localhost:8000/api/v1/docs`
 
-# Edit .env with your configuration
-# For local dev, defaults should work
-```
-
-### 4. Start Local Database (Option A: Local PostgreSQL)
-
-```bash
-# If you have PostgreSQL installed locally:
-# Create database
-createdb teacherflow
-
-# Update DATABASE_URL in .env to match your setup
-DATABASE_URL=postgresql://username:password@localhost/teacherflow
-```
-
-### 5. Start Backend Server
-
-```bash
-# Navigate to project root
-cd teacherflow-backend
-
-# Run uvicorn directly
-python main.py
-
-# Or use uvicorn directly
-uvicorn app.main:app --reload
-```
-
-**Server will start on:** http://localhost:8000
-
-**API Docs:** http://localhost:8000/api/v1/docs
-
-## Docker Setup (Recommended for Production)
-
-### With Docker Compose (Full Stack)
-
-```bash
-# Navigate to backend directory
-cd teacherflow-backend
-
-# Copy env example
-cp .env.example .env
-
-# Start all services (PostgreSQL + Backend)
-docker-compose up --build
-
-# On first run, wait for database to be ready
-# Alembic migrations run automatically
-```
-
-**Access:**
-- API: http://localhost:8000
-- Swagger: http://localhost:8000/api/v1/docs
-- ReDoc: http://localhost:8000/api/v1/redoc
-- PostgreSQL: localhost:5432 (user: teacherflow, pass: teacherflow123)
-
-### Stop Services
-
-```bash
-docker-compose down
-
-# To remove volume data also:
-docker-compose down -v
-```
-
-## API Endpoints
-
-All endpoints require JWT token in Authorization header:
-```
-Authorization: Bearer <access_token>
-```
-
-### Authentication
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register` | Register new user |
-| POST | `/api/v1/auth/login` | Login user |
-| POST | `/api/v1/auth/refresh` | Refresh access token |
-| GET | `/api/v1/auth/me` | Get current user info |
-
-### Students
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/students` | List all students |
-| GET | `/api/v1/students/{id}` | Get student by ID |
-| POST | `/api/v1/students` | Create student |
-| PUT | `/api/v1/students/{id}` | Update student |
-| DELETE | `/api/v1/students/{id}` | Delete student |
-
-### Locations
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/locations` | List all locations |
-| GET | `/api/v1/locations/{id}` | Get location by ID |
-| POST | `/api/v1/locations` | Create location |
-| PUT | `/api/v1/locations/{id}` | Update location |
-| DELETE | `/api/v1/locations/{id}` | Delete location |
-
-### Groups
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/groups` | List all groups |
-| GET | `/api/v1/groups/{id}` | Get group by ID |
-| POST | `/api/v1/groups` | Create group |
-| PUT | `/api/v1/groups/{id}` | Update group |
-| DELETE | `/api/v1/groups/{id}` | Delete group |
-
-### Schedules
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/schedules` | List all schedules |
-| GET | `/api/v1/schedules/{id}` | Get schedule by ID |
-| POST | `/api/v1/schedules` | Create schedule |
-| PUT | `/api/v1/schedules/{id}` | Update schedule |
-| DELETE | `/api/v1/schedules/{id}` | Delete schedule |
-
-### Lessons
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/lessons` | List lessons (with date filters) |
-| GET | `/api/v1/lessons/{id}` | Get lesson by ID |
-| POST | `/api/v1/lessons` | Create lesson |
-| PUT | `/api/v1/lessons/{id}` | Update lesson |
-| PATCH | `/api/v1/lessons/{id}/attendance` | Update attendance |
-| DELETE | `/api/v1/lessons/{id}` | Delete lesson |
-
-### Payments
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/payments` | List payments (with filters) |
-| GET | `/api/v1/payments/{id}` | Get payment by ID |
-| POST | `/api/v1/payments` | Create payment |
-| PUT | `/api/v1/payments/{id}` | Update payment |
-| DELETE | `/api/v1/payments/{id}` | Delete payment |
-
-## Configuration
-
-Environment variables in `.env`:
+## Variaveis de Ambiente Minimas
 
 ```env
-# Database
-DATABASE_URL=postgresql://user:pass@localhost/teacherflow
-
-# JWT
-SECRET_KEY=your-secret-key-min-32-chars
+DATABASE_URL=postgresql://...
+SECRET_KEY=...
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=7
-
-# API
-DEBUG=true
 API_V1_STR=/api/v1
-
-# CORS Origins
-CORS_ORIGINS=["http://localhost:5176", "http://localhost:3000"]
+ENVIRONMENT=production
 ```
 
-## Database Models
+## Deploy (Render)
 
-### User
-- Teacher/admin accounts
-- Email-based login
-- Password hashing with bcrypt
+Configuracao declarativa em `../render.yaml`:
 
-### Student
-- Student records
-- Profile types: free, trial, premium
+- `rootDirectory: ./backend`
+- `buildCommand: pip install --upgrade pip && pip install -r requirements.txt`
+- `startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+Depois do deploy, executar migrations:
+
+```bash
+cd /opt/render/project/src/backend
+alembic upgrade head
+```
+
+## Links Relacionados
+
+- `../docs/deployment/GUIA_DEPLOY_FINAL.md`
+- `../docs/deployment/RENDER_SETUP_CHECKLIST.md`
+- `../docs/operations/DISASTER_RECOVERY_RUNBOOK.md`
 - Payment status tracking
 
 ### Location

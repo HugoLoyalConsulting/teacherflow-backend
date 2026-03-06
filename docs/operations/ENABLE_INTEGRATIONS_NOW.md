@@ -283,10 +283,10 @@ ORDER BY date
 ## 📚 Detailed Guides
 
 For more information, see:
-- **Complete Setup:** [docs/STACK_INTEGRATION_SETUP.md](./docs/STACK_INTEGRATION_SETUP.md)
-- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)
-- **Metabase:** [METABASE_SETUP.md](./METABASE_SETUP.md)
-- **All Docs:** [docs/DOCUMENTATION_INDEX.md](./docs/DOCUMENTATION_INDEX.md)
+- **Complete Setup:** [docs/STACK_INTEGRATION_SETUP.md](../STACK_INTEGRATION_SETUP.md)
+- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](../architecture/ARCHITECTURE_STACK_INTEGRATION.md)
+- **Metabase:** [METABASE_SETUP.md](./deployment/METABASE_SETUP.md)
+- **All Docs:** [docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)
 
 ---
 
@@ -306,4 +306,4 @@ Your observability stack is now fully operational:
 
 ---
 
-**Need help?** Check [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](./ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)
+**Need help?** Check [ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting](../architecture/ARCHITECTURE_STACK_INTEGRATION.md#troubleshooting)

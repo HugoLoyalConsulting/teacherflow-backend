@@ -24,7 +24,7 @@ This report documents the comprehensive architecture review and stack integratio
 - ✅ Security measures (password hashing, rate limiting prep)
 
 **Created:**
-- [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md) - Complete architecture documentation with diagrams
+- [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md) - Complete architecture documentation with diagrams
 
 ---
 
@@ -55,7 +55,7 @@ This report documents the comprehensive architecture review and stack integratio
 - Updated: `render.yaml` with PostHog variables
 
 **Documentation:**
-- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
+- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#posthog-product-analytics)
 - Event tracking guide
 - KPI recommendations
 
@@ -91,7 +91,7 @@ This report documents the comprehensive architecture review and stack integratio
 - Updated: `render.yaml` with Sentry variables
 
 **Documentation:**
-- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
+- Setup instructions in [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md#sentry-error-monitoring)
 - Error handling best practices
 - Alert configuration guide
 
@@ -100,7 +100,7 @@ This report documents the comprehensive architecture review and stack integratio
 ### 4. Metabase Setup Documentation ✅
 
 **Created:**
-- [METABASE_SETUP.md](./METABASE_SETUP.md) - 400+ line comprehensive guide
+- [METABASE_SETUP.md](./deployment/METABASE_SETUP.md) - 400+ line comprehensive guide
 
 **Contents:**
 - Installation options (Cloud vs Self-hosted vs Docker)
@@ -120,7 +120,7 @@ This report documents the comprehensive architecture review and stack integratio
 ### 5. Multi-Tenant Architecture Plan ✅
 
 **Created:**
-- [docs/MULTI_TENANT_MIGRATION.md](./docs/MULTI_TENANT_MIGRATION.md)
+- [docs/MULTI_TENANT_MIGRATION.md](../MULTI_TENANT_MIGRATION.md)
 
 **Contents:**
 - Complete migration plan from `teacher_id` to `organization_id`
@@ -143,9 +143,9 @@ This report documents the comprehensive architecture review and stack integratio
 ### 6. Comprehensive Documentation Structure ✅
 
 **Created:**
-- [docs/DOCUMENTATION_INDEX.md](./docs/DOCUMENTATION_INDEX.md) - Master documentation index
-- [docs/STACK_INTEGRATION_SETUP.md](./docs/STACK_INTEGRATION_SETUP.md) - 45-minute setup guide
-- [docs/MULTI_TENANT_MIGRATION.md](./docs/MULTI_TENANT_MIGRATION.md) - Migration guide
+- [docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md) - Master documentation index
+- [docs/STACK_INTEGRATION_SETUP.md](../STACK_INTEGRATION_SETUP.md) - 45-minute setup guide
+- [docs/MULTI_TENANT_MIGRATION.md](../MULTI_TENANT_MIGRATION.md) - Migration guide
 
 **Organized:**
 - All documentation properly indexed
@@ -300,7 +300,7 @@ VITE_SENTRY_DSN=...
 ## 📖 Documentation Created
 
 ### Core Documents
-1. **[ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)** (800+ lines)
+1. **[ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)** (800+ lines)
    - Complete architecture overview
    - Data flow diagrams
    - Integration status
@@ -308,7 +308,7 @@ VITE_SENTRY_DSN=...
    - Observability setup
    - Troubleshooting guide
 
-2. **[METABASE_SETUP.md](./METABASE_SETUP.md)** (400+ lines)
+2. **[METABASE_SETUP.md](./deployment/METABASE_SETUP.md)** (400+ lines)
    - Installation options
    - Database connection
    - Dashboard templates
@@ -316,20 +316,20 @@ VITE_SENTRY_DSN=...
    - Security best practices
    - KPI recommendations
 
-3. **[docs/DOCUMENTATION_INDEX.md](./docs/DOCUMENTATION_INDEX.md)** (500+ lines)
+3. **[docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)** (500+ lines)
    - Master documentation index
    - Navigation guide
    - All docs organized by category
    - Quick reference section
 
-4. **[docs/MULTI_TENANT_MIGRATION.md](./docs/MULTI_TENANT_MIGRATION.md)** (600+ lines)
+4. **[docs/MULTI_TENANT_MIGRATION.md](../MULTI_TENANT_MIGRATION.md)** (600+ lines)
    - Migration plan
    - Organization model design
    - Soft delete implementation
    - Alembic migration script
    - Testing checklist
 
-5. **[docs/STACK_INTEGRATION_SETUP.md](./docs/STACK_INTEGRATION_SETUP.md)** (400+ lines)
+5. **[docs/STACK_INTEGRATION_SETUP.md](../STACK_INTEGRATION_SETUP.md)** (400+ lines)
    - Step-by-step setup guide
    - PostHog configuration
    - Sentry configuration
@@ -462,9 +462,9 @@ Current architecture supports:
 ## 🆘 Support & Resources
 
 ### Documentation
-- **Quick Start:** [QUICKSTART.md](./QUICKSTART.md)
-- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)
-- **All Docs:** [docs/DOCUMENTATION_INDEX.md](./docs/DOCUMENTATION_INDEX.md)
+- **Quick Start:** [QUICKSTART.md](./overview/QUICKSTART.md)
+- **Architecture:** [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
+- **All Docs:** [docs/DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md)
 
 ### External Resources
 - **FastAPI:** https://fastapi.tiangolo.com/

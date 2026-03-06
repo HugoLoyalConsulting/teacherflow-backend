@@ -360,10 +360,10 @@ curl -X POST http://localhost:8000/api/students \
 
 ## 📖 RELATED DOCUMENTATION
 
-- [ONBOARDING_SETUP.md](./ONBOARDING_SETUP.md) - Onboarding wizard
-- [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) - CI/CD secrets
-- [RENDER_API_DEPLOYMENT.md](./RENDER_API_DEPLOYMENT.md) - Deployment guide
-- [.env.example](./backend/.env.example) - Environment variables template
+- [ONBOARDING_SETUP.md](../operations/ONBOARDING_SETUP.md) - Onboarding wizard
+- [GITHUB_SECRETS_SETUP.md](../deployment/GITHUB_SECRETS_SETUP.md) - CI/CD secrets
+- [RENDER_BACKEND_SETUP.md](../RENDER_BACKEND_SETUP.md) - Deployment guide
+- [.env.example](../../backend/.env.example) - Environment variables template
 
 **To be created:**
 - `SECURITY_ARCHITECTURE.md` - Complete security design

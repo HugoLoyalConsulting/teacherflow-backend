@@ -7,9 +7,9 @@
 ## 🚀 Começar (Primeira Vez)
 
 Se você é novo e quer começar:
-1. **[README.md](./README.md)** - Visão geral (2 min)
-2. **[SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md)** - Passo a passo (10 min)
-3. **[GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md)** - Configurar secrets (5 min)
+1. **[README.md](./overview/README.md)** - Visão geral (2 min)
+2. **[SETUP_INSTRUCTIONS.md](./deployment/SETUP_INSTRUCTIONS.md)** - Passo a passo (10 min)
+3. **[GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md)** - Configurar secrets (5 min)
 
 Depois: `git push` e pronto!
 
@@ -120,19 +120,19 @@ Espete 5 minutos e veja sua mudança em:
 
 | Problema | Solução |
 |----------|---------|
-| "Não sei por onde começar" | → Leia [START.md](./START.md) |
-| "Não consigo adicionar secrets" | → Leia [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) |
+| "Não sei por onde começar" | → Leia [START.md](./overview/START.md) |
+| "Não consigo adicionar secrets" | → Leia [GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md) |
 | "GitHub Actions falha" | → Veja logs em Actions → procure erro em vermelho |
-| "Meu PC fica aberto?" | → NÃO. Leia [QUICKSTART.md](./QUICKSTART.md) |
+| "Meu PC fica aberto?" | → NÃO. Leia [QUICKSTART.md](./overview/QUICKSTART.md) |
 | "Como faço mudança?" | → Edite → git push → pronto! |
 
 ---
 
 ## 🎯 Checklist Rápido
 
-- [ ] Leu [README.md](./README.md)
-- [ ] Seguiu [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md)
-- [ ] Adicionou 4 secrets ([GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md))
+- [ ] Leu [README.md](./overview/README.md)
+- [ ] Seguiu [SETUP_INSTRUCTIONS.md](./deployment/SETUP_INSTRUCTIONS.md)
+- [ ] Adicionou 4 secrets ([GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md))
 - [ ] Fez primeiro `git push`
 - [ ] Aguardou 5 minutos
 - [ ] Acessou https://teacherflow.vercel.app
@@ -163,6 +163,6 @@ Total:                      21 minutos até estar em produção
 
 ---
 
-**Próxima ação:** Leia [START.md](./START.md) (3 minutos)
+**Próxima ação:** Leia [START.md](./overview/START.md) (3 minutos)
 
 Depois é só `git push` e deploy automático!

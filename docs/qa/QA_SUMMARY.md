@@ -171,19 +171,19 @@ GitHub Actions vai automaticamente:
 
 ### Para o Usuário:
 
-1. **[QA_COMPLETE_FINDINGS.md](./QA_COMPLETE_FINDINGS.md)**
+1. **[QA_COMPLETE_FINDINGS.md](./qa/QA_COMPLETE_FINDINGS.md)**
    - Relatório detalhado de todos os issues
    - Testes executados e resultados
    - Checklist pós-fixes
 
-2. **[QA_FIXES_GUIDE.md](./QA_FIXES_GUIDE.md)**
+2. **[QA_FIXES_GUIDE.md](./qa/QA_FIXES_GUIDE.md)**
    - Guia passo-a-passo para aplicar fixes
    - Troubleshooting comum
    - Validação final
 
 ### Para Testes Futuros:
 
-3. **[qa_manual_test.py](./backend/qa_manual_test.py)**
+3. **[qa_manual_test.py](../../backend/qa_manual_test.py)**
    - Script Python completo de testes
    - Testa: Auth, Students, Groups, Payments, Dashboard
    - Relatório automático de pass/fail

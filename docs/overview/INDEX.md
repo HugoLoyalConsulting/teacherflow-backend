@@ -7,7 +7,7 @@
 ## 🎯 O que você quer fazer?
 
 ### 1️⃣ Quero colocar ONLINE AGORA (30 min)
-👉 Leia: **[DEPLOY_NOW.md](./DEPLOY_NOW.md)**
+👉 Leia: **[DEPLOY_NOW.md](./deployment/DEPLOY_NOW.md)**
 
 Este arquivo tem passo-a-passo para:
 - Reset database
@@ -30,7 +30,7 @@ Resumo executivo com:
 ---
 
 ### 3️⃣ Quero adicionar Google Login
-👉 Leia: **[GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md)**
+👉 Leia: **[GOOGLE_OAUTH_SETUP.md](./deployment/GOOGLE_OAUTH_SETUP.md)**
 
 Instruções para:
 - Criar Google OAuth App (5 min)
@@ -58,7 +58,7 @@ python read_feedback.py
 ---
 
 ### 5️⃣ Tive um erro no deploy
-👉 Leia: **[QA_FIXES_GUIDE.md](./QA_FIXES_GUIDE.md)**
+👉 Leia: **[QA_FIXES_GUIDE.md](./qa/QA_FIXES_GUIDE.md)**
 
 Troubleshooting para:
 - Database errors
@@ -69,7 +69,7 @@ Troubleshooting para:
 ---
 
 ### 6️⃣ Preciso fazer git push
-👉 Leia: **[GIT_PUSH_GUIDE.md](./GIT_PUSH_GUIDE.md)**
+👉 Leia: **[GIT_PUSH_GUIDE.md](./deployment/GIT_PUSH_GUIDE.md)**
 
 Instruções simples para:
 - Configurar remote no GitHub
@@ -203,7 +203,7 @@ Você primeiro prova conceito! 💡
 ## ❓ Próxima Ação?
 
 ### Se quer ir online agora:
-👉 Abre [`DEPLOY_NOW.md`](./DEPLOY_NOW.md) e segue os passos
+👉 Abre [`DEPLOY_NOW.md`](./deployment/DEPLOY_NOW.md) e segue os passos
 
 ### Se tem dúvida sobre algo:
 👉 Procure o arquivo na lista acima

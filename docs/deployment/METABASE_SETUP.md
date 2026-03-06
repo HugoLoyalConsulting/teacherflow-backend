@@ -470,5 +470,5 @@ For Metabase-specific questions:
 - Support Email: support@metabase.com
 
 For TeacherFlow integration:
-- See [ARCHITECTURE_STACK_INTEGRATION.md](./ARCHITECTURE_STACK_INTEGRATION.md)
+- See [ARCHITECTURE_STACK_INTEGRATION.md](./architecture/ARCHITECTURE_STACK_INTEGRATION.md)
 - Check [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)

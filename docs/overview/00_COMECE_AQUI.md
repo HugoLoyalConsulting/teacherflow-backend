@@ -12,13 +12,13 @@ Você agora tem:
 ## 🎯 O que fazer AGORA
 
 ### 1️⃣ Leia isto (2 min)
-[SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md) - Responde sua preocupação com portas
+[SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md) - Responde sua preocupação com portas
 
 ### 2️⃣ Leia isto (5 min)
 [SETUP_CLEAN.md](./SETUP_CLEAN.md) - Instruções passo-a-passo
 
 ### 3️⃣ Leia isto (5 min)
-[GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) - Como adicionar 4 secrets
+[GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md) - Como adicionar 4 secrets
 
 ### 4️⃣ Execute (2 min)
 ```bash
@@ -49,17 +49,17 @@ https://teacherflow.vercel.app
 
 | Situação | Arquivo |
 |----------|---------|
-| "Meu PC fica aberto?" | [SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md) |
+| "Meu PC fica aberto?" | [SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md) |
 | "Como fazer tudo?" | [SETUP_CLEAN.md](./SETUP_CLEAN.md) |
-| "Como adicionar secrets?" | [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md) |
-| "3 passos rápido?" | [START.md](./START.md) |
-| "Visão geral?" | [README.md](./README.md) |
+| "Como adicionar secrets?" | [GITHUB_SECRETS_SETUP.md](./deployment/GITHUB_SECRETS_SETUP.md) |
+| "3 passos rápido?" | [START.md](./overview/START.md) |
+| "Visão geral?" | [README.md](./overview/README.md) |
 
 ---
 
 ## 📋 Checklist Rápido
 
-- [ ] Ler: [SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md)
+- [ ] Ler: [SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md)
 - [ ] Ler: [SETUP_CLEAN.md](./SETUP_CLEAN.md)
 - [ ] Adicionar 4 secrets GitHub
 - [ ] `git push`
@@ -120,7 +120,7 @@ Total:        22 minutos até estar em produção
 ## ❓ Dúvidas Frequentes
 
 **P: Meu PC fica aberto?**  
-R: Não. Zero portas abertas. [Ver: SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md)
+R: Não. Zero portas abertas. [Ver: SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md)
 
 **P: Preciso rodar `python main.py`?**  
 R: Não. Nunca. GitHub Actions faz tudo.
@@ -152,4 +152,4 @@ E seu app funciona. Automático. Online. Seguro. 🚀
 
 **Status Final:** 🟢 **PRONTO PARA USAR**
 
-Próxima ação: Leia [SECURITY_ZERO_PORTS.md](./SECURITY_ZERO_PORTS.md)
+Próxima ação: Leia [SECURITY_ZERO_PORTS.md](./security/SECURITY_ZERO_PORTS.md)

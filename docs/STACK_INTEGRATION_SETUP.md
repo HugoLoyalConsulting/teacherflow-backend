@@ -178,7 +178,7 @@ Check Sentry dashboard → **Issues** for the test messages.
 
 ## 📈 3. Metabase Setup (Business Intelligence)
 
-See detailed guide: [METABASE_SETUP.md](./METABASE_SETUP.md)
+See detailed guide: [METABASE_SETUP.md](./deployment/METABASE_SETUP.md)
 
 **Quick Setup:**
 
@@ -403,7 +403,7 @@ Create:
 - Revenue Dashboard
 - Teacher Activity
 
-See [METABASE_SETUP.md](./METABASE_SETUP.md) for SQL queries.
+See [METABASE_SETUP.md](./deployment/METABASE_SETUP.md) for SQL queries.
 
 ---
 
