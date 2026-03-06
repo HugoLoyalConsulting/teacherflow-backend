@@ -10,13 +10,14 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "TeacherFlow"
     DEBUG: bool = False
+    ENVIRONMENT: str = "development"
     
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost/teacherflow"
     SQLALCHEMY_ECHO: bool = False
     
-    # JWT
-    SECRET_KEY: str = "your-secret-key-change-in-production"
+    # JWT (NO DEFAULT - REQUIRED IN ENV)
+    SECRET_KEY: str  # Must be set in environment, no default for security
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
@@ -28,6 +29,14 @@ class Settings(BaseSettings):
         "https://teacherflow-app.vercel.app",
         "https://teacherflow.vercel.app",
     ]
+    
+    # Monitoring & Telemetry
+    SENTRY_ENABLED: bool = False
+    SENTRY_DSN: str = ""
+    
+    POSTHOG_ENABLED: bool = False
+    POSTHOG_API_KEY: str = ""
+    POSTHOG_HOST: str = "https://app.posthog.com"
     
     class Config:
         env_file = ".env"

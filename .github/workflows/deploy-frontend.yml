@@ -1,4 +1,4 @@
-name: Deploy Frontend to Vercel
+name: Deploy to Production
 
 on:
   push:
@@ -7,10 +7,16 @@ on:
       - 'frontend/**'
       - '.github/workflows/deploy-frontend.yml'
   workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: 'Skip tests'
+        required: false
+        default: 'false'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
     
     steps:
       - name: Checkout code
@@ -27,14 +33,29 @@ jobs:
         working-directory: frontend
         run: npm ci
       
-      - name: Build
+      - name: Run tests
+        if: github.event.inputs.skip_tests != 'true'
+        working-directory: frontend
+        run: npm run test
+      
+      - name: Build (Production)
         working-directory: frontend
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_ENVIRONMENT: production
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+          VITE_POSTHOG_ENABLED: ${{ secrets.VITE_POSTHOG_ENABLED }}
+          VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ secrets.VITE_POSTHOG_HOST }}
+          VITE_SENTRY_ENABLED: ${{ secrets.VITE_SENTRY_ENABLED }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_SENTRY_ENVIRONMENT: production
+          VITE_DEMO_ENABLED: true
+          VITE_EMAIL_VERIFICATION_ENABLED: true
+          VITE_SUBSCRIPTIONS_ENABLED: false
       
-      - name: Deploy to Vercel
+      - name: Deploy to Vercel (Production)
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -42,3 +63,9 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: frontend
           vercel-args: '--prod'
+      
+      - name: Deployment Complete
+        run: |
+          echo "✅ Production deployment complete"
+          echo "🌐 URL: https://teacherflow-app.vercel.app"
+          echo "📊 Monitor: PostHog & Sentry dashboards"

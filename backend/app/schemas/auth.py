@@ -1,7 +1,8 @@
 """Pydantic schemas for authentication"""
 from datetime import datetime
 from typing import Literal, Optional
-from pydantic import BaseModel, EmailStr
+import re
+from pydantic import BaseModel, EmailStr, field_validator, ValidationInfo
 
 
 class LoginRequest(BaseModel):
@@ -15,6 +16,35 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     full_name: str
     password: str
+    
+    @field_validator('password')
+    @classmethod
+    def validate_password_strength(cls, v: str, info: ValidationInfo) -> str:
+        """Enforce strong password policy (NIST 800-63B)
+        
+        Requirements:
+        - Minimum 12 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one number
+        - At least one special character
+        """
+        if len(v) < 12:
+            raise ValueError('Password must be at least 12 characters long')
+        
+        if not re.search(r'[A-Z]', v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        
+        if not re.search(r'[a-z]', v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        
+        if not re.search(r'\d', v):
+            raise ValueError('Password must contain at least one number')
+        
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
+            raise ValueError('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>)')
+        
+        return v
 
 
 class VerifyEmailRequest(BaseModel):
@@ -37,6 +67,27 @@ class ChangePasswordRequest(BaseModel):
     """Change password for authenticated user"""
     old_password: str
     new_password: str
+    
+    @field_validator('new_password')
+    @classmethod
+    def validate_password_strength(cls, v: str, info: ValidationInfo) -> str:
+        """Enforce strong password policy"""
+        if len(v) < 12:
+            raise ValueError('Password must be at least 12 characters long')
+        
+        if not re.search(r'[A-Z]', v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        
+        if not re.search(r'[a-z]', v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        
+        if not re.search(r'\d', v):
+            raise ValueError('Password must contain at least one number')
+        
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
+            raise ValueError('Password must contain at least one special character')
+        
+        return v
 
 
 class GoogleAuthRequest(BaseModel):

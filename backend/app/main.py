@@ -3,9 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.routers import auth, students, locations, groups, schedules, lessons, payments, dashboard, feedback
+from app.routers import auth, students, locations, groups, schedules, lessons, payments, dashboard, feedback, verification, onboarding, admin, tour, lgpd, subscriptions
 from app.core.autoseed import auto_seed_if_empty
 import logging
+
+# Initialize monitoring and telemetry
+from app.core import monitoring, telemetry
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +44,12 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix=settings.API_V1_STR)
+app.include_router(verification.router, prefix=settings.API_V1_STR)
+app.include_router(onboarding.router, prefix=settings.API_V1_STR)
+app.include_router(admin.router, prefix=settings.API_V1_STR)
+app.include_router(tour.router, prefix=settings.API_V1_STR)
+app.include_router(lgpd.router, prefix=settings.API_V1_STR)
+app.include_router(subscriptions.router, prefix=settings.API_V1_STR)
 app.include_router(students.router, prefix=settings.API_V1_STR)
 app.include_router(locations.router, prefix=settings.API_V1_STR)
 app.include_router(groups.router, prefix=settings.API_V1_STR)
@@ -49,6 +58,23 @@ app.include_router(lessons.router, prefix=settings.API_V1_STR)
 app.include_router(payments.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard.router, prefix=settings.API_V1_STR)
 app.include_router(feedback.router, prefix=settings.API_V1_STR)
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Application startup event"""
+    logger.info(f"Starting {settings.PROJECT_NAME} (env: {settings.ENVIRONMENT})")
+    if settings.SENTRY_ENABLED:
+        logger.info("Sentry error monitoring: ENABLED")
+    if settings.POSTHOG_ENABLED:
+        logger.info("PostHog telemetry: ENABLED")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Application shutdown event"""
+    logger.info("Shutting down application...")
+    telemetry.shutdown_posthog()
 
 
 @app.get("/")

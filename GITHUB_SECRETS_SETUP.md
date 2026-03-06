@@ -56,46 +56,37 @@ Este é o ID do seu projeto Frontend no Vercel.
 6. Volte ao GitHub
 7. **"New repository secret"**
 8. Nome: `VERCEL_PROJECT_ID`
-9. Value: `Cole aqui`
+9. Value: `prj_yeMTwuvFngWD86HMUN4nAjVjrVr7`
 10. "Add secret"
 
 ---
 
-## Passo 5: Adicione `RENDER_DEPLOY_HOOK`
+## Passo 5: Adicione `RENDER_API_KEY` e `RENDER_SERVICE_ID`
 
-Este é a webhook URL do seu serviço Backend no Render.
+**💰 IMPORTANTE:** Estamos usando a **API do Render** (grátis) ao invés de webhooks (pagos).
 
-### Se você ainda não tem serviço no Render:
+### Obter RENDER_API_KEY:
 
-1. Vá para https://dashboard.render.com
-2. Clique em "New +" → "Web Service"
-3. Conecte seu GitHub
-4. Selecione o repositório `teacherflow`
-5. Configure:
-   - Name: `teacherflow-api`
-   - Root Directory: `backend`
-   - Environment: `Python 3.11`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `python main.py`
-6. Defina Environment Variables:
-   - `ENVIRONMENT`: `production`
-   - `DATABASE_URL`: `seu URL PostgreSQL` (pode deixar vazio por enquanto)
-   - `SECRET_KEY`: `uma chave aleatória longa`
-7. Clique em "Create Web Service"
-8. Aguarde deploy completar
-
-### Após serviço criado:
-
-1. No painel do serviço Render, clique em **Settings**
-2. Procure por "Deploy Hook"
-3. Clique em "Create Deploy Hook"
-4. Nome: `github`
-5. Copie a URL gerada
+1. Vá para https://dashboard.render.com/account/settings
+2. Role até a seção **"API Keys"**
+3. Clique em **"Create API Key"**
+4. Nome: `github-actions`
+5. Copie a API Key (começa com `rnd_...`)
 6. Volte ao GitHub
 7. **"New repository secret"**
-8. Nome: `RENDER_DEPLOY_HOOK`
-9. Value: `Cole a URL da webhook aqui`
+8. Nome: `RENDER_API_KEY`
+9. Value: `rnd_xxxxxxxxxxxxx` (cole sua API key)
 10. "Add secret"
+
+### Adicionar RENDER_SERVICE_ID:
+
+Este já sabemos: `srv-d6h09fhaae7s73bl4v6g`
+
+1. Volte ao GitHub Secrets
+2. **"New repository secret"**
+3. Nome: `RENDER_SERVICE_ID`
+4. Value: `srv-d6h09fhaae7s73bl4v6g`
+5. "Add secret"
 
 ---
 
@@ -106,12 +97,13 @@ Vá para:
 https://github.com/HugoLoyalConsulting/teacherflow-backend/settings/secrets/actions
 ```
 
-Você deve ver:
+Você deve ver **5 secrets**:
 ```
 ✓ VERCEL_TOKEN
 ✓ VERCEL_ORG_ID
 ✓ VERCEL_PROJECT_ID
-✓ RENDER_DEPLOY_HOOK
+✓ RENDER_API_KEY           ← NOVO (Render API Key)
+✓ RENDER_SERVICE_ID         ← NOVO (srv-d6h09fhaae7s73bl4v6g)
 ```
 
 ---
@@ -127,13 +119,19 @@ git push -u origin main
 ```
 
 GitHub Actions vai:
-1. Ler os 4 secrets
+1. Ler os 5 secrets
 2. Testar frontend
 3. Deploy em Vercel (usando VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
-4. Testar backend  
-5. Deploy em Render (usando RENDER_DEPLOY_HOOK)
+4. Testar backend
+5. Rodar security audit (pip-audit)
+6. Deploy em Render via API (usando RENDER_API_KEY, RENDER_SERVICE_ID)
 
 Tudo automático! ✅
+
+**🆓 Por quê API ao invés de webhook?**
+- Webhooks do Render são pagos ($7/mês)
+- API é gratuita e funciona igualmente bem
+- Deploy em ~30 segundos (webhook seria instantâneo, mas API é rápido o suficiente)
 
 ---
 
@@ -144,11 +142,12 @@ Tudo automático! ✅
 3. Procure pelo erro (em vermelho)
 4. Comum: Secrets com nome errado ou valor vazio
 
-Solução: Verifica se os 4 secrets estão exatamente com esses nomes:
+Solução: Verifica se os 5 secrets estão exatamente com esses nomes:
 - `VERCEL_TOKEN` ← EXATO
 - `VERCEL_ORG_ID` ← EXATO
 - `VERCEL_PROJECT_ID` ← EXATO
-- `RENDER_DEPLOY_HOOK` ← EXATO
+- `RENDER_API_KEY` ← EXATO (novo!)
+- `RENDER_SERVICE_ID` ← EXATO (novo!)
 
 Os nomes têm que ser EXATAMENTE assim (maiúsculas, sem espaço).
 

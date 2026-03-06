@@ -143,4 +143,5 @@ class ApiClient {
 
 // Singleton instance
 export const apiClient = new ApiClient()
+export const api = apiClient // Alias for convenience
 export type { ApiResponse }

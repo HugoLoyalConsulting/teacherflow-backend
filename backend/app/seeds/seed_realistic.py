@@ -179,8 +179,20 @@ def seed_realistic_data(db: Session = None):
         
         db.flush()
         
-        # 7. Criar pagamentos com maioria em dia, alguns vencidos
-        print("💰 Criando pagamentos...")
+        # 7. Criar pagamentos com distribuição realista
+        print("💰 Criando pagamentos com distribuição realista...")
+        print("   📊 Distribuição planejada:")
+        print("      • 70% pagos (14 alunos)")
+        print("      • 20% pendentes (4 alunos)")
+        print("      • 8% atrasados < 30 dias (1-2 alunos)")
+        print("      • 2% pausados > 60 dias (1 aluno)")
+        
+        # Definir status para cada aluno conforme distribuição
+        # Total: 20 alunos
+        # 70% paid = 14 students (indices 0-13)
+        # 20% pending = 4 students (indices 14-17)
+        # 8% overdue < 30 days = 1-2 students (indices 18)
+        # 2% paused > 60 days = 1 student (index 19)
         
         for i, (student_obj, group) in enumerate(students):
             # Preço da turma
@@ -189,32 +201,76 @@ def seed_realistic_data(db: Session = None):
             # Assumir 4 aulas por mês (1 por semana)
             monthly_amount = price_per_hour * 4
             
-            # Criar 4 meses de pagamentos
-            # Maioria paga, alguns com atraso
-            is_inadimplent = i < 3  # Primeiros 3 alunos ficarão inadimplentes
+            # Definir status do aluno baseado no índice
+            if i < 14:
+                # 70% - Alunos pagos (14 students)
+                student_category = "paid"
+            elif i < 18:
+                # 20% - Alunos com pagamentos pendentes (4 students)
+                student_category = "pending"
+            elif i < 19:
+                # 8% - Aluno atrasado < 30 dias (1-2 students)
+                student_category = "overdue"
+            else:
+                # 2% - Aluno pausado > 60 dias (1 student)
+                student_category = "paused"
             
+            # Criar 4 meses de pagamentos
             for month in range(4, 0, -1):  # 4 meses atrás até agora
                 due_date = date.today() - relativedelta(months=month)
                 
-                if is_inadimplent and month == 4:
-                    # Aluno inadimplente - não pagou 2+ meses atrás
-                    status = "OVERDUE"
-                    payment_date = None
-                elif month <= 2:
-                    # Recentes - pagou
+                if student_category == "paid":
+                    # Alunos pagos - todos os meses pagos
                     status = "PAID"
                     payment_date = due_date + timedelta(days=random.randint(1, 5))
-                elif month == 3:
-                    # 1 mês atrás - alguns não pagaram ainda
-                    if random.random() < 0.7:  # 70% pagou
+                    payment_method = random.choice(["pix", "credit_card", "bank_transfer"])
+                    
+                elif student_category == "pending":
+                    # Alunos com pagamentos pendentes
+                    if month >= 2:  # Meses antigos pagos
                         status = "PAID"
                         payment_date = due_date + timedelta(days=random.randint(1, 5))
-                    else:
+                        payment_method = random.choice(["pix", "credit_card"])
+                    else:  # Mês atual pendente
+                        status = "PENDING"
+                        payment_date = None
+                        payment_method = None
+                        
+                elif student_category == "overdue":
+                    # Aluno atrasado < 30 dias
+                    if month >= 3:  # Meses muito antigos pagos
+                        status = "PAID"
+                        payment_date = due_date + timedelta(days=random.randint(1, 5))
+                        payment_method = "pix"
+                    elif month == 2:  # Mês passado - atrasado
                         status = "OVERDUE"
                         payment_date = None
-                else:
-                    status = "PENDING"
-                    payment_date = None
+                        payment_method = None
+                        # Ajustar due_date para ter ~20 dias de atraso
+                        due_date = date.today() - timedelta(days=20)
+                    else:  # Mês atual - pendente
+                        status = "PENDING"
+                        payment_date = None
+                        payment_method = None
+                        
+                else:  # paused
+                    # Aluno pausado > 60 dias sem pagar
+                    if month == 4:  # 4 meses atrás - último pagamento
+                        status = "PAID"
+                        payment_date = due_date + timedelta(days=random.randint(1, 3))
+                        payment_method = "pix"
+                    else:
+                        # Todos os outros meses sem pagar (3 meses = ~90 dias)
+                        status = "OVERDUE"
+                        payment_date = None
+                        payment_method = None
+                        # Ajustar due_date para refletir atraso real
+                        if month == 3:
+                            due_date = date.today() - timedelta(days=75)  # ~2.5 meses
+                        elif month == 2:
+                            due_date = date.today() - timedelta(days=45)  # ~1.5 meses
+                        else:
+                            due_date = date.today() - timedelta(days=15)  # ~0.5 mês
                 
                 payment = Payment(
                     id=str(uuid.uuid4()),
@@ -224,7 +280,7 @@ def seed_realistic_data(db: Session = None):
                     currency="BRL",
                     due_date=due_date,
                     payment_date=payment_date,
-                    payment_method="pix" if payment_date else None,
+                    payment_method=payment_method,
                     status=status,
                     description=f"Mensalidade - {due_date.strftime('%B/%Y')}",
                     recurrence="MONTHLY",
@@ -235,7 +291,12 @@ def seed_realistic_data(db: Session = None):
         db.flush()
         
         # 8. Atualizar status de inadimplência dos alunos
-        print("📊 Atualizando status de inadimplência...")
+        print("📊 Atualizando status de inadimplência e aplicando regras de negócio...")
+        print("   ⚙️  Regras:")
+        print("      • Overdue: < 30 dias atrasado")
+        print("      • Late: 30-60 dias atrasado")
+        print("      • Paused: > 60 dias (libera vaga automaticamente)")
+        
         from app.services.payment_status import update_student_payment_status
         
         for student, _ in students:
@@ -243,37 +304,76 @@ def seed_realistic_data(db: Session = None):
         
         db.commit()
         
-        # 9. Exibir resumo
-        print("\n" + "="*60)
+        # 9. Exibir resumo detalhado
+        print("\n" + "="*70)
         print("✅ SEED CRIADO COM SUCESSO!")
-        print("="*60)
+        print("="*70)
         print(f"✓ Professor: {teacher.full_name}")
-        print(f"✓ Turmas: 4 (Iniciantes R$50/h, Intermediário R$60/h, Avançado R$70/h, Especializado R$80/h)")
+        print(f"✓ Email: {teacher.email} | Senha: password123")
+        print(f"✓ Turmas: 4 (Iniciantes R$50/h, Intermediário R$60/h,")
+        print(f"            Avançado R$70/h, Especializado R$80/h)")
         print(f"✓ Alunos: 20 (5 por turma)")
-        print(f"✓ Locais: 2")
+        print(f"✓ Locais: 2 (Sala Centro, Sala Zona Norte)")
         print(f"✓ Pagamentos mensais: R$200, R$240, R$280, R$320 (4 aulas/mês)")
         
-        # Estatísticas de inadimplência
-        from app.services.payment_status import get_paused_students, get_all_inadimplent_students
+        # Estatísticas de pagamento e inadimplência
+        from app.services.payment_status import (
+            get_paused_students,
+            get_all_inadimplent_students,
+            get_overdue_students,
+            get_late_students
+        )
         
+        # Buscar estatísticas
+        db.refresh(teacher)  # Recarregar para pegar dados atualizados
         paused = get_paused_students(teacher.id, db)
+        late_students = get_late_students(teacher.id, db)
+        overdue = get_overdue_students(teacher.id, db)
         all_inadimplent = get_all_inadimplent_students(teacher.id, db)
         
-        print(f"\n📊 ESTATÍSTICAS:")
-        print(f"  • Alunos Pausados: {len(paused)}")
-        print(f"  • Alunos Inadimplentes: {len(all_inadimplent)}")
+        # Alunos pagos (20 - inadimplentes)
+        paid_students = 20 - len(all_inadimplent)
+        
+        print(f"\n📊 DISTRIBUIÇÃO DE PAGAMENTOS:")
+        print(f"   ✅ Pagos: {paid_students} alunos ({paid_students/20*100:.0f}%)")
+        print(f"   ⏳ Pendentes: {20 - len(all_inadimplent) - paid_students} alunos")
+        print(f"   ⚠️  Atrasados (< 30 dias): {len(overdue)} alunos ({len(overdue)/20*100:.0f}%)")
+        print(f"   🟠 Muito Atrasados (30-60 dias): {len(late_students)} alunos ({len(late_students)/20*100:.0f}%)")
+        print(f"   🔴 Pausados (> 60 dias): {len(paused)} alunos ({len(paused)/20*100:.0f}%)")
+        
+        # Calcular total em aberto
+        total_overdue = sum(p.get('total_overdue', 0) for p in all_inadimplent)
+        
+        print(f"\n💰 FINANCEIRO:")
+        print(f"   • Total em aberto: R$ {total_overdue:.2f}")
+        print(f"   • Inadimplentes: {len(all_inadimplent)} alunos")
         
         if paused:
-            print(f"\n🔴 ALUNOS PAUSADOS:")
+            print(f"\n🔴 ALUNOS PAUSADOS (Vaga liberada automaticamente):")
             for p in paused:
-                print(f"  • {p['student_name']}: {p['days_without_payment']} dias sem pagar")
+                print(f"   • {p['student_name']}: {p['days_without_payment']} dias sem pagar")
+                print(f"     R$ {p['total_overdue']:.2f} em aberto")
         
-        if all_inadimplent:
-            print(f"\n⚠️ ALUNOS INADIMPLENTES (30+ dias):")
-            for a in all_inadimplent[:5]:
-                print(f"  • {a['student_name']}: {a['days_without_payment']} dias, R${a['total_overdue']:.2f} vencido")
+        if late_students:
+            print(f"\n🟠 ALUNOS MUITO ATRASADOS (30-60 dias - Risco de pausar):")
+            for l in late_students:
+                print(f"   • {l['student_name']}: {l['days_without_payment']} dias")
         
-        print("\n" + "="*60)
+        if overdue:
+            print(f"\n⚠️  ALUNOS ATRASADOS (< 30 dias):")
+            for o in overdue[:3]:  # Mostrar só os 3 primeiros
+                print(f"   • {o['student_name']}: {o['days_without_payment']} dias")
+        
+        print("\n📌 ENDPOINTS DISPONÍVEIS:")
+        print("   GET /api/dashboard/summary")
+        print("   GET /api/dashboard/paused-students")
+        print("   GET /api/dashboard/overdue-students")
+        print("   GET /api/students")
+        
+        print("\n🔗 TESTE RÁPIDO:")
+        print("   curl https://teacherflow-backend.onrender.com/health")
+        
+        print("="*70 + "\n")
         
     except Exception as e:
         print(f"❌ Erro ao criar seed: {e}")

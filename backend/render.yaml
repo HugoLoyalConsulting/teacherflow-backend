@@ -23,8 +23,20 @@ services:
       - key: DEBUG
         value: false
       - key: API_V1_STR
-        value: /api
+        value: /api/v1
       - key: ENVIRONMENT
         value: production
       - key: CORS_ORIGINS
         value: '["https://teacherflow-app.vercel.app","http://localhost:5173"]'
+      # PostHog Telemetry
+      - key: POSTHOG_ENABLED
+        value: false
+      - key: POSTHOG_API_KEY
+        sync: false
+      - key: POSTHOG_HOST
+        value: https://app.posthog.com
+      # Sentry Error Monitoring
+      - key: SENTRY_ENABLED
+        value: false
+      - key: SENTRY_DSN
+        sync: false

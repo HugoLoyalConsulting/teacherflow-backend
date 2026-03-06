@@ -1,0 +1,19 @@
+Contact: security@teacherflow.app
+Expires: 2027-03-06T00:00:00.000Z
+Preferred-Languages: pt-BR, en
+Canonical: https://teacherflow.app/.well-known/security.txt
+Encryption: https://teacherflow.app/.well-known/pgp-key.txt
+Acknowledgments: https://teacherflow.app/security#hall-of-fame
+Policy: https://github.com/teacherflow/teacherflow/blob/main/SECURITY.md
+
+# Security Contact Information
+# TeacherFlow - Teacher Management Platform
+# 
+# If you discover a security vulnerability, please report it to:
+# Email: security@teacherflow.app
+# 
+# We take security seriously and will respond within 24 hours.
+# Please do NOT open public issues for security vulnerabilities.
+# 
+# For more information, see our security policy:
+# https://github.com/teacherflow/teacherflow/blob/main/SECURITY.md

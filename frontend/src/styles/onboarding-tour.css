@@ -1,0 +1,222 @@
+/* TeacherFlow Custom Styles for Driver.js Interactive Tour */
+
+/* Override default driver.js styles with modern, clean design */
+
+.teacherflow-tour-popover {
+  --popover-bg: #ffffff;
+  --popover-text: #1f2937;
+  --popover-border: #e5e7eb;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .teacherflow-tour-popover {
+    --popover-bg: #1f2937;
+    --popover-text: #f9fafb;
+    --popover-border: #374151;
+  }
+}
+
+/* Main popover container */
+.driver-popover {
+  background: var(--popover-bg) !important;
+  color: var(--popover-text) !important;
+  border: 1px solid var(--popover-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-heavy) !important;
+  padding: 20px !important;
+  max-width: 380px !important;
+  animation: fadeInScale 0.3s ease-out !important;
+}
+
+/* Popover arrow */
+.driver-popover-arrow {
+  display: none !important; /* Remove arrow for cleaner look */
+}
+
+/* Alternative: If you want to keep the arrow */
+.driver-popover.driver-popover-arrow-side-left .driver-popover-arrow,
+.driver-popover.driver-popover-arrow-side-right .driver-popover-arrow,
+.driver-popover.driver-popover-arrow-side-top .driver-popover-arrow,
+.driver-popover.driver-popover-arrow-side-bottom .driver-popover-arrow {
+  border-color: var(--popover-border) !important;
+}
+
+/* Popover title */
+.driver-popover-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--popover-text) !important;
+  margin-bottom: 12px !important;
+  line-height: 1.3 !important;
+}
+
+/* Popover description */
+.driver-popover-description {
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+  color: var(--popover-text) !important;
+  opacity: 0.85 !important;
+  margin-bottom: 20px !important;
+}
+
+/* Progress text */
+.driver-popover-progress-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 12px !important;
+  text-align: center !important;
+}
+
+/* Footer buttons container */
+.driver-popover-footer {
+  display: flex !important;
+  gap: 8px !important;
+  margin-top: 16px !important;
+}
+
+/* Buttons */
+.driver-popover-btn {
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Next/Done button (primary) */
+.driver-popover-next-btn {
+  background: var(--primary-color) !important;
+  color: white !important;
+  flex: 1 !important;
+}
+
+.driver-popover-next-btn:hover {
+  background: var(--primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+/* Previous button (secondary) */
+.driver-popover-prev-btn {
+  background: #f3f4f6 !important;
+  color: #4b5563 !important;
+  flex: 1 !important;
+}
+
+.driver-popover-prev-btn:hover {
+  background: #e5e7eb !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Close button */
+.driver-popover-close-btn {
+  background: transparent !important;
+  color: #6b7280 !important;
+  padding: 6px !important;
+  border-radius: 6px !important;
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.driver-popover-close-btn:hover {
+  background: #f3f4f6 !important;
+  color: #1f2937 !important;
+}
+
+/* Highlighted element */
+.driver-active-element {
+  position: relative !important;
+  z-index: 9998 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5) !important;
+  animation: pulse 2s ease-in-out infinite !important;
+}
+
+/* Overlay */
+.driver-overlay {
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(2px) !important;
+  z-index: 9997 !important;
+  animation: fadeIn 0.3s ease-out !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .driver-popover {
+    max-width: calc(100vw - 40px) !important;
+    padding: 16px !important;
+  }
+
+  .driver-popover-title {
+    font-size: 18px !important;
+  }
+
+  .driver-popover-description {
+    font-size: 14px !important;
+  }
+
+  .driver-popover-footer {
+    flex-direction: column !important;
+  }
+
+  .driver-popover-btn {
+    width: 100% !important;
+  }
+}
+
+/* Accessibility: Focus states */
+.driver-popover-btn:focus-visible {
+  outline: 2px solid var(--primary-color) !important;
+  outline-offset: 2px !important;
+}
+
+/* Smooth scroll behavior when highlighting elements */
+html.driver-active {
+  scroll-behavior: smooth !important;
+}

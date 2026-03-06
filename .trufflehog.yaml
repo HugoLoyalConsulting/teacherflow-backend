@@ -1,0 +1,62 @@
+# TruffleHog Configuration
+# Scans for secrets in git history and uncommitted files
+
+# Regex patterns for custom secret detection
+rules:
+  - id: teacherflow-jwt-secret
+    description: TeacherFlow JWT Secret Key
+    regex:
+      pattern: 'SECRET_KEY\s*=\s*["\']([a-zA-Z0-9_\-]{32,})["\']'
+      group: 1
+    severity: HIGH
+    
+  - id: teacherflow-database-url
+    description: PostgreSQL Connection String
+    regex:
+      pattern: 'postgresql://([^:]+):([^@]+)@([^/]+)/([^\s"'']+)'
+    severity: CRITICAL
+    
+  - id: render-api-key
+    description: Render API Key
+    regex:
+      pattern: 'rnd_[a-zA-Z0-9]{40}'
+    severity: HIGH
+    
+  - id: neon-database-password
+    description: Neon Database Password
+    regex:
+      pattern: '@ep-[a-z0-9-]+'
+    severity: CRITICAL
+
+# Files to exclude from scanning
+exclude:
+  paths:
+    - '**/.git/**'
+    - '**/node_modules/**'
+    - '**/venv/**'
+    - '**/.venv/**'
+    - '**/dist/**'
+    - '**/build/**'
+    - '**/.cache/**'
+    - '**/coverage/**'
+    - '**/*.min.js'
+    - '**/*.map'
+    - '**/package-lock.json'
+    - '**/poetry.lock'
+    - '**/.env.example'
+    - '**/.env.template'
+    - '**/SECURITY_HARDENING_ROADMAP.md'
+
+# Ignore these patterns (known false positives)
+allow-list:
+  patterns:
+    - 'example'
+    - 'sample'
+    - 'dummy'
+    - 'placeholder'
+    - 'your-secret-key-change-in-production'  # Old default, already removed
+
+# Verification settings
+verify:
+  enabled: true
+  timeout: 10s

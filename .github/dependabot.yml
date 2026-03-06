@@ -1,0 +1,84 @@
+# Dependabot Configuration
+# Automated dependency updates for security and maintenance
+
+version: 2
+updates:
+  # Backend Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "teacherflow/security-team"
+    assignees:
+      - "teacherflow/backend-team"
+    labels:
+      - "dependencies"
+      - "security"
+      - "backend"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # Auto-merge minor/patch updates
+    allow:
+      - dependency-type: "direct"
+        update-type: "security"
+      - dependency-type: "indirect"
+        update-type: "security"
+    # Version update strategies
+    versioning-strategy: increase
+
+  # Frontend npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "teacherflow/security-team"
+    assignees:
+      - "teacherflow/frontend-team"
+    labels:
+      - "dependencies"
+      - "security"
+      - "frontend"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # Auto-merge minor updates
+    allow:
+      - dependency-type: "direct"
+        update-type: "security"
+      - dependency-type: "indirect"
+        update-type: "security"
+    versioning-strategy: increase
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "teacherflow/devops-team"
+    labels:
+      - "dependencies"
+      - "ci-cd"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+# Security-only updates for all ecosystems
+# These are automatically prioritized and can be auto-merged
+registries: {}
