@@ -32,9 +32,7 @@ const isDev = () => {
   return globalThis.import?.meta?.env?.DEV === true || typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
 }
 
-// Determine environm
-
-ent
+// Determine environment
 const getEnvironment = (): 'development' | 'qa' | 'production' => {
   const envValue = getEnv('ENVIRONMENT', 'development').toLowerCase()
   if (envValue === 'qa' || envValue === 'staging') return 'qa'

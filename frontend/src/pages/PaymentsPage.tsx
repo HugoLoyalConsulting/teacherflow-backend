@@ -216,10 +216,6 @@ export const PaymentsPage = () => {
 
   const selectedMonthTotal = filteredPayments.reduce((sum, p) => sum + p.amount, 0)
 
-  const getStudentName = (studentId: string) => {
-    return students.find((s) => s.id === studentId)?.name || `Aluno ${studentId.split('-')[1]}`
-  }
-
   const formatCompactCurrency = (value: number) =>
     new Intl.NumberFormat('pt-BR', {
       style: 'currency',
