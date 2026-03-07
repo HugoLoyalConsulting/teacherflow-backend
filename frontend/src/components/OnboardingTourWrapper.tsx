@@ -49,50 +49,53 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
     const tour = startOnboardingTour();
 
     // Track progress on each step
-    tour.onNextClick = async (element, step) => {
-      const stepIndex = step.index || 0;
-      
-      try {
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/v1/tour/step`,
-          { step: stepIndex },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (error) {
-        console.error('Error saving tour step:', error);
-      }
-    };
+    // TODO: Fix driver.js API - onNextClick not available in current version
+    // tour.onNextClick = async (element, step) => {
+    //   const stepIndex = step.index || 0;
+    //   
+    //   try {
+    //     await axios.post(
+    //       `${import.meta.env.VITE_API_URL}/api/v1/tour/step`,
+    //       { step: stepIndex },
+    //       { headers: { Authorization: `Bearer ${token}` } }
+    //     );
+    //   } catch (error) {
+    //     console.error('Error saving tour step:', error);
+    //   }
+    // };
 
     // Mark as completed when tour finishes
-    tour.onDestroyStarted = async () => {
-      const config = tour.getConfig();
-      const steps = config.steps || [];
-      const currentIndex = tour.getActiveIndex() || 0;
-      
-      // If user reached the last step, mark as completed
-      if (currentIndex === steps.length - 1) {
-        try {
-          await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/v1/tour/complete`,
-            {},
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-        } catch (error) {
-          console.error('Error completing tour:', error);
-        }
-      }
-    };
+    // TODO: Fix driver.js API - onDestroyStarted not available
+    // tour.onDestroyStarted = async () => {
+    //   const config = tour.getConfig();
+    //   const steps = config.steps || [];
+    //   const currentIndex = tour.getActiveIndex() || 0;
+    //   
+    //   // If user reached the last step, mark as completed
+    //   if (currentIndex === steps.length - 1) {
+    //     try {
+    //       await axios.post(
+    //         `${import.meta.env.VITE_API_URL}/api/v1/tour/complete`,
+    //         {},
+    //         { headers: { Authorization: `Bearer ${token}` } }
+    //       );
+    //     } catch (error) {
+    //       console.error('Error completing tour:', error);
+    //     }
+    //   }
+    // };
 
     // User clicked "Skip Tour"
-    tour.onCloseClick = async () => {
-      try {
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/v1/tour/skip`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (error) {
-        console.error('Error skipping tour:', error);
+    // TODO: Fix driver.js API - onCloseClick not available
+    // tour.onCloseClick = async () => {
+    //   try {
+    //     await axios.post(
+    //       `${import.meta.env.VITE_API_URL}/api/v1/tour/skip`,
+    //       {},
+    //       { headers: { Authorization: `Bearer ${token}` } }
+    //     );
+    //   } catch (error) {
+    //     console.error('Error skipping tour:', error);
       }
     };
   };

@@ -152,7 +152,7 @@ export const driverConfig: Config = {
   nextBtnText: "Próximo →",
   prevBtnText: "← Anterior",
   doneBtnText: "Concluir ✓",
-  closeBtnText: "Pular Tour",
+  // closeBtnText: "Pular Tour", // TODO: Fix driver.js API - not available in current version
   progressText: "{{current}} de {{total}}",
   
   // Styling
