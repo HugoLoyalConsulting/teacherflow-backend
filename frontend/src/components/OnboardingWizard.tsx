@@ -105,10 +105,10 @@ const OnboardingWizard: React.FC = () => {
   const selectedCategoryData = categories?.find((c) => c.key === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 dark:from-slate-950 dark:via-purple-950/50 dark:to-cyan-950/30 flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-700">
         {/* Progress Bar */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-8 py-6">
+        <div className="bg-vaporwave-gradient px-8 py-6">
           <div className="flex items-center justify-between mb-4">
             {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
@@ -142,13 +142,13 @@ const OnboardingWizard: React.FC = () => {
           {/* Step 1: Select Category */}
           {step === 1 && (
             <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Bem-vindo ao TeacherFlow! 🎉</h2>
-              <p className="text-gray-600 mb-8 text-center">Vamos personalizar sua experiência. Qual é sua área de atuação?</p>
+              <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-50 mb-2 text-center">Bem-vindo ao TeacherFlow! 🎉</h2>
+              <p className="text-gray-700 dark:text-gray-200 mb-8 text-center">Vamos personalizar sua experiência. Qual é sua área de atuação?</p>
 
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                  <p className="mt-4 text-gray-600">Carregando categorias...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-vaporwave-purple dark:border-vaporwave-cyan mx-auto"></div>
+                  <p className="mt-4 text-gray-700 dark:text-gray-200">Carregando categorias...</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -156,10 +156,10 @@ const OnboardingWizard: React.FC = () => {
                     <button
                       key={category.key}
                       onClick={() => handleCategorySelect(category.key)}
-                      className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all group"
+                      className="p-6 border-2 border-gray-200 dark:border-slate-700 rounded-xl hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan hover:shadow-lg transition-all group bg-white dark:bg-slate-800"
                     >
                       <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">{category.icon}</div>
-                      <div className="text-sm font-semibold text-gray-800 group-hover:text-blue-600">{category.name}</div>
+                      <div className="text-sm font-semibold text-gray-800 dark:text-gray-50 group-hover:text-vaporwave-purple dark:group-hover:text-vaporwave-cyan">{category.name}</div>
                     </button>
                   ))}
                 </div>
@@ -170,26 +170,26 @@ const OnboardingWizard: React.FC = () => {
           {/* Step 2: Select Sub-Category */}
           {step === 2 && selectedCategoryData && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-50 mb-2 text-center">
                 {selectedCategoryData.icon} {selectedCategoryData.name}
               </h2>
-              <p className="text-gray-600 mb-8 text-center">Qual é sua especialidade?</p>
+              <p className="text-gray-700 dark:text-gray-200 mb-8 text-center">Qual é sua especialidade?</p>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
                 {selectedCategoryData.sub_categories.map((subCat) => (
                   <button
                     key={subCat}
                     onClick={() => handleSubCategorySelect(subCat)}
-                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
+                    className="p-4 border-2 border-gray-200 dark:border-slate-700 rounded-lg hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan hover:bg-purple-50 dark:hover:bg-slate-800 transition-all text-left bg-white dark:bg-slate-900"
                   >
-                    <span className="text-sm font-medium text-gray-800">{subCat}</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-50">{subCat}</span>
                   </button>
                 ))}
               </div>
 
               <button
                 onClick={() => setStep(1)}
-                className="mt-6 px-6 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                className="mt-6 px-6 py-2 text-gray-700 dark:text-gray-200 hover:text-vaporwave-purple dark:hover:text-vaporwave-cyan font-medium"
               >
                 ← Voltar
               </button>
@@ -200,16 +200,16 @@ const OnboardingWizard: React.FC = () => {
           {step === 3 && selectedCategoryData && (
             <div className="text-center">
               <div className="text-6xl mb-4">{selectedCategoryData.icon}</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">Perfeito!</h2>
-              <p className="text-gray-600 mb-8">
-                Você selecionou: <strong>{selectedSubCategory}</strong>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-50 mb-2">Perfeito!</h2>
+              <p className="text-gray-700 dark:text-gray-200 mb-8">
+                Você selecionou: <strong className="text-vaporwave-purple dark:text-vaporwave-cyan">{selectedSubCategory}</strong>
               </p>
 
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-8 inline-block">
-                <p className="text-sm text-gray-700 mb-4">
+              <div className="bg-purple-50 dark:bg-slate-800 border-2 border-purple-200 dark:border-vaporwave-purple rounded-xl p-6 mb-8 inline-block">
+                <p className="text-sm text-gray-700 dark:text-gray-200 mb-4">
                   Vamos criar sua configuração inicial personalizada com:
                 </p>
-                <ul className="text-left text-sm text-gray-700 space-y-2">
+                <ul className="text-left text-sm text-gray-700 dark:text-gray-200 space-y-2">
                   <li>✅ Turmas sugeridas com preços adequados</li>
                   <li>✅ Locais recomendados para suas aulas</li>
                   <li>✅ Faixas de preço do mercado</li>
@@ -220,14 +220,14 @@ const OnboardingWizard: React.FC = () => {
               <div className="flex gap-4 justify-center">
                 <button
                   onClick={() => setStep(2)}
-                  className="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium"
+                  className="px-6 py-3 text-gray-700 dark:text-gray-200 hover:text-vaporwave-purple dark:hover:text-vaporwave-cyan font-medium"
                 >
                   ← Voltar
                 </button>
                 <button
                   onClick={handleComplete}
                   disabled={loading}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50"
+                  className="px-8 py-3 bg-vaporwave-gradient text-white rounded-lg font-semibold hover:opacity-90 transition-all disabled:opacity-50 shadow-lg"
                 >
                   {loading ? 'Configurando...' : 'Confirmar e Continuar →'}
                 </button>
@@ -240,21 +240,21 @@ const OnboardingWizard: React.FC = () => {
             <div>
               <div className="text-center mb-8">
                 <div className="text-6xl mb-4">{suggestions.icon}</div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Tudo Pronto! 🎉</h2>
-                <p className="text-gray-600">Aqui estão suas recomendações personalizadas:</p>
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-50 mb-2">Tudo Pronto! 🎉</h2>
+                <p className="text-gray-700 dark:text-gray-200">Aqui estão suas recomendações personalizadas:</p>
               </div>
 
               {/* Turmas Sugeridas */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-50 mb-4 flex items-center">
                   📚 Turmas Sugeridas
                 </h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   {suggestions.suggestions.groups.map((group, idx) => (
-                    <div key={idx} className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500 transition-all">
-                      <h4 className="font-semibold text-gray-800 mb-2">{group.name}</h4>
-                      <p className="text-sm text-gray-600">R$ {group.hourly_rate}/hora</p>
-                      <p className="text-xs text-gray-500">Até {group.max_students} alunos</p>
+                    <div key={idx} className="border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan transition-all bg-white dark:bg-slate-800">
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-50 mb-2">{group.name}</h4>
+                      <p className="text-sm text-gray-700 dark:text-gray-200">R$ {group.hourly_rate}/hora</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Até {group.max_students} alunos</p>
                     </div>
                   ))}
                 </div>
@@ -262,40 +262,40 @@ const OnboardingWizard: React.FC = () => {
 
               {/* Locais Recomendados */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-50 mb-4 flex items-center">
                   📍 Locais Recomendados
                 </h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   {suggestions.suggestions.locations.map((location, idx) => (
-                    <div key={idx} className="border-2 border-gray-200 rounded-lg p-4 hover:border-green-500 transition-all">
-                      <h4 className="font-semibold text-gray-800">{location.name}</h4>
+                    <div key={idx} className="border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:border-green-500 dark:hover:border-vaporwave-cyan transition-all bg-white dark:bg-slate-800">
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-50">{location.name}</h4>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Faixa de Preço */}
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6 mb-8">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">💰 Faixa de Preço do Mercado</h3>
+              <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 dark:from-slate-800 dark:to-slate-900 border-2 border-purple-200 dark:border-vaporwave-purple rounded-xl p-6 mb-8">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-50 mb-4">💰 Faixa de Preço do Mercado</h3>
                 <div className="flex items-center justify-center gap-8">
                   <div className="text-center">
-                    <p className="text-sm text-gray-600">Mínimo</p>
-                    <p className="text-2xl font-bold text-gray-800">R$ {suggestions.suggestions.pricing.min}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">Mínimo</p>
+                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-50">R$ {suggestions.suggestions.pricing.min}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600">Recomendado</p>
-                    <p className="text-3xl font-bold text-green-600">R$ {suggestions.suggestions.pricing.suggested}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">Recomendado</p>
+                    <p className="text-3xl font-bold text-green-600 dark:text-vaporwave-cyan">R$ {suggestions.suggestions.pricing.suggested}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-600">Máximo</p>
-                    <p className="text-2xl font-bold text-gray-800">R$ {suggestions.suggestions.pricing.max}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">Máximo</p>
+                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-50">R$ {suggestions.suggestions.pricing.max}</p>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={handleFinish}
-                className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-bold text-lg hover:from-blue-600 hover:to-indigo-700 transition-all"
+                className="w-full py-4 bg-vaporwave-gradient text-white rounded-lg font-bold text-lg hover:opacity-90 transition-all shadow-lg"
               >
                 Ir para o Dashboard →
               </button>
