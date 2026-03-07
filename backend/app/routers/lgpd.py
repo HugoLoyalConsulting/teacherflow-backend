@@ -60,7 +60,7 @@ class DeletionRequestResponse(BaseModel):
 class StudentLGPDRequest(BaseModel):
     """Request to update student LGPD settings"""
     lgpd_parent_consent: bool
-    lgpd_data_classification: str = Field(..., regex="^(personal|sensitive|anonymous)$")
+    lgpd_data_classification: str = Field(..., pattern="^(personal|sensitive|anonymous)$")
     lgpd_purpose: str = Field(default="educational_services")
     lgpd_can_contact: bool = True
     

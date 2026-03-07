@@ -82,7 +82,7 @@ class User(Base):
     payments = relationship("Payment", back_populates="teacher", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="user", cascade="all, delete-orphan")
     verification_codes = relationship("VerificationCode", back_populates="user", cascade="all, delete-orphan")
-    subscription = relationship("Subscription", back_populates="user", foreign_keys=[subscription_id])
+    subscription = relationship("Subscription", foreign_keys=[subscription_id], uselist=False)
 
 
 class Student(Base):
@@ -388,7 +388,7 @@ class Subscription(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
-    user = relationship("User", back_populates="subscription")
+    user = relationship("User", foreign_keys=[user_id])
     tier = relationship("SubscriptionTier", back_populates="subscriptions")
     payments = relationship("SubscriptionPayment", back_populates="subscription", cascade="all, delete-orphan")
 

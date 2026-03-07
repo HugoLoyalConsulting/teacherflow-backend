@@ -91,45 +91,6 @@ if SENTRY_ENABLED and SENTRY_DSN:
     except Exception as e:
         logger.error(f"Failed to initialize Sentry: {e}")
         SENTRY_ENABLED = False
-    """
-    Filter sensitive data before sending to Sentry
-    
-    Removes:
-    - Passwords
-    - API keys
-    - JWT tokens
-    - Credit card numbers
-    """
-    if not event:
-        return event
-    
-    sensitive_keys = [
-        "password",
-        "hashed_password",
-        "secret",
-        "token",
-        "jwt",
-        "api_key",
-        "credit_card",
-        "ssn",
-        "authorization",
-    ]
-    
-    # Remove from request data
-    if "request" in event and "data" in event["request"]:
-        data = event["request"]["data"]
-        if isinstance(data, dict):
-            for key in sensitive_keys:
-                if key in data:
-                    data[key] = "[FILTERED]"
-    
-    # Remove from extra context
-    if "extra" in event:
-        for key in sensitive_keys:
-            if key in event["extra"]:
-                event["extra"][key] = "[FILTERED]"
-    
-    return event
 
 
 def capture_exception(
