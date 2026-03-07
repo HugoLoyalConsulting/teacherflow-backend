@@ -1,11 +1,8 @@
 import { Card, Badge } from '../components/UI'
 import { useTheme } from '../hooks/useTheme'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
 import { Button } from '../components/Form'
-import { Check, RefreshCw } from 'lucide-react'
-import { useAuthStore } from '../store/authStore'
 
 interface SubscriptionTier {
   id: string
@@ -23,8 +20,6 @@ interface SubscriptionTier {
 
 export const SettingsPage = () => {
   const { isDark, theme, setLightTheme, setDarkTheme, setSystemTheme } = useTheme()
-  const { setOnboardingComplete } = useAuthStore()
-  const navigate = useNavigate()
   const [tiers, setTiers] = useState<SubscriptionTier[]>([])
   const [currentTierKey, setCurrentTierKey] = useState<string>('free')
   const [loading, setLoading] = useState(false)
@@ -72,12 +67,6 @@ export const SettingsPage = () => {
     }
   }
 
-  const handleRestartOnboarding = () => {
-    // Reset onboarding status and redirect
-    setOnboardingComplete(false)
-    navigate('/onboarding')
-  }
-
   return (
     <div className="space-y-6">
       <div>
@@ -86,32 +75,6 @@ export const SettingsPage = () => {
       </div>
 
       <div className="max-w-2xl">
-        {/* Onboarding Configuration */}
-        <Card>
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-50">Configuração Inicial</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Configure sua área de atuação e preferências iniciais do sistema.
-          </p>
-          
-          <div className="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="text-2xl">🎯</div>
-              <div>
-                <p className="font-semibold text-gray-900 dark:text-gray-50">Área de Atuação</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Refaça o assistente de configuração inicial</p>
-              </div>
-            </div>
-            <Button 
-              variant="secondary" 
-              onClick={handleRestartOnboarding}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refazer
-            </Button>
-          </div>
-        </Card>
-
         {/* Dark Mode */}
         <Card>
           <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-gray-50">Dark Mode</h2>

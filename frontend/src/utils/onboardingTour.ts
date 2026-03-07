@@ -19,56 +19,56 @@ export interface TourStep extends DriveStep {
  */
 
 export const onboardingSteps: TourStep[] = [
-  // Step 1: Welcome
+  // Step 1: Welcome + Area Selection
   {
     element: "body",
     popover: {
-      title: "🎉 Bem-vindo!",
-      description: "Tour rápido em 8 passos. Vamos começar!",
+      title: "🎉 Bem-vindo ao TeacherFlow!",
+      description: "📚 Tour interativo em 9 passos para você começar. Primeiro, me diga: qual é sua área de atuação? (Música 🎵, Idiomas 🗣️, Matérias Acadêmicas 📚, Esportes ⚽, Artes 🎨, Outro 📋)",
       side: "bottom",
       align: "center",
     },
   },
   
-  // Step 2: Create Student Button
+  // Step 2: Students - Take Action
   {
     element: "#nav-students",
     popover: {
-      title: "👥 Alunos",
-      description: "Clique aqui para gerenciar seus alunos.",
+      title: "👥 Passo 1/6: Cadastre seus Alunos",
+      description: "Clique aqui agora para adicionar seu primeiro aluno! Nome, contato, valor da aula.",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 3: Locations
+  // Step 3: Locations - Take Action
   {
     element: "#nav-locations",
     popover: {
-      title: "📍 Locais",
-      description: "Cadastre onde você dá aula.",
+      title: "📍 Passo 2/6: Cadastre Locais",
+      description: "Onde você dá aula? Sua casa, escola, online? Clique e cadastre!",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 4: Groups
+  // Step 4: Groups - Take Action
   {
     element: "#nav-groups",
     popover: {
-      title: "👨‍🎓 Turmas",
-      description: "Organize turmas e defina preços.",
+      title: "👨‍🎓 Passo 3/6: Crie Turmas",
+      description: "Aulas em grupo? Crie turmas aqui e defina preços especiais. Clique para começar!",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 5: Calendar
+  // Step 5: Calendar - Take Action
   {
     element: "#nav-calendar",
     popover: {
-      title: "📅 Agenda",
-      description: "Agende e gerencie suas aulas.",
+      title: "📅 Passo 4/6: Agende Aulas",
+      description: "Aqui você marca aulas individuais ou recorrentes. Clique para agendar sua primeira aula!",
       side: "right",
       align: "center",
     },
@@ -78,8 +78,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-payments",
     popover: {
-      title: "💰 Pagamentos",
-      description: "Controle recebimentos e inadimplência.",
+      title: "💰 Passo 5/6: Controle Pagamentos",
+      description: "Veja quem pagou, quem está devendo, e receba alertas de inadimplência.",
       side: "right",
       align: "center",
     },
@@ -89,19 +89,30 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-menu",
     popover: {
-      title: "📊 Dashboard",
-      description: "Visão geral de tudo em um só lugar.",
+      title: "📊 Passo 6/6: Seu Dashboard",
+      description: "Volte aqui sempre! Visão completa: próximas aulas, recebimentos, alunos ativos.",
       side: "right",
       align: "start",
     },
   },
   
-  // Step 8: Finish
+  // Step 8: Settings
   {
     element: "body",
     popover: {
-      title: "✅ Pronto!",
-      description: "Comece cadastrando seus alunos. Boa aula! 🎓",
+      title: "⚙️ Dica Extra: Configurações",
+      description: "No menu do seu perfil (canto superior direito), você pode trocar tema, alterar dados e refazer este tour quando quiser!",
+      side: "bottom",
+      align: "center",
+    },
+  },
+  
+  // Step 9: Finish
+  {
+    element: "body",
+    popover: {
+      title: "✅ Tudo Pronto!",
+      description: "Agora é com você! Comece cadastrando seus primeiros alunos e agende suas aulas. Boa aula! 🎓📚🎉",
       side: "bottom",
       align: "center",
     },

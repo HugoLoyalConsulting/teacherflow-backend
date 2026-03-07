@@ -8,7 +8,6 @@ import { FeedbackWidget } from './components/FeedbackWidget'
 import { Layout } from './components/Layout/Layout'
 import { GOOGLE_CLIENT_ID, isGoogleOAuthConfigured } from './config/googleAuth'
 import { LoginPage } from './pages/LoginPage'
-import { OnboardingPage } from './pages/OnboardingPage'
 import { VerifyEmailPage } from './pages/VerifyEmailPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
@@ -29,7 +28,7 @@ validateConfig()
 logConfig()
 
 function AppContent() {
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
   const { mounted } = useTheme()
 
   // Prevent flash of unstyled content
@@ -45,34 +44,24 @@ function AppContent() {
     return null
   }
 
-  // Check if user needs to complete onboarding
-  const needsOnboarding = isAuthenticated && user && !user.onboardingComplete
-
   return (
     <Router>
       {isAuthenticated ? (
-        needsOnboarding ? (
+        <Layout>
           <Routes>
-            <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="*" element={<Navigate to="/onboarding" replace />} />
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/students" element={<StudentsPage />} />
+            <Route path="/students/:id" element={<StudentDetailsPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
+            <Route path="/locations" element={<LocationsPage />} />
+            <Route path="/groups" element={<GroupsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/packages" element={<PackagesPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        ) : (
-          <Layout>
-            <Routes>
-              <Route path="/" element={<DashboardPage />} />
-              <Route path="/students" element={<StudentsPage />} />
-              <Route path="/students/:id" element={<StudentDetailsPage />} />
-              <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/payments" element={<PaymentsPage />} />
-              <Route path="/locations" element={<LocationsPage />} />
-              <Route path="/groups" element={<GroupsPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/packages" element={<PackagesPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Layout>
-        )
+        </Layout>
       ) : (
         <Routes>
           <Route path="/login" element={<LoginPage />} />
