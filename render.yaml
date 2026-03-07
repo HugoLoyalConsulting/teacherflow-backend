@@ -81,7 +81,7 @@ services:
       - key: ENABLE_AUTOSEED
         value: true
       - key: CORS_ORIGINS
-        value: '["https://staging-teacherflow-app.vercel.app","https://teacherflow-app.vercel.app","http://localhost:5173","http://localhost:3000"]'
+        value: '["https://staging.teacherflow-app.vercel.app","https://teacherflow-app.vercel.app","http://localhost:5173","http://localhost:3000"]'
       # PostHog Telemetry (enabled in QA for testing)
       - key: POSTHOG_ENABLED
         value: true
