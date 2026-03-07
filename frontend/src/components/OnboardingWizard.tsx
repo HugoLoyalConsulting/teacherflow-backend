@@ -62,6 +62,7 @@ const OnboardingWizard: React.FC = () => {
   };
 
   const handleCategorySelect = (categoryKey: string) => {
+    console.log('handleCategorySelect executado:', categoryKey);
     setSelectedCategory(categoryKey);
     setStep(2);
   };
@@ -113,8 +114,10 @@ const OnboardingWizard: React.FC = () => {
             {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                    step >= s ? 'bg-white text-blue-600' : 'bg-blue-400 text-white opacity-50'
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all shadow-lg ${
+                    step >= s 
+                      ? 'bg-white text-slate-900 ring-2 ring-white/50' 
+                      : 'bg-white/20 text-white/60 backdrop-blur'
                   }`}
                 >
                   {s}
@@ -122,15 +125,15 @@ const OnboardingWizard: React.FC = () => {
                 {s < 4 && (
                   <div
                     className={`h-1 w-16 mx-2 transition-all ${
-                      step > s ? 'bg-white' : 'bg-blue-400 opacity-50'
+                      step > s ? 'bg-white shadow-sm' : 'bg-white/30'
                     }`}
                   />
                 )}
               </div>
             ))}
           </div>
-          <p className="text-white text-center font-medium">
-            {step === 1 && 'Escolha sua área de atuação'}
+          <p className="text-white text-center font-medium drop-shadow-md">
+            {step === 1 && 'Escolha sua área de atuação (opcional)'}
             {step === 2 && 'Selecione sua especialidade'}
             {step === 3 && 'Confirme sua escolha'}
             {step === 4 && 'Sua configuração personalizada'}
@@ -143,7 +146,8 @@ const OnboardingWizard: React.FC = () => {
           {step === 1 && (
             <div>
               <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-50 mb-2 text-center">Bem-vindo ao TeacherFlow! 🎉</h2>
-              <p className="text-gray-700 dark:text-gray-200 mb-8 text-center">Vamos personalizar sua experiência. Qual é sua área de atuação?</p>
+              <p className="text-gray-700 dark:text-gray-200 mb-4 text-center">Vamos personalizar sua experiência. Qual é sua área de atuação?</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-8 text-center italic">Isso é apenas para cadastro - você pode pular e configurar depois.</p>
 
               {loading ? (
                 <div className="text-center py-12">
@@ -155,8 +159,12 @@ const OnboardingWizard: React.FC = () => {
                   {categories.map((category) => (
                     <button
                       key={category.key}
-                      onClick={() => handleCategorySelect(category.key)}
-                      className="p-6 border-2 border-gray-200 dark:border-slate-700 rounded-xl hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan hover:shadow-lg transition-all group bg-white dark:bg-slate-800"
+                      onClick={() => {
+                        console.log('Categoria clicada:', category.key);
+                        handleCategorySelect(category.key);
+                      }}
+                      type="button"
+                      className="p-6 border-2 border-gray-200 dark:border-slate-700 rounded-xl hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan hover:shadow-lg transition-all group bg-white dark:bg-slate-800 cursor-pointer active:scale-95"
                     >
                       <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">{category.icon}</div>
                       <div className="text-sm font-semibold text-gray-800 dark:text-gray-50 group-hover:text-vaporwave-purple dark:group-hover:text-vaporwave-cyan">{category.name}</div>
@@ -164,6 +172,19 @@ const OnboardingWizard: React.FC = () => {
                   ))}
                 </div>
               )}
+              
+              {/* Skip button */}
+              <div className="mt-8 text-center">
+                <button
+                  onClick={() => {
+                    setOnboardingComplete(true);
+                    navigate('/dashboard');
+                  }}
+                  className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline text-sm"
+                >
+                  Pular e ir direto para o dashboard →
+                </button>
+              </div>
             </div>
           )}
 
@@ -252,9 +273,9 @@ const OnboardingWizard: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-4">
                   {suggestions.suggestions.groups.map((group, idx) => (
                     <div key={idx} className="border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:border-vaporwave-purple dark:hover:border-vaporwave-cyan transition-all bg-white dark:bg-slate-800">
-                      <h4 className="font-semibold text-gray-800 dark:text-gray-50 mb-2">{group.name}</h4>
-                      <p className="text-sm text-gray-700 dark:text-gray-200">R$ {group.hourly_rate}/hora</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Até {group.max_students} alunos</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-gray-50 mb-2">{group.name}</h4>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">R$ {group.hourly_rate}/hora</p>
+                      <p className="text-xs text-gray-700 dark:text-gray-400">Até {group.max_students} alunos</p>
                     </div>
                   ))}
                 </div>
@@ -275,20 +296,20 @@ const OnboardingWizard: React.FC = () => {
               </div>
 
               {/* Faixa de Preço */}
-              <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 dark:from-slate-800 dark:to-slate-900 border-2 border-purple-200 dark:border-vaporwave-purple rounded-xl p-6 mb-8">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-50 mb-4">💰 Faixa de Preço do Mercado</h3>
+              <div className="bg-white dark:from-slate-800 dark:to-slate-900 border-2 border-vaporwave-purple/30 dark:border-vaporwave-purple rounded-xl p-6 mb-8 shadow-md">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-50 mb-4">💰 Faixa de Preço do Mercado</h3>
                 <div className="flex items-center justify-center gap-8">
                   <div className="text-center">
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Mínimo</p>
-                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-50">R$ {suggestions.suggestions.pricing.min}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mínimo</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">R$ {suggestions.suggestions.pricing.min}</p>
+                  </div>
+                  <div className="text-center px-6 py-3 bg-gradient-to-br from-vaporwave-purple/10 to-vaporwave-cyan/10 dark:from-vaporwave-purple/20 dark:to-vaporwave-cyan/20 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">⭐ Recomendado</p>
+                    <p className="text-3xl font-bold text-vaporwave-purple dark:text-vaporwave-cyan">R$ {suggestions.suggestions.pricing.suggested}</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Recomendado</p>
-                    <p className="text-3xl font-bold text-green-600 dark:text-vaporwave-cyan">R$ {suggestions.suggestions.pricing.suggested}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-700 dark:text-gray-300">Máximo</p>
-                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-50">R$ {suggestions.suggestions.pricing.max}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Máximo</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">R$ {suggestions.suggestions.pricing.max}</p>
                   </div>
                 </div>
               </div>
