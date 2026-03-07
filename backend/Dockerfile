@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application
 COPY . .
 
-# Expose port (Railway injeta PORT automaticamente)
-EXPOSE $PORT
+# Expose port (metadata do container)
+EXPOSE 8000
 
 # Run application (usa PORT do Railway ou 8000 como fallback)
 CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
