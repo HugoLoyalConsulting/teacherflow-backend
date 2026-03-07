@@ -134,8 +134,8 @@ class OTPManager:
     """Gerenciar OTP (One-Time Passwords) para 2FA"""
     
     @staticmethod
-    def generate_otp_code(length: int = 6) -> str:
-        """Gerar código OTP de 6 dígitos"""
+    def generate_otp_code(length: int = 4) -> str:
+        """Gerar código OTP de 4 dígitos"""
         return str(secrets.randbelow(10 ** length)).zfill(length)
     
     @staticmethod
@@ -267,7 +267,7 @@ class EmailVerification:
     def create_verification(
         cls,
         email: str,
-        expires_in_minutes: int = 15
+        expires_in_minutes: int = 10
     ) -> str:
         """Criar código de verificação e retornar código"""
         code = OTPManager.generate_otp_code()

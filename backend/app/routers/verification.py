@@ -28,13 +28,13 @@ class SendCodeRequest(BaseModel):
 
 
 class VerifyCodeRequest(BaseModel):
-    """Request to verify 6-digit code"""
+    """Request to verify 4-digit code"""
     code: str
     
     class Config:
         json_schema_extra = {
             "example": {
-                "code": "123456"
+                "code": "1234"
             }
         }
 
@@ -74,10 +74,10 @@ async def send_code(
     db: Session = Depends(get_db)
 ):
     """
-    Send 6digit verification code to email
+    Send 4-digit verification code to email
     
     - **email**: Email address to verify
-    - Generates random 6-digit code
+    - Generates random 4-digit code
     - Code expires in 10 minutes
     - Max 3 verification attempts
     - Rate limited: max 5 codes per hour
@@ -123,18 +123,18 @@ async def verify_email_code(
     db: Session = Depends(get_db)
 ):
     """
-    Verify 6-digit code
+    Verify 4-digit code
     
-    - **code**: 6-digit verification code
+    - **code**: 4-digit verification code
     - Must be called by authenticated user
     - Max 3 attempts before code is invalidated
     - Code expires in 10 minutes
     """
     # Validate code format
-    if not request.code.isdigit() or len(request.code) != 6:
+    if not request.code.isdigit() or len(request.code) != 4:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Código deve ter 6 dígitos"
+            detail="Código deve ter 4 dígitos"
         )
     
     # Check if already verified

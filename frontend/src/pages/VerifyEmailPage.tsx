@@ -11,7 +11,7 @@ export function VerifyEmailPage() {
 
   const [email] = useState(emailParam || '')
   const [otp, setOtp] = useState('')
-  const [timeLeft, setTimeLeft] = useState(15 * 60) // 15 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(10 * 60) // 10 minutes in seconds
   const [loading, setLoading] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -40,8 +40,8 @@ export function VerifyEmailPage() {
   }
 
   const handleOtpChange = (value: string) => {
-    // Aceitar apenas 6 dígitos
-    const cleaned = value.replace(/\D/g, '').slice(0, 6)
+    // Aceitar apenas 4 dígitos
+    const cleaned = value.replace(/\D/g, '').slice(0, 4)
     setOtp(cleaned)
     setError(null)
   }
@@ -58,8 +58,8 @@ export function VerifyEmailPage() {
         return
       }
 
-      if (!otp || otp.length !== 6) {
-        setError('Digite um código válido (6 dígitos)')
+      if (!otp || otp.length !== 4) {
+        setError('Digite um código válido (4 dígitos)')
         setLoading(false)
         return
       }
@@ -99,7 +99,7 @@ export function VerifyEmailPage() {
       await authService.resendOTP(email)
 
       // Resetar timer e cooldown
-      setTimeLeft(15 * 60)
+      setTimeLeft(10 * 60)
       setResendCooldown(60) // 60 segundos de cooldown
 
       const cooldownInterval = setInterval(() => {
@@ -175,16 +175,16 @@ export function VerifyEmailPage() {
                 id="otp"
                 type="text"
                 inputMode="numeric"
-                maxLength={6}
+                maxLength={4}
                 value={otp}
                 onChange={(e) => handleOtpChange(e.target.value)}
-                placeholder="000000"
+                placeholder="0000"
                 disabled={loading || timeLeft === 0}
                 autoComplete="off"
                 className="w-full text-center text-3xl tracking-widest px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-mono"
               />
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 text-center">
-                Apenas números. O código é válido por 15 minutos.
+                Apenas números. O código é válido por 10 minutos.
               </p>
             </div>
 
@@ -207,7 +207,7 @@ export function VerifyEmailPage() {
             {/* Verify Button */}
             <Button
               type="submit"
-              disabled={loading || otp.length !== 6 || timeLeft === 0}
+              disabled={loading || otp.length !== 4 || timeLeft === 0}
               className="w-full"
             >
               {loading ? 'Verificando...' : 'Verificar Código'}
@@ -234,7 +234,7 @@ export function VerifyEmailPage() {
                 ⚠️ Código expirado
               </p>
               <p className="text-red-600 dark:text-red-400 text-xs mb-3">
-                O código era válido por 15 minutos. Solicite um novo código.
+                O código era válido por 10 minutos. Solicite um novo código.
               </p>
               <Button
                 type="button"
