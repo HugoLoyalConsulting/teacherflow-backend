@@ -82,6 +82,7 @@ class User(Base):
     payments = relationship("Payment", back_populates="teacher", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="user", cascade="all, delete-orphan")
     verification_codes = relationship("VerificationCode", back_populates="user", cascade="all, delete-orphan")
+    password_reset_tokens = relationship("PasswordResetToken", back_populates="user", cascade="all, delete-orphan")
     subscription = relationship("Subscription", foreign_keys=[subscription_id], uselist=False)
 
 
@@ -390,6 +391,33 @@ class Subscription(Base):
     # Relationships
     user = relationship("User", foreign_keys=[user_id])
     tier = relationship("SubscriptionTier", back_populates="subscriptions")
+    payments = relationship("SubscriptionPayment", back_populates="subscription", cascade="all, delete-orphan")
+
+
+class PasswordResetToken(Base):
+    """Track password reset requests with tokens and codes"""
+    __tablename__ = "password_reset_tokens"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
+    user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
+    token = Column(String(64), unique=True, nullable=False, index=True)
+    code = Column(String(6), nullable=False)
+    expires_at = Column(DateTime, nullable=False, index=True)
+    used = Column(Boolean, default=False)
+    ip_address = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    used_at = Column(DateTime, nullable=True)
+    
+    # Relationships
+    user = relationship("User", back_populates="password_reset_tokens")
+    
+    def is_expired(self) -> bool:
+        """Check if token has expired"""
+        return datetime.utcnow() > self.expires_at
+    
+    def is_valid(self) -> bool:
+        """Check if token is still valid"""
+        return not self.is_expired() and not self.used
     payments = relationship("SubscriptionPayment", back_populates="subscription", cascade="all, delete-orphan")
 
 
