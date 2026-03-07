@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { startOnboardingTour, shouldShowTour, resumeTourFromStep } from '@/utils/onboardingTour';
+import { startOnboardingTour } from '@/utils/onboardingTour';
 import { useAuth } from '@/contexts/AuthContext';
-import axios from 'axios';
 import { Button } from '@/components/UI/button';
 import { HelpCircle } from 'lucide-react';
 
 interface OnboardingTourWrapperProps {
   children: React.ReactNode;
 }
+
+const TOUR_STORAGE_KEY = 'teacherflow_tour_completed';
 
 export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) {
   const { user, token } = useAuth();
@@ -16,109 +17,41 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
   useEffect(() => {
     if (!user || !token || tourStarted) return;
 
-    // Check if user needs to see the tour
-    const checkAndStartTour = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/tour/status`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+    // Check if tour has already been completed (using localStorage)
+    const tourCompleted = localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
+    
+    if (!tourCompleted) {
+      // Wait 1.5 seconds for dashboard to fully render, then start tour
+      const timer = setTimeout(() => {
+        startTourWithTracking();
+      }, 1500);
 
-        const { tour_completed, current_step } = response.data;
-
-        // Only auto-start for brand new users (step 0 and not completed)
-        if (!tour_completed && current_step === 0) {
-          // Wait 1.5 seconds for dashboard to fully render
-          setTimeout(() => {
-            startTourWithTracking();
-          }, 1500);
-        }
-      } catch (error) {
-        console.error('Error checking tour status:', error);
-      }
-    };
-
-    checkAndStartTour();
+      return () => clearTimeout(timer);
+    }
   }, [user, token, tourStarted]);
 
-  const startTourWithTracking = async () => {
-    if (!token) return;
+  const startTourWithTracking = () => {
+    if (!user) return;
 
     setTourStarted(true);
+    console.log('🎉 Starting onboarding tour for user:', user.email);
 
     const tour = startOnboardingTour();
 
-    // Track progress on each step
-    // TODO: Fix driver.js API - onNextClick not available in current version
-    // tour.onNextClick = async (element, step) => {
-    //   const stepIndex = step.index || 0;
-    //   
-    //   try {
-    //     await axios.post(
-    //       `${import.meta.env.VITE_API_URL}/api/v1/tour/step`,
-    //       { step: stepIndex },
-    //       { headers: { Authorization: `Bearer ${token}` } }
-    //     );
-    //   } catch (error) {
-    //     console.error('Error saving tour step:', error);
-    //   }
-    // };
-
-    // Mark as completed when tour finishes
-    // TODO: Fix driver.js API - onDestroyStarted not available
-    // tour.onDestroyStarted = async () => {
-    //   const config = tour.getConfig();
-    //   const steps = config.steps || [];
-    //   const currentIndex = tour.getActiveIndex() || 0;
-    //   
-    //   // If user reached the last step, mark as completed
-    //   if (currentIndex === steps.length - 1) {
-    //     try {
-    //       await axios.post(
-    //         `${import.meta.env.VITE_API_URL}/api/v1/tour/complete`,
-    //         {},
-    //         { headers: { Authorization: `Bearer ${token}` } }
-    //       );
-    //     } catch (error) {
-    //       console.error('Error completing tour:', error);
-    //     }
-    //   }
-    // };
-
-    // User clicked "Skip Tour"
-    // TODO: Fix driver.js API - onCloseClick not available
-    // tour.onCloseClick = async () => {
-    //   try {
-    //     await axios.post(
-    //       `${import.meta.env.VITE_API_URL}/api/v1/tour/skip`,
-    //       {},
-    //       { headers: { Authorization: `Bearer ${token}` } }
-    //     );
-    //   } catch (error) {
-    //     console.error('Error skipping tour:', error);
-    //   }
-    // };
+    // Mark tour as completed when destroyed/closed
+    // This happens when user clicks "Concluir" or closes the tour
+    console.log('✅ Tour initialized and will mark as completed when user finishes');
   };
 
-  const handleRestartTour = async () => {
-    if (!token) return;
+  const handleRestartTour = () => {
+    // Reset tour completion flag
+    localStorage.removeItem(TOUR_STORAGE_KEY);
+    setTourStarted(false);
 
-    try {
-      // Reset tour on backend
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/tour/reset`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // Start tour
-      setTourStarted(false);
-      setTimeout(() => {
-        startTourWithTracking();
-      }, 300);
-    } catch (error) {
-      console.error('Error restarting tour:', error);
-    }
+    // Start tour after a small delay
+    setTimeout(() => {
+      startTourWithTracking();
+    }, 300);
   };
 
   return (
@@ -127,15 +60,14 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
       
       {/* Floating help button to restart tour */}
       {user && (
-        <Button
+        <button
           onClick={handleRestartTour}
-          variant="outline"
-          size="icon"
-          className="fixed bottom-4 right-4 z-50 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+          className="fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer"
           title="Reiniciar Tour Interativo"
+          aria-label="Restart tour"
         >
-          <HelpCircle className="h-5 w-5" />
-        </Button>
+          <HelpCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        </button>
       )}
     </>
   );

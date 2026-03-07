@@ -11,12 +11,12 @@ interface LayoutProps {
 }
 
 const menuItems = [
-  { icon: Home, emoji: '📊', label: 'Dashboard', shortLabel: 'Home', href: '/' },
-  { icon: Calendar, emoji: '📅', label: 'Calendário', shortLabel: 'Agenda', href: '/calendar' },
-  { icon: DollarSign, emoji: '💰', label: 'Recebimentos', shortLabel: 'Pag.', href: '/payments' },
-  { icon: MapPin, emoji: '📍', label: 'Locais', shortLabel: 'Locais', href: '/locations' },
-  { icon: GraduationCap, emoji: '👨‍🎓', label: 'Turmas', shortLabel: 'Turmas', href: '/groups' },
-  { icon: Users, emoji: '👥', label: 'Alunos', shortLabel: 'Alunos', href: '/students' },
+  { id: 'nav-menu', icon: Home, emoji: '📊', label: 'Dashboard', shortLabel: 'Home', href: '/' },
+  { id: 'nav-calendar', icon: Calendar, emoji: '📅', label: 'Calendário', shortLabel: 'Agenda', href: '/calendar' },
+  { id: 'nav-payments', icon: DollarSign, emoji: '💰', label: 'Recebimentos', shortLabel: 'Pag.', href: '/payments' },
+  { id: 'nav-locations', icon: MapPin, emoji: '📍', label: 'Locais', shortLabel: 'Locais', href: '/locations' },
+  { id: 'nav-groups', icon: GraduationCap, emoji: '👨‍🎓', label: 'Turmas', shortLabel: 'Turmas', href: '/groups' },
+  { id: 'nav-students', icon: Users, emoji: '👥', label: 'Alunos', shortLabel: 'Alunos', href: '/students' },
 ]
 
 const mobileBottomTabs = menuItems.slice(0, 6)
@@ -68,6 +68,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           {menuItems.map((item) => (
             <NavLink
               key={item.href}
+              id={item.id}
               icon={item.emoji}
               label={item.label}
               href={item.href}
@@ -317,6 +318,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 }
 
 interface NavLinkProps {
+  id: string
   icon: string
   label: string
   href: string
@@ -324,8 +326,9 @@ interface NavLinkProps {
   onClick: () => void
 }
 
-const NavLink: FC<NavLinkProps> = ({ icon, label, collapsed, onClick }) => (
+const NavLink: FC<NavLinkProps> = ({ id, icon, label, collapsed, onClick }) => (
   <button
+    id={id}
     onClick={onClick}
     className="w-full flex items-center gap-3 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-xs sm:text-sm"
     title={label}

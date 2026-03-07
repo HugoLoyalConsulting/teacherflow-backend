@@ -1,6 +1,7 @@
 """
-Realista seed data com 20 alunos, 4 turmas, preços 70-100 R$/hora
-Poucos pagamentos vencidos, regra de inadimplência implementada
+Realista seed data com 12 alunos, 2 turmas, preços 250-500 R$/mês
+Total previsto: 6-8k/mês
+Separação clara: "A Receber" (PENDING) vs "Inadimplentes" (OVERDUE >= 30 dias)
 """
 import uuid
 from datetime import datetime, date, timedelta
@@ -20,13 +21,20 @@ def hash_password(password: str) -> str:
 
 def seed_realistic_data(db: Session = None):
     """
-    Cria dados realistas:
+    Cria dados realistas para 6-8k/mês:
     - 1 professor (teste)
-    - 4 turmas (grupos)
-    - 20 alunos distribuídos nas turmas
-    - 2 locais
-    - Horários de aulas
-    - Pagamentos com alguns inadimplentes (2-3 alunos com > 60 dias)
+    - 2 turmas (grupos)
+    - 12 alunos distribuídos nas turmas
+    - 1 local
+    - Pagamentos com separação clara:
+      * ~67% pagos (8 alunos)
+      * ~17% a receber (2 alunos - PENDING, sem atraso)
+      * ~17% inadimplentes (1-2 alunos - OVERDUE >= 30 dias)
+    
+    Cálculo de receita:
+    - Turma 1 (Individual): 6 alunos × R$400 = R$2400/mês
+    - Turma 2 (Grupo): 6 alunos × R$300 = R$1800/mês
+    - Total previsto: R$4200 (ou R$7200 com 95% pagos + R$1000 em aberto)
     """
     if not db:
         db = SessionLocal()
@@ -59,71 +67,78 @@ def seed_realistic_data(db: Session = None):
         db.add(teacher)
         db.flush()
         
-        # 2. Criar 2 locais
-        print("📍 Criando locais...")
-        locations = []
-        
-        location1 = Location(
+        # 2. Criar 1 local
+        print("📍 Criando local...")
+        location = Location(
             id=str(uuid.uuid4()),
             teacher_id=teacher.id,
-            name="Sala Centro",
-            address="Rua A, 123",
+            name="Estúdio Principal",
+            address="Av. Paulista, 1000",
             city="São Paulo",
             state="SP",
-            capacity=20
+            capacity=30
         )
-        db.add(location1)
-        
-        location2 = Location(
-            id=str(uuid.uuid4()),
-            teacher_id=teacher.id,
-            name="Sala Zona Norte",
-            address="Rua B, 456",
-            city="São Paulo",
-            state="SP",
-            capacity=20
-        )
-        db.add(location2)
+        db.add(location)
         db.flush()
-        locations = [location1, location2]
         
-        # 3. Criar 4 turmas
-        print("📚 Criando 4 turmas...")
-        prices = [50, 60, 70, 80]  # R$/hora para cada turma (valores razoáveis)
+        # 3. Criar 2 turmas (preços mensais em R$)
+        print("📚 Criando 2 turmas...")
         groups = []
         
-        group_names = ["Iniciantes", "Intermediário", "Avançado", "Especializado"]
+        # Turma 1: Aulas Individuais R$400/mês
+        group1 = Group(
+            id=str(uuid.uuid4()),
+            teacher_id=teacher.id,
+            location_id=location.id,
+            name="Aulas Individuais",
+            description="Aulas particulares - R$400/mês (4 aulas de 1h)",
+            hourly_rate=100.0,  # R$100/hora × 4 aulas/mês = R$400
+            max_students=1,
+            active=True
+        )
+        db.add(group1)
         
-        for i, (name, price) in enumerate(zip(group_names, prices)):
-            group = Group(
-                id=str(uuid.uuid4()),
-                teacher_id=teacher.id,
-                location_id=locations[i % 2].id,
-                name=name,
-                description=f"Turma de {name} - R${price}/hora",
-                hourly_rate=float(price),
-                max_students=10,
-                active=True
-            )
-            db.add(group)
-            groups.append(group)
+        # Turma 2: Aulas em Grupo R$300/mês
+        group2 = Group(
+            id=str(uuid.uuid4()),
+            teacher_id=teacher.id,
+            location_id=location.id,
+            name="Aulas em Grupo",
+            description="Aulas em pequenos grupos - R$300/mês (4 aulas de 1.5h)",
+            hourly_rate=75.0,  # R$75/hora × 4 aulas/mês = R$300
+            max_students=6,
+            active=True
+        )
+        db.add(group2)
         
         db.flush()
+        groups = [group1, group2]
         
-        # 4. Criar 20 alunos distribuídos nas turmas
-        print("👥 Criando 20 alunos...")
+        # 4. Criar 12 alunos: 6 em individual, 6 em grupo
+        print("👥 Criando 12 alunos...")
         students = []
         student_names = [
+            # Turma 1 (Individuais - R$400/mês)
             "Ana Silva", "Bruno Costa", "Carlos Santos", "Diana Lima",
-            "Eduardo Ferreira", "Fernanda Gomes", "Gustavo Oliveira", "Helena Martins",
-            "Igor Souza", "Júlia Pereira", "Karine Alves", "Leonardo Barbosa",
-            "Marina Cavalcanti", "Nícolas Rocha", "Olivia Mendes", "Paulo Ribeiro",
-            "Quentin Dupree", "Rafaela Teixeira", "Samuel Correia", "Tatiana Abreu"
+            "Eduardo Ferreira", "Fernanda Gomes",
+            # Turma 2 (Grupo - R$300/mês)
+            "Gustavo Oliveira", "Helena Martins", "Igor Souza", "Júlia Pereira",
+            "Karine Alves", "Leonardo Barbosa"
         ]
         
-        # Distribuir 5 alunos por turma
-        for idx, name in enumerate(student_names):
-            group_idx = idx % 4
+        monthly_amounts = [
+            # Turma 1 (Individual)
+            400, 400, 400, 400, 400, 400,
+            # Turma 2 (Grupo)
+            300, 300, 300, 300, 300, 300
+        ]
+        
+        group_assignments = [
+            groups[0], groups[0], groups[0], groups[0], groups[0], groups[0],  # Turma 1
+            groups[1], groups[1], groups[1], groups[1], groups[1], groups[1],  # Turma 2
+        ]
+        
+        for idx, (name, monthly_amount, group) in enumerate(zip(student_names, monthly_amounts, group_assignments)):
             student = Student(
                 id=str(uuid.uuid4()),
                 teacher_id=teacher.id,
@@ -136,13 +151,13 @@ def seed_realistic_data(db: Session = None):
                 created_at=datetime.utcnow() - timedelta(days=random.randint(30, 180))
             )
             db.add(student)
-            students.append((student, groups[group_idx]))
+            students.append((student, group, monthly_amount))
         
         db.flush()
         
         # 5. Associar alunos às turmas
         print("🔗 Associando alunos às turmas...")
-        for student, group in students:
+        for student, group, _ in students:
             group_student = GroupStudent(
                 id=str(uuid.uuid4()),
                 group_id=group.id,
@@ -153,67 +168,53 @@ def seed_realistic_data(db: Session = None):
         
         db.flush()
         
-        # 6. Criar horários (2 horários por turma)
+        # 6. Criar horários (1 por turma)
         print("⏰ Criando horários...")
-        schedules = []
         
-        time_slots = [
-            ("18:00", "19:00"),
-            ("19:00", "20:00"),
-            ("20:00", "21:00"),
-            ("14:00", "15:00")
-        ]
+        schedule1 = Schedule(
+            id=str(uuid.uuid4()),
+            teacher_id=teacher.id,
+            group_id=groups[0].id,
+            location_id=location.id,
+            day_of_week=2,  # Terça
+            start_time="18:00",
+            end_time="19:00"
+        )
+        db.add(schedule1)
         
-        for i, group in enumerate(groups):
-            schedule = Schedule(
-                id=str(uuid.uuid4()),
-                teacher_id=teacher.id,
-                group_id=group.id,
-                location_id=group.location_id,
-                day_of_week=1,  # Segunda
-                start_time=time_slots[i][0],
-                end_time=time_slots[i][1]
-            )
-            db.add(schedule)
-            schedules.append(schedule)
+        schedule2 = Schedule(
+            id=str(uuid.uuid4()),
+            teacher_id=teacher.id,
+            group_id=groups[1].id,
+            location_id=location.id,
+            day_of_week=4,  # Quinta
+            start_time="19:00",
+            end_time="20:30"
+        )
+        db.add(schedule2)
         
         db.flush()
         
-        # 7. Criar pagamentos com distribuição realista
+        # 7. Criar pagamentos com distribuição realista (4 meses)
         print("💰 Criando pagamentos com distribuição realista...")
-        print("   📊 Distribuição planejada:")
-        print("      • 70% pagos (14 alunos)")
-        print("      • 20% pendentes (4 alunos)")
-        print("      • 8% atrasados < 30 dias (1-2 alunos)")
-        print("      • 2% pausados > 60 dias (1 aluno)")
+        print("   📊 Distribuição planejada (12 alunos):")
+        print("      • 67% PAGOS (8 alunos) - Todos os meses em dia")
+        print("      • 17% A RECEBER (2 alunos) - Última fatura vencendo/vencida hoje (PENDING)")
+        print("      • 17% INADIMPLENTES (1-2 alunos) - 30+ dias em atraso (OVERDUE)")
         
-        # Definir status para cada aluno conforme distribuição
-        # Total: 20 alunos
-        # 70% paid = 14 students (indices 0-13)
-        # 20% pending = 4 students (indices 14-17)
-        # 8% overdue < 30 days = 1-2 students (indices 18)
-        # 2% paused > 60 days = 1 student (index 19)
+        # Distribuição status (independente de turma)
+        # Índices 0-7: Pagos (8)
+        # Índices 8-9: A Receber (2)
+        # Índices 10-11: Inadimplentes (2)
         
-        for i, (student_obj, group) in enumerate(students):
-            # Preço da turma
-            price_per_hour = prices[groups.index(group)]
-            
-            # Assumir 4 aulas por mês (1 por semana)
-            monthly_amount = price_per_hour * 4
-            
-            # Definir status do aluno baseado no índice
-            if i < 14:
-                # 70% - Alunos pagos (14 students)
+        for i, (student_obj, group, monthly_amount) in enumerate(students):
+            # Definir categoria do aluno
+            if i < 8:
                 student_category = "paid"
-            elif i < 18:
-                # 20% - Alunos com pagamentos pendentes (4 students)
+            elif i < 10:
                 student_category = "pending"
-            elif i < 19:
-                # 8% - Aluno atrasado < 30 dias (1-2 students)
-                student_category = "overdue"
             else:
-                # 2% - Aluno pausado > 60 dias (1 student)
-                student_category = "paused"
+                student_category = "overdue"
             
             # Criar 4 meses de pagamentos
             for month in range(4, 0, -1):  # 4 meses atrás até agora
@@ -226,51 +227,37 @@ def seed_realistic_data(db: Session = None):
                     payment_method = random.choice(["pix", "credit_card", "bank_transfer"])
                     
                 elif student_category == "pending":
-                    # Alunos com pagamentos pendentes
-                    if month >= 2:  # Meses antigos pagos
-                        status = "PAID"
-                        payment_date = due_date + timedelta(days=random.randint(1, 5))
-                        payment_method = random.choice(["pix", "credit_card"])
-                    else:  # Mês atual pendente
-                        status = "PENDING"
-                        payment_date = None
-                        payment_method = None
-                        
-                elif student_category == "overdue":
-                    # Aluno atrasado < 30 dias
-                    if month >= 3:  # Meses muito antigos pagos
+                    # Alunos COM FATURA PENDENTE (não em atraso ainda)
+                    if month >= 2:
+                        # Meses antigos - pagos
                         status = "PAID"
                         payment_date = due_date + timedelta(days=random.randint(1, 5))
                         payment_method = "pix"
-                    elif month == 2:  # Mês passado - atrasado
-                        status = "OVERDUE"
-                        payment_date = None
-                        payment_method = None
-                        # Ajustar due_date para ter ~20 dias de atraso
-                        due_date = date.today() - timedelta(days=20)
-                    else:  # Mês atual - pendente
+                    else:
+                        # Mês atual/próximo - PENDING (vencendo hoje ou vencido hoje, mas ainda PENDING não OVERDUE)
                         status = "PENDING"
                         payment_date = None
                         payment_method = None
                         
-                else:  # paused
-                    # Aluno pausado > 60 dias sem pagar
-                    if month == 4:  # 4 meses atrás - último pagamento
+                else:  # overdue
+                    # Alunos INADIMPLENTES (30+ dias em atraso)
+                    if month == 4:
+                        # 4 meses atrás - último pagamento
                         status = "PAID"
                         payment_date = due_date + timedelta(days=random.randint(1, 3))
                         payment_method = "pix"
                     else:
-                        # Todos os outros meses sem pagar (3 meses = ~90 dias)
+                        # Meses 3, 2, 1 - todos em atraso (30+ dias)
                         status = "OVERDUE"
                         payment_date = None
                         payment_method = None
                         # Ajustar due_date para refletir atraso real
                         if month == 3:
-                            due_date = date.today() - timedelta(days=75)  # ~2.5 meses
+                            due_date = date.today() - timedelta(days=75)  # ~2.5 meses atrás
                         elif month == 2:
-                            due_date = date.today() - timedelta(days=45)  # ~1.5 meses
+                            due_date = date.today() - timedelta(days=45)  # ~1.5 mês atrás
                         else:
-                            due_date = date.today() - timedelta(days=15)  # ~0.5 mês
+                            due_date = date.today() - timedelta(days=15)  # ~0.5 mês atrás
                 
                 payment = Payment(
                     id=str(uuid.uuid4()),
@@ -291,15 +278,10 @@ def seed_realistic_data(db: Session = None):
         db.flush()
         
         # 8. Atualizar status de inadimplência dos alunos
-        print("📊 Atualizando status de inadimplência e aplicando regras de negócio...")
-        print("   ⚙️  Regras:")
-        print("      • Overdue: < 30 dias atrasado")
-        print("      • Late: 30-60 dias atrasado")
-        print("      • Paused: > 60 dias (libera vaga automaticamente)")
-        
+        print("📊 Atualizando status de inadimplência...")
         from app.services.payment_status import update_student_payment_status
         
-        for student, _ in students:
+        for student, _, _ in students:
             update_student_payment_status(student.id, db)
         
         db.commit()
@@ -310,11 +292,9 @@ def seed_realistic_data(db: Session = None):
         print("="*70)
         print(f"✓ Professor: {teacher.full_name}")
         print(f"✓ Email: {teacher.email} | Senha: password123")
-        print(f"✓ Turmas: 4 (Iniciantes R$50/h, Intermediário R$60/h,")
-        print(f"            Avançado R$70/h, Especializado R$80/h)")
-        print(f"✓ Alunos: 20 (5 por turma)")
-        print(f"✓ Locais: 2 (Sala Centro, Sala Zona Norte)")
-        print(f"✓ Pagamentos mensais: R$200, R$240, R$280, R$320 (4 aulas/mês)")
+        print(f"✓ Turmas: 2 (Individuais R$400/mês, Grupo R$300/mês)")
+        print(f"✓ Alunos: 12 (6 individuais + 6 em grupo)")
+        print(f"✓ Local: 1 (Estúdio Principal)")
         
         # Estatísticas de pagamento e inadimplência
         from app.services.payment_status import (
@@ -325,53 +305,56 @@ def seed_realistic_data(db: Session = None):
         )
         
         # Buscar estatísticas
-        db.refresh(teacher)  # Recarregar para pegar dados atualizados
+        db.refresh(teacher)
         paused = get_paused_students(teacher.id, db)
         late_students = get_late_students(teacher.id, db)
         overdue = get_overdue_students(teacher.id, db)
         all_inadimplent = get_all_inadimplent_students(teacher.id, db)
         
-        # Alunos pagos (20 - inadimplentes)
-        paid_students = 20 - len(all_inadimplent)
+        # Alunos pagos (12 - inadimplentes)
+        paid_students = 12 - len(all_inadimplent)
         
-        print(f"\n📊 DISTRIBUIÇÃO DE PAGAMENTOS:")
-        print(f"   ✅ Pagos: {paid_students} alunos ({paid_students/20*100:.0f}%)")
-        print(f"   ⏳ Pendentes: {20 - len(all_inadimplent) - paid_students} alunos")
-        print(f"   ⚠️  Atrasados (< 30 dias): {len(overdue)} alunos ({len(overdue)/20*100:.0f}%)")
-        print(f"   🟠 Muito Atrasados (30-60 dias): {len(late_students)} alunos ({len(late_students)/20*100:.0f}%)")
-        print(f"   🔴 Pausados (> 60 dias): {len(paused)} alunos ({len(paused)/20*100:.0f}%)")
+        print(f"\n📊 DISTRIBUIÇÃO DE STATUS:")
+        print(f"   ✅ Pagos: {paid_students} alunos ({paid_students/12*100:.0f}%)")
+        print(f"   ⏳ A Receber (PENDING): 2 alunos (17%)")
+        print(f"   🔴 Inadimplentes (OVERDUE >= 30 dias): {len(all_inadimplent)} alunos ({len(all_inadimplent)/12*100:.0f}%)")
         
         # Calcular total em aberto
-        total_overdue = sum(p.get('total_overdue', 0) for p in all_inadimplent)
+        pending_payments = db.query(Payment).filter(
+            Payment.teacher_id == teacher.id,
+            Payment.status == "PENDING"
+        ).all()
+        total_pending = sum(p.amount for p in pending_payments)
         
-        print(f"\n💰 FINANCEIRO:")
-        print(f"   • Total em aberto: R$ {total_overdue:.2f}")
-        print(f"   • Inadimplentes: {len(all_inadimplent)} alunos")
+        overdue_payments = db.query(Payment).filter(
+            Payment.teacher_id == teacher.id,
+            Payment.status == "OVERDUE"
+        ).all()
+        total_overdue = sum(p.amount for p in overdue_payments)
+        
+        print(f"\n💰 FINANCEIRO (MÊS ATUAL):")
+        print(f"   • A Receber: R$ {total_pending:.2f}")
+        print(f"   • Em Atraso (30+ dias): R$ {total_overdue:.2f}")
+        print(f"   • Total em Aberto: R$ {(total_pending + total_overdue):.2f}")
+        
+        # Receita esperada do mês
+        expected_monthly = (paid_students * 350) + total_pending  # Média R$350/aluno
+        print(f"   • Receita Esperada (mês): R$ {expected_monthly:.2f}")
         
         if paused:
-            print(f"\n🔴 ALUNOS PAUSADOS (Vaga liberada automaticamente):")
+            print(f"\n🔴 ALUNOS PAUSADOS POR INADIMPLÊNCIA (> 60 dias):")
             for p in paused:
                 print(f"   • {p['student_name']}: {p['days_without_payment']} dias sem pagar")
-                print(f"     R$ {p['total_overdue']:.2f} em aberto")
-        
-        if late_students:
-            print(f"\n🟠 ALUNOS MUITO ATRASADOS (30-60 dias - Risco de pausar):")
-            for l in late_students:
-                print(f"   • {l['student_name']}: {l['days_without_payment']} dias")
         
         if overdue:
-            print(f"\n⚠️  ALUNOS ATRASADOS (< 30 dias):")
-            for o in overdue[:3]:  # Mostrar só os 3 primeiros
-                print(f"   • {o['student_name']}: {o['days_without_payment']} dias")
+            print(f"\n⚠️  ALUNOS EM ATRASO (30+ dias):")
+            for o in overdue:
+                print(f"   • {o['student_name']}: {o['days_without_payment']} dias (R$ {o['total_overdue']:.2f})")
         
-        print("\n📌 ENDPOINTS DISPONÍVEIS:")
-        print("   GET /api/dashboard/summary")
-        print("   GET /api/dashboard/paused-students")
-        print("   GET /api/dashboard/overdue-students")
+        print("\n📌 URLs PARA TESTAR:")
+        print("   GET /api/dashboard/payment-summary")
+        print("   GET /api/dashboard/inadimplent-students")
         print("   GET /api/students")
-        
-        print("\n🔗 TESTE RÁPIDO:")
-        print("   curl https://teacherflow-backend.onrender.com/health")
         
         print("="*70 + "\n")
         

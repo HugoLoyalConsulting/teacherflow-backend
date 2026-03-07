@@ -161,7 +161,33 @@ export function createOnboardingTour() {
  */
 export function startOnboardingTour() {
   const tour = createOnboardingTour();
+  
+  // Start the tour
   tour.drive();
+  
+  // Mark as completed when tour is destroyed (closed/finished)
+  // This persists the setting in localStorage so it doesn't show again
+  setTimeout(() => {
+    const listener = () => {
+      console.log('✅ Tour completed! Marking in localStorage');
+      localStorage.setItem('teacherflow_tour_completed', 'true');
+    };
+    
+    // Listen for when the tour overlay is removed from DOM
+    const observer = new MutationObserver((mutations) => {
+      const driverOverlay = document.querySelector('[data-driver-popover]');
+      if (!driverOverlay) {
+        observer.disconnect();
+        listener();
+      }
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }, 100);
+  
   return tour;
 }
 
