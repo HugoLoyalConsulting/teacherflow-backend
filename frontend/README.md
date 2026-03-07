@@ -35,13 +35,13 @@ npm run preview
 ## Variaveis de Ambiente
 
 ```env
-VITE_API_URL=https://teacherflow-backend.onrender.com/api/v1
+VITE_API_URL=https://backend-production-c4f8f.up.railway.app/api/v1
 VITE_ENVIRONMENT=production
 ```
 
 ## Referencias
 
-- `../docs/VERCEL_ENVIRONMENT_VARIABLES.md`
+- `../README_RAILWAY.md`
 - `../docs/DOCUMENTATION_INDEX.md`
 - `../docs/overview/FOLDER_STRUCTURE.md`
 - `../backend/README.md`

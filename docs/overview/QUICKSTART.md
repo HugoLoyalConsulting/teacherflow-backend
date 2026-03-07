@@ -1,122 +1,38 @@
-# 🎓 TeacherFlow - Online Only
+# QUICKSTART - Railway
 
-**Tudo funciona online. Zero portas locais abertas.**
+## 1) Abrir o projeto
 
----
-
-## 📋 Como Funciona
-
-```
-Seu PC (local)
-    ↓
-Edita arquivo.js / arquivo.py
-    ↓
-git commit + git push
-    ↓
-Sobe para GitHub
-    ↓
-GitHub Actions roda (tests, build, deploy)
-    ↓
-Frontend → Vercel (automático)
-Backend → Render (automático)
-    ↓
-Acessa tudo online
-    ↓
-Sem portas abertas no seu PC ✅
-```
-
----
-
-## 🚀 Setup (5 minutos)
-
-### 1️⃣ Clone o repositório
 ```bash
 git clone https://github.com/HugoLoyalConsulting/teacherflow-backend.git
 cd teacherflow
 ```
 
-### 2️⃣ Edite arquivos localmente
-```bash
-# Abra em seu editor (VS Code, etc)
-# Edite qualquer arquivo
+## 2) Fluxo padrão
 
-# Exemplos:
-# - frontend/src/pages/Dashboard.tsx
-# - backend/app/models.py
-# - frontend/index.html
-```
-
-### 3️⃣ Commit e push (sem rodar nada)
 ```bash
 git add .
-git commit -m "Meu ajuste no dashboard"
+git commit -m "sua alteração"
 git push origin main
 ```
 
-### 4️⃣ GitHub Actions faz o resto
-- ✅ Testa tudo
-- ✅ Compila
-- ✅ Faz deploy automático
-- ✅ (~3 minutos)
+O Railway executa o deploy automaticamente.
 
-### 5️⃣ Acessa online
-- Frontend: **https://teacherflow.vercel.app**
-- Backend: **https://teacherflow-backend.onrender.com/api/v1/docs**
+## 3) Endpoints de produção
 
----
+- Frontend: `https://frontend-production-a7c5.up.railway.app`
+- Backend: `https://backend-production-c4f8f.up.railway.app`
+- Docs: `https://backend-production-c4f8f.up.railway.app/docs`
 
-## 🔒 Segurança: ZERO Portas Abertas
+## 4) Validação rápida
 
-**Você NUNCA vai rodar nada localmente.**
-
-❌ **NÃO FAÇA ISTO:**
-```bash
-python main.py              # ← Deixa porta aberta
-npm run dev                 # ← Deixa porta aberta
-npm run build               # ← Não precisa
+```powershell
+./scripts/quality/validate-stack.ps1
 ```
 
-✅ **SÓ FAÇA ISTO:**
-```bash
-git push                    # ← Tudo que precisa!
-```
+## 5) Referências
 
-**GitHub Actions** faz tudo automaticamente:
-- Testa seu código
-- Compila
-- Faz deploy em Vercel (frontend)
-- Faz deploy em Render (backend)
-
-Seu PC nunca abre porta. 100% seguro. ✅
-
----
-
-## 🔐 Segurança
-
-| O quê | Onde | Quem acessa |
-|-------|------|-------------|
-| Seu código | GitHub (privado) | Só você + GitHub Actions |
-| Frontend | Vercel (online) | Qualquer um com o link |
-| Backend | Render (online) | Só app autorizada (CORS) |
-| Seu PC | Local | Ninguém de fora |
-
-**Zero portas abertas no seu PC.** ✅
-
----
-
-## 📁 Estrutura
-
-```
-teacherflow/
-├── frontend/        ← Edite aqui (HTML, React, CSS)
-├── backend/         ← Edite aqui (Python, SQLAlchemy)
-├── .github/workflows/
-│   ├── deploy-frontend.yml  ← GitHub Actions
-│   └── deploy-backend.yml   ← GitHub Actions
-└── README.md
-```
-
----
+- `README_RAILWAY.md`
+- `docs/overview/FOLDER_STRUCTURE.md`
 
 ## 🔄 Workflow típico
 

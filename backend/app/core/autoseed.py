@@ -81,7 +81,7 @@ def auto_seed_if_empty():
             print("  • 8% overdue < 30 days (1-2 students)")
             print("  • 2% paused > 60 days (1 student)")
             print("\nYou can verify this in:")
-            print("  GET https://teacherflow-backend.onrender.com/api/v1/dashboard/statistics")
+            print("  GET https://backend-production-c4f8f.up.railway.app/api/v1/dashboard/statistics")
             print("="*60 + "\n")
         else:
             # Database already has realistic data

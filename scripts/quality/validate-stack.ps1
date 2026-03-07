@@ -1,6 +1,6 @@
 param(
-    [string]$BackendUrl = "https://teacherflow-backend.onrender.com",
-    [string]$FrontendUrl = "https://teacherflow-app.vercel.app",
+    [string]$BackendUrl = "https://backend-production-c4f8f.up.railway.app",
+    [string]$FrontendUrl = "https://frontend-production-a7c5.up.railway.app",
     [int]$TimeoutSec = 30
 )
 

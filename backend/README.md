@@ -6,7 +6,7 @@ Backend FastAPI do TeacherFlow no monorepo.
 
 - API REST em `backend/app/`
 - Migrations em `backend/alembic/`
-- Deploy em Render com configuracao em `render.yaml` (raiz)
+- Deploy em Railway com configuracao em `backend/railway.toml`
 
 ## Estrutura
 
@@ -36,25 +36,18 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 API docs local: `http://localhost:8000/api/v1/docs`
 
-## Deploy Render
+## Deploy Railway
 
-Servico deve usar:
+Servico usa `backend/Dockerfile` e `backend/railway.toml`.
 
-- Branch: `main`
-- Root Directory: `backend`
-- Build Command: `pip install --upgrade pip && pip install -r requirements.txt`
-- Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+URL atual de producao:
 
-Migrations apos deploy:
-
-```bash
-cd /opt/render/project/src/backend
-alembic upgrade head
-```
+- Backend: `https://backend-production-c4f8f.up.railway.app`
+- Docs: `https://backend-production-c4f8f.up.railway.app/docs`
 
 ## Referencias
 
-- `../render.yaml`
+- `../railway.json`
+- `../README_RAILWAY.md`
 - `../docs/deployment/GUIA_DEPLOY_FINAL.md`
-- `../docs/deployment/RENDER_SETUP_CHECKLIST.md`
 - `../docs/operations/DISASTER_RECOVERY_RUNBOOK.md`

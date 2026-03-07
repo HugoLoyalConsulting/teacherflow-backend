@@ -7,7 +7,7 @@ Guia oficial da estrutura de pastas do repositorio `teacherflow`.
 Na raiz, manter apenas:
 
 - pastas de dominio (`backend`, `frontend`, `docs`, `scripts`, `.github`)
-- arquivos tecnicos obrigatorios (`render.yaml`, `.gitignore`, etc.)
+- arquivos tecnicos obrigatorios (`railway.json`, `.gitignore`, etc.)
 
 Evitar arquivos operacionais soltos na raiz.
 
@@ -40,7 +40,7 @@ teacherflow/
     quality/
     deploy/
     README.md
-  render.yaml
+  railway.json
 ```
 
 ## Convencao de Organizacao

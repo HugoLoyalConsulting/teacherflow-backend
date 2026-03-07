@@ -6,7 +6,7 @@ Guia principal do projeto TeacherFlow com navegação por pastas e documentos.
 
 1. `docs/overview/START.md`
 2. `docs/deployment/SETUP_INSTRUCTIONS.md`
-3. `docs/deployment/RENDER_SETUP_CHECKLIST.md`
+3. `README_RAILWAY.md`
 4. `docs/DOCUMENTATION_INDEX.md`
 
 ## Estrutura do Repositorio
@@ -21,15 +21,15 @@ Detalhamento completo da arvore: `docs/overview/FOLDER_STRUCTURE.md`.
 
 ## Ambientes e URLs
 
-- Frontend: `https://teacherflow-app.vercel.app`
-- Backend: `https://teacherflow-backend.onrender.com`
-- OpenAPI: `https://teacherflow-backend.onrender.com/api/v1/docs`
+- Frontend: `https://frontend-production-a7c5.up.railway.app`
+- Backend: `https://backend-production-c4f8f.up.railway.app`
+- OpenAPI: `https://backend-production-c4f8f.up.railway.app/docs`
 
 ## Fluxo Operacional
 
 1. Alterar codigo/documentacao.
 2. Commit e push para `main`.
-3. Validar workflow/deploy no GitHub Actions e Render.
+3. Validar deploy no Railway.
 4. Executar smoke test: `./scripts/quality/test-backend.ps1`.
 
 ## Guia por Area
@@ -41,6 +41,6 @@ Detalhamento completo da arvore: `docs/overview/FOLDER_STRUCTURE.md`.
 - QA: `docs/qa/QA_SUMMARY.md`
 - Status: `docs/status/STATUS_PROJETO.md`
 
-## Observacao Importante Sobre Render
+## Observacao Importante Sobre Deploy
 
-`render.yaml` no repositorio so eh aplicado automaticamente quando o servico foi criado como Blueprint. Se o servico Render foi criado manualmente, as configuracoes precisam ser ajustadas no dashboard do Render.
+O projeto esta padronizado para Railway. Configuracoes de deploy antigas (Render/Vercel) foram removidas para evitar drift operacional.

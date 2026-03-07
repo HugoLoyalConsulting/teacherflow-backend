@@ -7,7 +7,7 @@ Indice oficial da documentacao ativa do projeto.
 1. `docs/overview/README.md`
 2. `docs/overview/FOLDER_STRUCTURE.md`
 3. `docs/deployment/SETUP_INSTRUCTIONS.md`
-4. `docs/deployment/RENDER_SETUP_CHECKLIST.md`
+4. `README_RAILWAY.md`
 
 ## Secoes
 

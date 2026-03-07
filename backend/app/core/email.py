@@ -260,13 +260,13 @@ def send_welcome_email(email: str, name: str) -> bool:
             </div>
             
             <div class="cta">
-                <a href="https://teacherflow-app.vercel.app" class="button">
+                <a href="https://frontend-production-a7c5.up.railway.app" class="button">
                     Começar Agora →
                 </a>
             </div>
             
             <p style="margin-top: 40px; font-size: 14px; color: #6b7280;">
-                Precisa de ajuda? Visite nossa <a href="https://teacherflow-app.vercel.app/help">central de ajuda</a>.
+                Precisa de ajuda? Visite nossa <a href="https://frontend-production-a7c5.up.railway.app/help">central de ajuda</a>.
             </p>
         </div>
     </body>
@@ -287,9 +287,9 @@ def send_welcome_email(email: str, name: str) -> bool:
     - Visualizar dashboard com métricas
     - Organizar locais de aula
     
-    Acesse: https://teacherflow-app.vercel.app
+    Acesse: https://frontend-production-a7c5.up.railway.app
     
-    Precisa de ajuda? Visite: https://teacherflow-app.vercel.app/help
+    Precisa de ajuda? Visite: https://frontend-production-a7c5.up.railway.app/help
     """
     
     return email_service.send_email(email, subject, html_body, text_body)

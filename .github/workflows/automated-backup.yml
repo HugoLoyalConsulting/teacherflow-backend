@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   backup-database:
-    name: 📦 Database Backup (Neon PostgreSQL)
+    name: 📦 Database Backup (Railway PostgreSQL)
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.backup_type != 'code-only' || github.event_name == 'schedule' }}
     
@@ -59,10 +59,10 @@ jobs:
       
       - name: 🗄️ Create database backup (SQL)
         env:
-          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           if [ -z "$DATABASE_URL" ]; then
-            echo "NEON_DATABASE_URL não configurado em GitHub Secrets"
+            echo "BACKUP_DATABASE_URL não configurado em GitHub Secrets"
             exit 1
           fi
           mkdir -p backups/database
@@ -79,7 +79,7 @@ jobs:
       
       - name: 📊 Create database backup (JSON)
         env:
-          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
         run: |
           python scripts/backup/backup_database.py
         continue-on-error: true
@@ -122,7 +122,7 @@ jobs:
           body: |
             🛡️ **Automated Monthly Backup**
             
-            - **Database:** PostgreSQL (Neon)
+            - **Database:** PostgreSQL (Railway)
             - **Formats:** SQL, JSON, CSV
             - **Timestamp:** $(date -u +%Y-%m-%d %H:%M:%S UTC)
             - **Commit:** ${{ github.sha }}
@@ -209,8 +209,9 @@ jobs:
           # Backup de arquivos de configuração (sem secrets)
           cp backend/.env.example backups/config/
           cp frontend/.env.example backups/config/
-          cp render.yaml backups/config/
-          cp frontend/vercel.json backups/config/
+          cp railway.json backups/config/
+          cp backend/railway.toml backups/config/
+          cp frontend/railway.toml backups/config/
           cp backend/alembic.ini backups/config/ 2>/dev/null || true
           
           # Listar routers e models (estrutura da API)

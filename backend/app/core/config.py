@@ -25,10 +25,9 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: list = [
         "http://localhost:5176",
+        "http://localhost:5173",
         "http://localhost:3000",
-        "https://teacherflow-app.vercel.app",
-        "https://teacherflow.vercel.app",
-        "https://teacherflow-app-git-staging-hugoloyalconsulting-8127s-projects.vercel.app",
+        "https://frontend-production-a7c5.up.railway.app",
     ]
     
     # Monitoring & Telemetry

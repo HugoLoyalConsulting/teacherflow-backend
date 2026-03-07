@@ -132,11 +132,11 @@ async def version():
             stderr=subprocess.DEVNULL
         ).decode('ascii').strip()
     except:
-        commit_hash = os.getenv("RENDER_GIT_COMMIT", "unknown")[:8]
+        commit_hash = os.getenv("RAILWAY_GIT_COMMIT_SHA", "unknown")[:8]
     
     return {
         "version": commit_hash,
-        "deployed_at": os.getenv("RENDER_INSTANCE_START_TIME", datetime.utcnow().isoformat()),
+        "deployed_at": os.getenv("RAILWAY_DEPLOYMENT_CREATED_AT", datetime.utcnow().isoformat()),
         "environment": settings.ENVIRONMENT,
         "api_version": settings.API_V1_STR,
         "debug": settings.DEBUG

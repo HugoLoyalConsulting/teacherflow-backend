@@ -404,13 +404,13 @@ railway webhook create --url https://seu-webhook.com/deploy
 
 ## 🔄 Migração de Dados
 
-Se você já tem dados em outro banco (como Neon):
+Se você já tem dados em outro PostgreSQL:
 
-### **1. Exportar do Neon**
+### **1. Exportar do banco de origem**
 
 ```bash
 # Via pg_dump
-pg_dump "$NEON_DATABASE_URL" > backup.sql
+pg_dump "$SOURCE_DATABASE_URL" > backup.sql
 ```
 
 ### **2. Importar no Railway**
