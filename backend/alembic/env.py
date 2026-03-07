@@ -38,8 +38,12 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
+    cfg_section = config.get_section(config.config_ini_section, {})
+    # Ignore legacy Flask-SQLAlchemy option if present in ini/env.
+    cfg_section.pop("sqlalchemy.track_modifications", None)
+
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        cfg_section,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
