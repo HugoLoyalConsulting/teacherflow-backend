@@ -1,6 +1,9 @@
 services:
+  # ============================================
+  # PRODUCTION ENVIRONMENT
+  # ============================================
   - type: web
-    name: teacherflow-backend
+    name: teacherflow-backend-prod
     env: python
     region: oregon
     plan: free
@@ -27,6 +30,8 @@ services:
         value: /api/v1
       - key: ENVIRONMENT
         value: production
+      - key: ENABLE_AUTOSEED
+        value: false
       - key: CORS_ORIGINS
         value: '["https://teacherflow-app.vercel.app","http://localhost:5173"]'
       # PostHog Telemetry
@@ -39,5 +44,53 @@ services:
       # Sentry Error Monitoring
       - key: SENTRY_ENABLED
         value: false
+      - key: SENTRY_DSN
+        sync: false
+
+  # ============================================
+  # QA / STAGING ENVIRONMENT
+  # ============================================
+  - type: web
+    name: teacherflow-backend-qa
+    env: python
+    region: oregon
+    plan: free
+    branch: staging
+    rootDirectory: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python -m app.core.preflight && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: DATABASE_URL
+        sync: false  # Use separate staging database
+      - key: SECRET_KEY
+        sync: false
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: 7
+      - key: DEBUG
+        value: true
+      - key: API_V1_STR
+        value: /api/v1
+      - key: ENVIRONMENT
+        value: staging
+      - key: ENABLE_AUTOSEED
+        value: true
+      - key: CORS_ORIGINS
+        value: '["https://staging-teacherflow-app.vercel.app","https://teacherflow-app.vercel.app","http://localhost:5173","http://localhost:3000"]'
+      # PostHog Telemetry (enabled in QA for testing)
+      - key: POSTHOG_ENABLED
+        value: true
+      - key: POSTHOG_API_KEY
+        sync: false
+      - key: POSTHOG_HOST
+        value: https://app.posthog.com
+      # Sentry Error Monitoring (enabled in QA for testing)
+      - key: SENTRY_ENABLED
+        value: true
       - key: SENTRY_DSN
         sync: false

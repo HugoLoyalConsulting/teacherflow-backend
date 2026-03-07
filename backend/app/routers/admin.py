@@ -20,6 +20,7 @@ async def reset_demo_data(
     🔄 Reset demo data with realistic distribution
     
     **Admin only endpoint** - Requires admin privileges
+    **QA/Staging only** - Blocked in production environment
     
     This will:
     - Clear all existing data (students, payments, groups, etc.)
@@ -35,6 +36,16 @@ async def reset_demo_data(
     - Clear old unrealistic data
     - Refresh for demos/presentations
     """
+    import os
+    
+    # Block in production environment
+    environment = os.getenv("ENVIRONMENT", "development")
+    if environment == "production":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Demo data reset is disabled in production environment for safety"
+        )
+    
     # Verify admin privileges
     if not current_user.is_admin:
         raise HTTPException(

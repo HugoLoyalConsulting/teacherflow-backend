@@ -6,6 +6,7 @@ from app.core.database import Base, engine
 from app.routers import auth, students, locations, groups, schedules, lessons, payments, dashboard, feedback, verification, onboarding, admin, tour, lgpd, subscriptions
 from app.core.autoseed import auto_seed_if_empty
 import logging
+import os
 
 # Initialize monitoring and telemetry
 from app.core import monitoring, telemetry
@@ -68,6 +69,21 @@ async def startup_event():
         logger.info("Sentry error monitoring: ENABLED")
     if settings.POSTHOG_ENABLED:
         logger.info("PostHog telemetry: ENABLED")
+    
+    # Seed subscription tiers if they don't exist
+    try:
+        from app.core.database import SessionLocal
+        from app.services.subscription_service import SubscriptionService
+        
+        db = SessionLocal()
+        try:
+            subscription_service = SubscriptionService(db)
+            subscription_service.seed_subscription_tiers()
+            logger.info("✓ Subscription tiers verified/seeded")
+        finally:
+            db.close()
+    except Exception as e:
+        logger.warning(f"Failed to seed subscription tiers (non-critical): {e}")
 
 
 @app.on_event("shutdown")
@@ -96,3 +112,32 @@ async def health():
 async def healthz():
     """Health check endpoint (Render format)"""
     return {"status": "ok"}
+
+
+@app.get(f"{settings.API_V1_STR}/health/version")
+async def version():
+    """
+    Version endpoint for real-time update detection
+    
+    Frontend polls this endpoint to detect when new version is deployed
+    Returns commit hash, deployment timestamp, and environment
+    """
+    import subprocess
+    from datetime import datetime
+    
+    try:
+        # Get git commit hash (first 8 chars)
+        commit_hash = subprocess.check_output(
+            ['git', 'rev-parse', '--short=8', 'HEAD'],
+            stderr=subprocess.DEVNULL
+        ).decode('ascii').strip()
+    except:
+        commit_hash = os.getenv("RENDER_GIT_COMMIT", "unknown")[:8]
+    
+    return {
+        "version": commit_hash,
+        "deployed_at": os.getenv("RENDER_INSTANCE_START_TIME", datetime.utcnow().isoformat()),
+        "environment": settings.ENVIRONMENT,
+        "api_version": settings.API_V1_STR,
+        "debug": settings.DEBUG
+    }

@@ -44,7 +44,16 @@ def auto_seed_if_empty():
     """
     Automatically run realistic seed if database is empty or has unrealistic data
     This runs on deployment if needed
+    
+    Controlled by ENABLE_AUTOSEED environment variable:
+    - production: ENABLE_AUTOSEED=false (database starts empty)
+    - staging/qa: ENABLE_AUTOSEED=true (auto-populate with demo data)
     """
+    # Check if auto-seeding is enabled
+    if not os.getenv("ENABLE_AUTOSEED", "true").lower() == "true":
+        print("\n✓ Auto-seed disabled (ENABLE_AUTOSEED=false) - production mode")
+        return
+    
     db = SessionLocal()
     try:
         needs_reseed = check_if_needs_reseed(db)

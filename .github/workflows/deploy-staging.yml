@@ -37,6 +37,7 @@ jobs:
         working-directory: frontend
         run: npm run build
         env:
+          # Backend: https://teacherflow-backend-qa.onrender.com
           VITE_API_URL: ${{ secrets.VITE_API_URL_STAGING }}
           VITE_ENVIRONMENT: staging
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID_STAGING }}
@@ -56,7 +57,7 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: frontend
-          vercel-args: '--prod'
+          vercel-args: '--prod --force'  # Force rebuild for cache invalidation
           alias-domains: staging.teacherflow-app.vercel.app
       
       - name: Deployment Complete
