@@ -96,8 +96,8 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
     //     );
     //   } catch (error) {
     //     console.error('Error skipping tour:', error);
-      }
-    };
+    //   }
+    // };
   };
 
   const handleRestartTour = async () => {
