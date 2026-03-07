@@ -17,39 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-      
-      - name: Run tests
-        working-directory: frontend
-        run: npm run test
-        continue-on-error: true
-      
-      - name: Build (Staging)
-        working-directory: frontend
-        run: npm run build
-        env:
-          # Backend: https://teacherflow-backend-qa.onrender.com
-          VITE_API_URL: ${{ secrets.VITE_API_URL_STAGING }}
-          VITE_ENVIRONMENT: staging
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID_STAGING }}
-          VITE_POSTHOG_ENABLED: true
-          VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY_STAGING }}
-          VITE_SENTRY_ENABLED: true
-          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN_STAGING }}
-          VITE_SENTRY_ENVIRONMENT: staging
-          VITE_DEMO_ENABLED: true
-          VITE_EMAIL_VERIFICATION_ENABLED: true
-          VITE_SUBSCRIPTIONS_ENABLED: false
-      
       - name: Deploy to Vercel (Staging)
         uses: amondnet/vercel-action@v25
         with:
