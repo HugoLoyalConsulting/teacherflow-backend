@@ -1,9 +1,12 @@
 """Payment status and inadimplency service
 
 Business Rules:
-- Overdue: < 30 days late (warning status)
-- Late: 30-60 days late (critical status, needs attention)
-- Paused: > 60 days late (automatic schedule release)
+- Overdue (Atrasado): < 30 days late → warning status, still active
+- Late (Inadimplente): 30-60 days late → critical status, needs urgent attention
+- Paused (Pausado): 60+ days late → automatic removal from groups/schedules
+
+Definition:
+- Inadimplent (Inadimplente) = Late OR Paused (>= 30 days without payment)
 """
 from datetime import datetime, date, timedelta
 from sqlalchemy.orm import Session
@@ -56,7 +59,10 @@ def get_payment_status_category(days_without_payment: int) -> str:
     Determina a categoria de status baseado nos dias sem pagar
     
     Returns:
-        'active' | 'overdue' | 'late' | 'paused'
+        - 'active': 0 dias (em dia)
+        - 'overdue': 1-29 dias (atrasado, alerta)
+        - 'late': 30-59 dias (inadimplente, crítico)
+        - 'paused': 60+ dias (pausado, removido de turmas)
     """
     if days_without_payment == 0:
         return "active"
@@ -221,8 +227,9 @@ def get_student_payment_summary(student_id: str, db: Session) -> dict:
 
 def get_all_inadimplent_students(teacher_id: str, db: Session) -> list:
     """
-    Retorna todos os alunos inadimplentes (todos com dias > 0)
-    Ordenados por gravidade: pausados > muito atrasados > atrasados
+    Retorna todos os alunos inadimplentes (>= 30 dias sem pagar)
+    Inclui categorias: 'late' (30-60 dias) e 'paused' (60+ dias)
+    Ordenados por gravidade: pausados primeiro, depois por dias sem pagar
     
     Returns:
         Lista de resumos de pagamento ordenada por gravidade
@@ -234,7 +241,8 @@ def get_all_inadimplent_students(teacher_id: str, db: Session) -> list:
     inadimplent = []
     for student in students:
         summary = get_student_payment_summary(student.id, db)
-        if summary and summary['days_without_payment'] > 0:
+        # Inadimplente = late OR paused (>= 30 dias)
+        if summary and summary['status_category'] in ['late', 'paused']:
             inadimplent.append(summary)
     
     # Ordenar por gravidade (pausado > late > overdue) e depois por dias

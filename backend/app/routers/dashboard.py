@@ -61,9 +61,13 @@ async def list_inadimplent_students(
     db: Session = Depends(get_db),
 ):
     """
-    Lista todos os alunos inadimplentes (30+ dias sem pagar)
+    Lista todos os alunos inadimplentes (>= 30 dias sem pagar)
     
-    Response: Lista de resumos de pagamento, ordenados por dias sem pagar
+    Inclui:
+    - Late (30-59 dias): Inadimplente, precisa atenção urgente
+    - Paused (60+ dias): Pausado, removido automaticamente das turmas
+    
+    Response: Lista de resumos ordenada por gravidade (pausados primeiro)
     """
     students = get_all_inadimplent_students(user_id, db)
     
