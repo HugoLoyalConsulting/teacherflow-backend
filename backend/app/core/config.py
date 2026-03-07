@@ -28,6 +28,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "https://teacherflow-app.vercel.app",
         "https://teacherflow.vercel.app",
+        "https://teacherflow-app-git-staging-hugoloyalconsulting-8127s-projects.vercel.app",
     ]
     
     # Monitoring & Telemetry
