@@ -17,11 +17,13 @@ import {
   startOfDay,
   endOfDay,
   startOfMonth,
+  startOfYear,
   startOfToday,
   startOfWeek,
   eachDayOfInterval,
   eachWeekOfInterval,
   eachMonthOfInterval,
+  isWithinInterval,
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { formatCurrencyBR } from '../utils/formatters'
@@ -114,20 +116,72 @@ export const PaymentsPage = () => {
     return matchMonth && matchPeriod
   })
 
+  // Calculate financial summary with precision
   const summary = {
+    // Pagos (verde) - PAID, PARTIALLY_PAID, RENEGOTIATED
     paid: filteredPayments
       .filter((p) => isPaidStatus(p.status))
       .reduce((sum, p) => sum + p.amount, 0),
+    
+    // A Receber (laranja) - PENDING não vencido
+    pending: filteredPayments
+      .filter((p) => OPEN_STATUSES.includes(p.status) && !isBefore(parseISO(p.dueDate), today))
+      .reduce((sum, p) => sum + p.amount, 0),
+    
+    // Inadimplentes (vermelho) - OVERDUE + DEFAULTED (vencidos)
     overdue: filteredPayments
-      .filter((p) => OVERDUE_STATUSES.includes(p.status))
+      .filter((p) => 
+        (OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status))
+      )
       .reduce((sum, p) => sum + p.amount, 0),
-    defaulted: filteredPayments
-      .filter((p) => DEFAULTED_STATUSES.includes(p.status))
-      .reduce((sum, p) => sum + p.amount, 0),
-    future: filteredPayments
-      .filter((p) => !isBefore(parseISO(p.dueDate), today))
-      .reduce((sum, p) => sum + p.amount, 0),
+    
+    // Total Esperado (azul) - Pagos + A Receber
+    get expected() {
+      return this.paid + this.pending
+    },
+    
+    // Total Geral
     total: filteredPayments.reduce((sum, p) => sum + p.amount, 0),
+  }
+
+  // YTD (Year To Date) - Janeiro até hoje
+  const ytdStart = startOfYear(today)
+  const ytdPayments = payments.filter((p) => 
+    isWithinInterval(parseISO(p.dueDate), { start: ytdStart, end: today })
+  )
+  const ytdSummary = {
+    paid: ytdPayments.filter((p) => isPaidStatus(p.status)).reduce((sum, p) => sum + p.amount, 0),
+    pending: ytdPayments
+      .filter((p) => OPEN_STATUSES.includes(p.status) && !isBefore(parseISO(p.dueDate), today))
+      .reduce((sum, p) => sum + p.amount, 0),
+    overdue: ytdPayments
+      .filter((p) => 
+        (OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status))
+      )
+      .reduce((sum, p) => sum + p.amount, 0),
+    get expected() {
+      return this.paid + this.pending
+    },
+  }
+
+  // MTD (Month To Date) - Dia 1 do mês até hoje
+  const mtdStart = startOfMonth(today)
+  const mtdPayments = payments.filter((p) => 
+    isWithinInterval(parseISO(p.dueDate), { start: mtdStart, end: today })
+  )
+  const mtdSummary = {
+    paid: mtdPayments.filter((p) => isPaidStatus(p.status)).reduce((sum, p) => sum + p.amount, 0),
+    pending: mtdPayments
+      .filter((p) => OPEN_STATUSES.includes(p.status) && !isBefore(parseISO(p.dueDate), today))
+      .reduce((sum, p) => sum + p.amount, 0),
+    overdue: mtdPayments
+      .filter((p) => 
+        (OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status))
+      )
+      .reduce((sum, p) => sum + p.amount, 0),
+    get expected() {
+      return this.paid + this.pending
+    },
   }
 
   // Contar alunos com pagamentos pendentes no mês
@@ -308,7 +362,7 @@ export const PaymentsPage = () => {
         </div>
       </Card>
 
-      {/* Resumo */}
+      {/* Resumo Mensal */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <SummaryCard
           title="Pagos"
@@ -317,19 +371,96 @@ export const PaymentsPage = () => {
           icon="✅"
         />
         <SummaryCard
-          title="Vencidos"
-          value={summary.overdue}
-          color="red"
-          icon="⏰"
+          title="A Receber"
+          subtitle="(não vencidos)"
+          value={summary.pending}
+          color="orange"
+          icon="📅"
         />
         <SummaryCard
           title="Inadimplentes"
-          value={summary.defaulted}
+          subtitle="(vencidos)"
+          value={summary.overdue}
           color="red"
           icon="🚨"
         />
-        <SummaryCard title="Alunos com Pendências" value={studentsWithPendingPayments} color="blue" icon="👥" isCount />
+        <SummaryCard 
+          title="Total Esperado" 
+          subtitle="(Pagos + A Receber)"
+          value={summary.expected} 
+          color="blue" 
+          icon="💰" 
+        />
       </div>
+
+      {/* YTD e MTD */}
+      <Card>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
+          📊 Análise Temporal (Precisão Cirúrgica)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* YTD */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+              YTD (Year To Date) - {format(ytdStart, 'dd/MM/yyyy', { locale: ptBR })} até hoje
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-xs text-green-700 dark:text-green-300 font-medium">Pagos</p>
+                <p className="text-lg font-bold text-green-900 dark:text-green-200">{formatCurrencyBR(ytdSummary.paid)}</p>
+              </div>
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">A Receber</p>
+                <p className="text-lg font-bold text-orange-900 dark:text-orange-200">{formatCurrencyBR(ytdSummary.pending)}</p>
+              </div>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-xs text-red-700 dark:text-red-300 font-medium">Inadimplentes</p>
+                <p className="text-lg font-bold text-red-900 dark:text-red-200">{formatCurrencyBR(ytdSummary.overdue)}</p>
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">Total Esperado</p>
+                <p className="text-lg font-bold text-blue-900 dark:text-blue-200">{formatCurrencyBR(ytdSummary.expected)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* MTD */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+              MTD (Month To Date) - {format(mtdStart, 'dd/MM/yyyy', { locale: ptBR })} até hoje
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-xs text-green-700 dark:text-green-300 font-medium">Pagos</p>
+                <p className="text-lg font-bold text-green-900 dark:text-green-200">{formatCurrencyBR(mtdSummary.paid)}</p>
+              </div>
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">A Receber</p>
+                <p className="text-lg font-bold text-orange-900 dark:text-orange-200">{formatCurrencyBR(mtdSummary.pending)}</p>
+              </div>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-xs text-red-700 dark:text-red-300 font-medium">Inadimplentes</p>
+                <p className="text-lg font-bold text-red-900 dark:text-red-200">{formatCurrencyBR(mtdSummary.overdue)}</p>
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">Total Esperado</p>
+                <p className="text-lg font-bold text-blue-900 dark:text-blue-200">{formatCurrencyBR(mtdSummary.expected)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Info sobre Alunos com Pendências */}
+      <Card>
+        <div className="flex items-center gap-3">
+          <div className="text-3xl">👥</div>
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Alunos com Pagamentos Pendentes</p>
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{studentsWithPendingPayments}</p>
+          </div>
+        </div>
+      </Card>
 
       {/* Recortes e Filtro de Mês */}
       <Card>
@@ -656,13 +787,14 @@ export const PaymentsPage = () => {
 
 interface SummaryCardProps {
   title: string
+  subtitle?: string
   value: number
   color: 'red' | 'orange' | 'green' | 'blue' | 'gray'
   icon: string
   isCount?: boolean
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, color, icon, isCount = false }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ title, subtitle, value, color, icon, isCount = false }) => {
   const colorMap = {
     red: 'bg-red-50 dark:bg-red-900/10',
     orange: 'bg-orange-50 dark:bg-orange-900/10',
@@ -675,8 +807,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, color, icon, is
     <Card className={colorMap[color]}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+            {title}
+            {subtitle && <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</span>}
+          </p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-50 mt-2">
             {isCount ? value : formatCurrencyBR(value)}
           </p>
         </div>

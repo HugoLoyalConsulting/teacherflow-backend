@@ -1,10 +1,10 @@
 import { Card, Badge } from '../components/UI'
 import { useAppStore } from '../store/appStore'
 import { DollarSign, Clock, TrendingUp, AlertCircle } from 'lucide-react'
-import { format, isThisMonth, isThisWeek, isBefore, parseISO } from 'date-fns'
+import { format, isThisMonth, isThisWeek, isBefore, parseISO, startOfYear, startOfMonth, startOfToday, isWithinInterval } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { formatCurrencyBR, formatNumberBR } from '../utils/formatters'
-import { isDefaultedStatus, isOpenStatus, isOverdueStatus, PENDING_STATUSES } from '../utils/paymentStatus'
+import { isPaidStatus, isOpenStatus, isOverdueStatus, isDefaultedStatus, OPEN_STATUSES, OVERDUE_STATUSES, DEFAULTED_STATUSES } from '../utils/paymentStatus'
 
 export const DashboardPage = () => {
   const {
@@ -16,6 +16,8 @@ export const DashboardPage = () => {
     groups,
   } = useAppStore()
 
+  const today = startOfToday()
+
   // Calcula receita prevista (lessons PLANNED)
   const plannedLessons = lessons.filter((l) => l.status === 'PLANNED' && isThisMonth(parseISO(l.date)))
   const totalExpectedRevenue = plannedLessons.reduce((sum, l) => sum + l.priceSnapshot, 0)
@@ -25,7 +27,7 @@ export const DashboardPage = () => {
   const totalRealizedRevenue = completedLessons.reduce((sum, l) => sum + l.priceSnapshot, 0)
 
   // Calcula pendências deste mês
-  const pendingPaymentsThisMonth = payments.filter((p) => isOpenStatus(p.status) && isThisMonth(parseISO(p.dueDate)))
+  const pendingPaymentsThisMonth = payments.filter((p) => OPEN_STATUSES.includes(p.status) && isThisMonth(parseISO(p.dueDate)))
   const totalPending = pendingPaymentsThisMonth.reduce((sum, p) => sum + p.amount, 0)
 
   // Calcula horas agendadas esta semana
@@ -35,9 +37,49 @@ export const DashboardPage = () => {
     return sum + (schedule?.durationMinutes || 0) / 60
   }, 0)
 
-  // Pagamentos vencidos
+  // Financial summary - MTD (Month To Date)
+  const mtdStart = startOfMonth(today)
+  const mtdPayments = payments.filter((p) => 
+    isWithinInterval(parseISO(p.dueDate), { start: mtdStart, end: today })
+  )
+  const mtdSummary = {
+    paid: mtdPayments.filter((p) => isPaidStatus(p.status)).reduce((sum, p) => sum + p.amount, 0),
+    pending: mtdPayments
+      .filter((p) => OPEN_STATUSES.includes(p.status) && !isBefore(parseISO(p.dueDate), today))
+      .reduce((sum, p) => sum + p.amount, 0),
+    overdue: mtdPayments
+      .filter((p) => 
+        (OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status))
+      )
+      .reduce((sum, p) => sum + p.amount, 0),
+    get expected() {
+      return this.paid + this.pending
+    },
+  }
+
+  // Financial summary - YTD (Year To Date)
+  const ytdStart = startOfYear(today)
+  const ytdPayments = payments.filter((p) => 
+    isWithinInterval(parseISO(p.dueDate), { start: ytdStart, end: today })
+  )
+  const ytdSummary = {
+    paid: ytdPayments.filter((p) => isPaidStatus(p.status)).reduce((sum, p) => sum + p.amount, 0),
+    pending: ytdPayments
+      .filter((p) => OPEN_STATUSES.includes(p.status) && !isBefore(parseISO(p.dueDate), today))
+      .reduce((sum, p) => sum + p.amount, 0),
+    overdue: ytdPayments
+      .filter((p) => 
+        (OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status))
+      )
+      .reduce((sum, p) => sum + p.amount, 0),
+    get expected() {
+      return this.paid + this.pending
+    },
+  }
+
+  // Pagamentos inadimplentes (OVERDUE + DEFAULTED)
   const overduePayments = payments.filter(
-    (p) => isOpenStatus(p.status) && isBefore(parseISO(p.dueDate), new Date())
+    (p) => OVERDUE_STATUSES.includes(p.status) || DEFAULTED_STATUSES.includes(p.status)
   )
 
   const onboardingSteps = [
@@ -124,15 +166,73 @@ export const DashboardPage = () => {
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-1 flex-shrink-0" />
             <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-red-900 dark:text-red-300">Pagamentos Vencidos/Inadimplentes</h3>
+              <h3 className="font-semibold text-red-900 dark:text-red-300">Pagamentos Inadimplentes</h3>
               <p className="text-xs sm:text-sm text-red-800 dark:text-red-400">
-                Você tem {overduePayments.length} pagamento(s) vencido(s) no valor de R${' '}
+                Você tem {overduePayments.length} pagamento(s) inadimplente(s) no valor de R${' '}
                 {formatCurrencyBR(overduePayments.reduce((sum, p) => sum + p.amount, 0)).replace('R$', '').trim()}
               </p>
             </div>
           </div>
         </Card>
       )}
+
+      {/* Resumo Financeiro YTD/MTD - Precisão Cirúrgica */}
+      <Card>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
+          📊 Resumo Financeiro Detalhado (YTD / MTD)
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* YTD */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+              YTD (Year To Date) - {format(ytdStart, 'dd/MM/yyyy', { locale: ptBR })} até hoje
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-xs text-green-700 dark:text-green-300 font-medium">✅ Pagos</p>
+                <p className="text-lg font-bold text-green-900 dark:text-green-200">{formatCurrencyBR(ytdSummary.paid)}</p>
+              </div>
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">📅 A Receber</p>
+                <p className="text-lg font-bold text-orange-900 dark:text-orange-200">{formatCurrencyBR(ytdSummary.pending)}</p>
+              </div>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-xs text-red-700 dark:text-red-300 font-medium">🚨 Inadimplentes</p>
+                <p className="text-lg font-bold text-red-900 dark:text-red-200">{formatCurrencyBR(ytdSummary.overdue)}</p>
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">💰 Total Esperado</p>
+                <p className="text-lg font-bold text-blue-900 dark:text-blue-200">{formatCurrencyBR(ytdSummary.expected)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* MTD */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+              MTD (Month To Date) - {format(mtdStart, 'dd/MM/yyyy', { locale: ptBR })} até hoje
+            </h4>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                <p className="text-xs text-green-700 dark:text-green-300 font-medium">✅ Pagos</p>
+                <p className="text-lg font-bold text-green-900 dark:text-green-200">{formatCurrencyBR(mtdSummary.paid)}</p>
+              </div>
+              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">📅 A Receber</p>
+                <p className="text-lg font-bold text-orange-900 dark:text-orange-200">{formatCurrencyBR(mtdSummary.pending)}</p>
+              </div>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-xs text-red-700 dark:text-red-300 font-medium">🚨 Inadimplentes</p>
+                <p className="text-lg font-bold text-red-900 dark:text-red-200">{formatCurrencyBR(mtdSummary.overdue)}</p>
+              </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">💰 Total Esperado</p>
+                <p className="text-lg font-bold text-blue-900 dark:text-blue-200">{formatCurrencyBR(mtdSummary.expected)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {/* Métricas principais */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -202,7 +302,7 @@ export const DashboardPage = () => {
                   <Badge variant={isOverdueStatus(payment.status) || isDefaultedStatus(payment.status) ? 'danger' : 'warning'} className="flex-shrink-0">
                     {isDefaultedStatus(payment.status) || isOverdueStatus(payment.status) ? (
                       <span className="mr-1">⚠️</span>
-                    ) : PENDING_STATUSES.includes(payment.status) ? (
+                    ) : OPEN_STATUSES.includes(payment.status) ? (
                       <span className="mr-1">⏳</span>
                     ) : null}
                     {formatCurrencyBR(payment.amount)}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
 import { Button, Input } from '../components/Form'
@@ -142,6 +142,22 @@ export const LoginPage = () => {
               {isLoading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
+
+          {/* Additional Links */}
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Esqueci minha senha
+            </Link>
+            <Link
+              to="/register"
+              className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+            >
+              Criar conta
+            </Link>
+          </div>
 
           {/* Google Sign-In */}
           {isGoogleOAuthConfigured() && (
