@@ -17,7 +17,6 @@ import { LocationsPage } from './pages/LocationsPage'
 import { GroupsPage } from './pages/GroupsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ProfilePage } from './pages/ProfilePage'
-import { OnboardingPage } from './pages/OnboardingPage'
 import { validateConfig, logConfig } from './config/env'
 
 // Validate and log configuration on startup
@@ -44,29 +43,20 @@ function AppContent() {
   return (
     <Router>
       {isAuthenticated ? (
-        <>
-          {!user?.onboardingComplete ? (
-            <Routes>
-              <Route path="/onboarding" element={<OnboardingPage />} />
-              <Route path="*" element={<Navigate to="/onboarding" replace />} />
-            </Routes>
-          ) : (
-            <Layout>
-              <Routes>
-                <Route path="/" element={<DashboardPage />} />
-                <Route path="/students" element={<StudentsPage />} />
-                <Route path="/students/:id" element={<StudentDetailsPage />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/payments" element={<PaymentsPage />} />
-                <Route path="/locations" element={<LocationsPage />} />
-                <Route path="/groups" element={<GroupsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Layout>
-          )}
-        </>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/students" element={<StudentsPage />} />
+            <Route path="/students/:id" element={<StudentDetailsPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
+            <Route path="/locations" element={<LocationsPage />} />
+            <Route path="/groups" element={<GroupsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
       ) : (
         <Routes>
           <Route path="/login" element={<LoginPage />} />

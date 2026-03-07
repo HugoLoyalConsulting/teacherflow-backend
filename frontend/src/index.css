@@ -13,8 +13,13 @@ html {
 body {
   @apply bg-white text-gray-900;
   @apply dark:bg-slate-950 dark:text-gray-50;
-  background-image: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08), transparent 35%),
-    radial-gradient(circle at 85% 10%, rgba(168, 85, 247, 0.08), transparent 40%);
+  /* Gradientes MUITO suaves apenas em dark mode */
+}
+
+/* Gradiente sutil só no dark mode */
+html.dark body {
+  background-image: radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.03), transparent 35%),
+    radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.03), transparent 40%);
 }
 
 /* Garantir que TUDO em dark mode tenha texto claro */

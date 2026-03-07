@@ -4,6 +4,7 @@ import { LogOut, Menu, X, Home, Users, Calendar, DollarSign, MapPin, GraduationC
 import { useState } from 'react'
 import { useAuthStore } from '../../store/authStore'
 import { useAppStore } from '../../store/appStore'
+import { OnboardingTourWrapper } from '../OnboardingTourWrapper'
 
 interface LayoutProps {
   children: ReactNode
@@ -54,9 +55,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 transition-all duration-300 flex-col hidden md:flex`}
       >
         <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-slate-700">
-          <h1 className={`font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 ${!sidebarOpen && 'text-center'}`}>
+          <button 
+            onClick={() => navigate('/')}
+            className="font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors w-full text-left"
+            title="Ir para o Dashboard"
+          >
             {sidebarOpen ? 'TeacherFlow' : 'TF'}
-          </h1>
+          </button>
         </div>
 
         <nav className="flex-1 p-3 sm:p-4 space-y-2">
@@ -275,7 +280,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
         {/* Content */}
         <main ref={mainContentRef} className="flex-1 overflow-auto pb-20 md:pb-0">
-          <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">{children}</div>
+          <OnboardingTourWrapper>
+            <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">{children}</div>
+          </OnboardingTourWrapper>
         </main>
 
         {/* Bottom Navigation - Mobile Only */}
