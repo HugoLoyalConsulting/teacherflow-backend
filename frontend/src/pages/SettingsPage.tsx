@@ -32,17 +32,24 @@ export const SettingsPage = () => {
   const loadTiers = async () => {
     try {
       const response = await api.get('/api/v1/subscriptions/tiers')
-      setTiers(response.data)
+      // Ensure tiers is always an array
+      const tiersData = Array.isArray(response.data) ? response.data : response.data?.tiers || []
+      setTiers(tiersData)
+      console.log('Loaded tiers:', tiersData)
       
       // Try to get current subscription
       try {
         const currentResponse = await api.get('/api/v1/subscriptions/current')
-        setCurrentTierKey(currentResponse.data.subscription.tier.tier_key)
+        if (currentResponse.data?.subscription?.tier?.tier_key) {
+          setCurrentTierKey(currentResponse.data.subscription.tier.tier_key)
+        }
       } catch (err) {
+        console.log('No current subscription, using free tier')
         setCurrentTierKey('free')
       }
     } catch (error) {
       console.error('Failed to load tiers:', error)
+      setTiers([])
     }
   }
 
@@ -151,84 +158,86 @@ export const SettingsPage = () => {
           </p>
 
           <div className="grid md:grid-cols-3 gap-4">
-            {tiers.map((tier) => (
-              <div
-                key={tier.id}
-                className={`relative rounded-xl border-2 p-6 transition-all ${
-                  tier.tier_key === currentTierKey
-                    ? 'border-vaporwave-purple dark:border-vaporwave-cyan bg-purple-50 dark:bg-slate-800'
-                    : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600'
-                }`}
-              >
-                {tier.tier_key === currentTierKey && (
-                  <div className="absolute -top-3 right-4">
-                    <Badge variant="success">Plano Atual</Badge>
-                  </div>
-                )}
-
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">{tier.name}</h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{tier.description}</p>
-                </div>
-
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-gray-50">
-                      R$ {tier.price_monthly}
-                    </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">/mês</span>
-                  </div>
-                  {tier.price_yearly > 0 && (
-                    <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                      R$ {tier.price_yearly}/ano (economize {Math.round((1 - tier.price_yearly / (tier.price_monthly * 12)) * 100)}%)
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {tier.max_students ? `Até ${tier.max_students} alunos` : 'Alunos ilimitados'}
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {tier.max_locations ? `Até ${tier.max_locations} locais` : 'Locais ilimitados'}
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {tier.max_groups ? `Até ${tier.max_groups} turmas` : 'Turmas ilimitadas'}
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                      {tier.max_users} usuário{tier.max_users > 1 ? 's' : ''}
-                    </p>
-                  </div>
-                </div>
-
-                <Button
-                  variant={tier.tier_key === currentTierKey ? 'secondary' : 'primary'}
-                  className="w-full"
-                  onClick={() => handleSelectPlan(tier.tier_key)}
-                  disabled={loading || tier.tier_key === currentTierKey}
+            {Array.isArray(tiers) && tiers.length > 0 ? (
+              tiers.map((tier) => (
+                <div
+                  key={tier.id}
+                  className={`relative rounded-xl border-2 p-6 transition-all ${
+                    tier.tier_key === currentTierKey
+                      ? 'border-vaporwave-purple dark:border-vaporwave-cyan bg-purple-50 dark:bg-slate-800'
+                      : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600'
+                  }`}
                 >
-                  {tier.tier_key === currentTierKey ? 'Plano Atual' : 'Selecionar'}
-                </Button>
-              </div>
-            ))}
-          </div>
+                  {tier.tier_key === currentTierKey && (
+                    <div className="absolute -top-3 right-4">
+                      <Badge variant="success">Plano Atual</Badge>
+                    </div>
+                  )}
 
-          {tiers.length === 0 && (
-            <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-              Carregando planos...
-            </p>
-          )}
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-50">{tier.name}</h3>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{tier.description}</p>
+                  </div>
+
+                  <div className="mb-6">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-bold text-gray-900 dark:text-gray-50">
+                        R$ {tier.price_monthly}
+                      </span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">/mês</span>
+                    </div>
+                    {tier.price_yearly > 0 && (
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                        R$ {tier.price_yearly}/ano (economize {Math.round((1 - tier.price_yearly / (tier.price_monthly * 12)) * 100)}%)
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {tier.max_students ? `Até ${tier.max_students} alunos` : 'Alunos ilimitados'}
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {tier.max_locations ? `Até ${tier.max_locations} locais` : 'Locais ilimitados'}
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {tier.max_groups ? `Até ${tier.max_groups} turmas` : 'Turmas ilimitadas'}
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                        {tier.max_users} usuário{tier.max_users > 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant={tier.tier_key === currentTierKey ? 'secondary' : 'primary'}
+                    className="w-full"
+                    onClick={() => handleSelectPlan(tier.tier_key)}
+                    disabled={loading || tier.tier_key === currentTierKey}
+                  >
+                    {tier.tier_key === currentTierKey ? 'Plano Atual' : 'Selecionar'}
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">
+                  {tiers === undefined || tiers.length === 0 ? 'Carregando planos...' : 'Nenhum plano disponível'}
+                </p>
+              </div>
+            )}
+          </div>
         </Card>
       </div>
     </div>
