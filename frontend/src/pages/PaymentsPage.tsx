@@ -3,6 +3,7 @@ import { useAppStore } from '../store/appStore'
 import { useTheme } from '../hooks/useTheme'
 import { Card, Badge } from '../components/UI'
 import { Button } from '../components/Form'
+import { MessageCircle } from 'lucide-react'
 import {
   addDays,
   subDays,
@@ -60,6 +61,39 @@ export const PaymentsPage = () => {
   const dataWindow = getDataGenerationWindow()
 
   const today = startOfToday()
+
+  // Helper: Get student name by ID
+  const getStudentName = (studentId: string) => {
+    const student = students.find((s) => s.id === studentId)
+    return student?.name || 'Aluno não encontrado'
+  }
+
+  // Helper: Get student by ID
+  const getStudent = (studentId: string) => {
+    return students.find((s) => s.id === studentId)
+  }
+
+  // Helper: Create WhatsApp link for payment reminder
+  const createWhatsAppLink = (studentId: string, payment: typeof payments[0]) => {
+    const student = getStudent(studentId)
+    if (!student || !student.phone) return null
+    
+    // Remove all non-numeric characters
+    const cleanPhone = student.phone.replace(/\D/g, '')
+    
+    // Build message
+    const dueDate = format(parseISO(payment.dueDate), 'dd/MM/yyyy', { locale: ptBR })
+    const amount = formatCurrencyBR(payment.amount)
+    const message = encodeURIComponent(
+      `Olá ${student.name}! 👋\n\n` +
+      `Lembrete amigável sobre o pagamento da aula:\n` +
+      `📅 Vencimento: ${dueDate}\n` +
+      `💰 Valor: ${amount}\n\n` +
+      `Aguardo sua confirmação! 😊`
+    )
+    
+    return `https://wa.me/${cleanPhone}?text=${message}`
+  }
 
   const monthDate = useMemo(() => {
     const [year, month] = filterMonth.split('-').map(Number)
@@ -578,17 +612,35 @@ export const PaymentsPage = () => {
                         {payment.paidDate ? format(parseISO(payment.paidDate), 'dd/MM/yyyy', { locale: ptBR }) : '-'}
                       </td>
                       <td className="px-4 py-3">
-                        {isOpenStatus(payment.status) ? (
-                          <Button
-                            size="sm"
-                            variant="success"
-                            onClick={() => markPaymentAsPaid(payment.id)}
-                          >
-                            Marcar como Pago
-                          </Button>
-                        ) : (
-                          <span className="text-gray-500 dark:text-gray-400 text-sm">-</span>
-                        )}
+                        <div className="flex gap-2 items-center">
+                          {isOpenStatus(payment.status) && (
+                            <Button
+                              size="sm"
+                              variant="success"
+                              onClick={() => markPaymentAsPaid(payment.id)}
+                            >
+                              Marcar como Pago
+                            </Button>
+                          )}
+                          
+                          {/* WhatsApp button for overdue payments */}
+                          {isOverdue && createWhatsAppLink(payment.studentId, payment) && (
+                            <a
+                              href={createWhatsAppLink(payment.studentId, payment)!}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                              title={`Cobrar via WhatsApp: ${getStudent(payment.studentId)?.phone || 'sem telefone'}`}
+                            >
+                              <MessageCircle className="w-4 h-4" />
+                              <span className="hidden sm:inline">Cobrar</span>
+                            </a>
+                          )}
+                          
+                          {!isOpenStatus(payment.status) && !isOverdue && (
+                            <span className="text-gray-500 dark:text-gray-400 text-sm">-</span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   )

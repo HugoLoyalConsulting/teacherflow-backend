@@ -11,6 +11,8 @@ interface EnvConfig {
   isDevelopment: boolean
   isProduction: boolean
   useMockData: boolean
+  environment: 'development' | 'qa' | 'production'
+  isQaEnvironment: boolean
 }
 
 // Get env var with fallback - access via globalThis to avoid TS issues
@@ -30,6 +32,16 @@ const isDev = () => {
   return globalThis.import?.meta?.env?.DEV === true || typeof process !== 'undefined' && process.env.NODE_ENV === 'development'
 }
 
+// Determine environm
+
+ent
+const getEnvironment = (): 'development' | 'qa' | 'production' => {
+  const envValue = getEnv('ENVIRONMENT', 'development').toLowerCase()
+  if (envValue === 'qa' || envValue === 'staging') return 'qa'
+  if (envValue === 'production' || envValue === 'prod') return 'production'
+  return 'development'
+}
+
 export const config: EnvConfig = {
   // API Configuration
   apiUrl: getEnv('API_URL', 'http://localhost:3000'),
@@ -41,6 +53,8 @@ export const config: EnvConfig = {
   // Environment Detection
   isDevelopment: isDev(),
   isProduction: !isDev(),
+  environment: getEnvironment(),
+  isQaEnvironment: getEnvironment() === 'qa',
   
   // Feature Flags
   useMockData: getEnv('USE_MOCK_DATA', isDev() ? 'true' : 'false') === 'true',
