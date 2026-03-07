@@ -4,18 +4,24 @@ import { useAppStore } from '../store/appStore'
 import { Card, Badge } from '../components/UI'
 import { Button, Input, Select, TextArea, Modal } from '../components/Form'
 import { Trash2, Edit2, Plus, Eye } from 'lucide-react'
-import { Student } from '../types'
+import { Student, Location, Group } from '../types'
 import { formatCurrencyBR } from '../utils/formatters'
 import { validationService } from '../utils/validationService'
 
 export const StudentsPage = () => {
   const navigate = useNavigate()
-  const { students, addStudent, updateStudent, deleteStudent } = useAppStore()
+  const { students, addStudent, updateStudent, deleteStudent, locations, groups, addLocation, addGroup } = useAppStore()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<Partial<Student>>({})
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<string>('')
+  
+  // Inline create states
+  const [showNewLocation, setShowNewLocation] = useState(false)
+  const [newLocationName, setNewLocationName] = useState('')
+  const [showNewGroup, setShowNewGroup] = useState(false)
+  const [newGroupName, setNewGroupName] = useState('')
 
   const formatLastPayment = (value?: string) => {
     if (!value) return '—'
@@ -47,7 +53,61 @@ export const StudentsPage = () => {
         defaultHourlyPrice: 100,
       })
     }
+    setShowNewLocation(false)
+    setShowNewGroup(false)
+    setNewLocationName('')
+    setNewGroupName('')
     setIsModalOpen(true)
+  }
+
+  const handleCreateLocation = () => {
+    if (!newLocationName.trim()) return
+    
+    const newLocation = {
+      id: `location-${Date.now()}`,
+      tenantId: 'tenant-1',
+      name: newLocationName.trim(),
+      type: 'home' as const,
+      createdAt: new Date().toISOString(),
+    }
+    
+    addLocation(newLocation)
+    setFormData({ ...formData, primaryLocationId: newLocation.id })
+    setShowNewLocation(false)
+    setNewLocationName('')
+  }
+
+  const handleCreateGroup = () => {
+    if (!newGroupName.trim()) return
+    
+    const groupType = newGroupName.toLowerCase().includes('individual') ? 'individual' : 'group'
+    const locationInfo = formData.primaryLocationId 
+      ? locations.find(l => l.id === formData.primaryLocationId)?.name || ''
+      : ''
+    
+    const newGroup = {
+      id: `group-${Date.now()}`,
+      tenantId: 'tenant-1',
+      name: newGroupName.trim(),
+      type: groupType,
+      defaultHourlyPricePerStudent: formData.defaultHourlyPrice || 100,
+      maxStudents: groupType === 'individual' ? 1 : 10,
+      createdAt: new Date().toISOString(),
+      locationId: formData.primaryLocationId || locations[0]?.id,
+    }
+    
+    addGroup(newGroup)
+    setFormData({ ...formData, primaryGroupId: newGroup.id })
+    setShowNewGroup(false)
+    setNewGroupName('')
+  }
+
+  const getSuggestedGroupName = () => {
+    const locationName = formData.primaryLocationId 
+      ? locations.find(l => l.id === formData.primaryLocationId)?.name || 'Local'
+      : 'Local'
+    const studentName = formData.name || 'Aluno'
+    return `[Individual] ${studentName} - ${locationName}`
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -315,6 +375,117 @@ export const StudentsPage = () => {
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             rows={3}
           />
+
+          <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
+            <h3 className="font-medium text-gray-900 dark:text-gray-50 mb-4">Organização (Opcional)</h3>
+            
+            {/* Local Primário */}
+            <div className="space-y-2">
+              <Select
+                label="Local Primário"
+                options={[
+                  { value: '', label: 'Sem local' },
+                  ...locations.map(l => ({ value: l.id, label: l.name })),
+                  { value: '__new__', label: '+ Novo Local' }
+                ]}
+                value={showNewLocation ? '__new__' : (formData.primaryLocationId || '')}
+                onChange={(e) => {
+                  if (e.target.value === '__new__') {
+                    setShowNewLocation(true)
+                    setNewLocationName('')
+                  } else {
+                    setShowNewLocation(false)
+                    setFormData({ ...formData, primaryLocationId: e.target.value || undefined })
+                  }
+                }}
+              />
+              
+              {showNewLocation && (
+                <div className="bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-3">
+                  <Input
+                    placeholder="Nome do local (ex: Minha Casa, Estúdio Online)"
+                    value={newLocationName}
+                    onChange={(e) => setNewLocationName(e.target.value)}
+                    autoFocus
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      variant="primary"
+                      onClick={handleCreateLocation}
+                      disabled={!newLocationName.trim()}
+                      className="flex-1"
+                    >
+                      Criar Local
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setShowNewLocation(false)
+                        setNewLocationName('')
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Turma Primária */}
+            <div className="space-y-2 mt-4">
+              <Select
+                label="Turma Primária"
+                options={[
+                  { value: '', label: 'Sem turma' },
+                  ...groups.map(g => ({ value: g.id, label: g.name })),
+                  { value: '__new__', label: '+ Nova Turma' }
+                ]}
+                value={showNewGroup ? '__new__' : (formData.primaryGroupId || '')}
+                onChange={(e) => {
+                  if (e.target.value === '__new__') {
+                    setShowNewGroup(true)
+                    setNewGroupName(getSuggestedGroupName())
+                  } else {
+                    setShowNewGroup(false)
+                    setFormData({ ...formData, primaryGroupId: e.target.value || undefined })
+                  }
+                }}
+              />
+              
+              {showNewGroup && (
+                <div className="bg-purple-50 dark:bg-slate-800 border border-purple-200 dark:border-purple-800 rounded-lg p-4 space-y-3">
+                  <Input
+                    placeholder="Nome da turma"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    autoFocus
+                  />
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    💡 Sugestão: use o formato "[Tipo] Nome/Local" para organizar melhor
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="primary"
+                      onClick={handleCreateGroup}
+                      disabled={!newGroupName.trim()}
+                      className="flex-1"
+                    >
+                      Criar Turma
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setShowNewGroup(false)
+                        setNewGroupName('')
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </form>
       </Modal>
     </div>

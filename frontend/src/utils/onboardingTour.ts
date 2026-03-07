@@ -14,129 +14,94 @@ export interface TourStep extends DriveStep {
 /**
  * Interactive Onboarding Tour Configuration
  * 
- * Hierarchy: Locais → Turmas → Alunos
- * - Locais são criados primeiro (onde as aulas acontecem)
- * - Turmas são vinculadas a locais
- * - Alunos podem ter local primário (opcional) e estar em turmas (opcional)
+ * Simplified flow: Start by creating a student, then explore features
+ * Total: 8 steps with concise descriptions
  */
 
 export const onboardingSteps: TourStep[] = [
-  // Step 0: Welcome
+  // Step 1: Welcome
   {
     element: "body",
     popover: {
-      title: "🎉 Bem-vindo ao TeacherFlow!",
-      description: "Vamos fazer um tour rápido para você começar. Isso vai levar apenas 2 minutos. Preparado?",
+      title: "🎉 Bem-vindo!",
+      description: "Tour rápido em 8 passos. Vamos começar!",
       side: "bottom",
       align: "center",
     },
   },
   
-  // Step 1: Dashboard Overview
-  {
-    element: "#dashboard-container",
-    popover: {
-      title: "📊 Seu Dashboard",
-      description: "Aqui você vê um resumo de tudo: alunos ativos, turmas, pagamentos pendentes e muito mais. Tudo em um só lugar!",
-      side: "bottom",
-      align: "start",
-    },
-  },
-  
-  // Step 2: Navigation Menu
-  {
-    element: "#nav-menu",
-    popover: {
-      title: "🧭 Menu de Navegação",
-      description: "Use este menu para navegar entre as diferentes seções: Alunos, Locais, Turmas, Agenda e Pagamentos.",
-      side: "right",
-      align: "start",
-    },
-  },
-  
-  // Step 3: Locations First (Hierarchy)
-  {
-    element: "#nav-locations",
-    popover: {
-      title: "📍 1º Passo: Cadastre seus Locais",
-      description: "Comece cadastrando os locais onde você dá aula (sua casa, estúdio, escola, online, etc.). Os locais são a base da hierarquia.",
-      side: "right",
-      align: "center",
-    },
-  },
-  
-  // Step 4: Groups Second
-  {
-    element: "#nav-groups",
-    popover: {
-      title: "📚 2º Passo: Crie Turmas",
-      description: "Depois, organize suas turmas. Cada turma está vinculada a um local e pode ter vários alunos. Defina o valor da hora/aula aqui.",
-      side: "right",
-      align: "center",
-    },
-  },
-  
-  // Step 5: Students Last
+  // Step 2: Create Student Button
   {
     element: "#nav-students",
     popover: {
-      title: "👥 3º Passo: Cadastre Alunos",
-      description: "Por último, cadastre seus alunos. Você pode: definir um local primário (opcional), vincular a turmas (opcional), ou deixar sem turma (aulas individuais).",
+      title: "👥 Alunos",
+      description: "Clique aqui para gerenciar seus alunos.",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 6: Calendar
+  // Step 3: Locations
+  {
+    element: "#nav-locations",
+    popover: {
+      title: "📍 Locais",
+      description: "Cadastre onde você dá aula.",
+      side: "right",
+      align: "center",
+    },
+  },
+  
+  // Step 4: Groups
+  {
+    element: "#nav-groups",
+    popover: {
+      title: "👨‍🎓 Turmas",
+      description: "Organize turmas e defina preços.",
+      side: "right",
+      align: "center",
+    },
+  },
+  
+  // Step 5: Calendar
   {
     element: "#nav-calendar",
     popover: {
-      title: "📅 Agenda de Aulas",
-      description: "Gerencie horários, agende aulas e veja sua disponibilidade semanal. Conecta alunos, turmas e locais em um só lugar.",
+      title: "📅 Agenda",
+      description: "Agende e gerencie suas aulas.",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 7: Payments
+  // Step 6: Payments
   {
     element: "#nav-payments",
     popover: {
-      title: "💰 Controle Financeiro",
-      description: "Acompanhe pagamentos, gere cobranças e veja quem está em dia. O sistema marca automaticamente alunos inadimplentes.",
+      title: "💰 Pagamentos",
+      description: "Controle recebimentos e inadimplência.",
       side: "right",
       align: "center",
     },
   },
   
-  // Step 8: Quick Actions
+  // Step 7: Dashboard Home
   {
-    element: "#quick-actions",
+    element: "#nav-menu",
     popover: {
-      title: "⚡ Ações Rápidas",
-      description: "Use os botões de ação rápida para cadastrar novos alunos, agendar aulas e registrar pagamentos sem sair do dashboard.",
-      side: "left",
+      title: "📊 Dashboard",
+      description: "Visão geral de tudo em um só lugar.",
+      side: "right",
       align: "start",
     },
   },
   
-  // Step 9: Profile & Settings
-  {
-    element: "#user-menu",
-    popover: {
-      title: "⚙️ Perfil e Configurações",
-      description: "Acesse suas configurações, gerencie sua conta e veja informações sobre LGPD (proteção de dados).",
-      side: "bottom",
-      align: "end",
-    },
-  },
-  
-  // Step 10: Finish
+  // Step 8: Finish
   {
     element: "body",
     popover: {
-      title: "✅ Tour Concluído!",
-      description: "Ótimo! Agora você já sabe como usar o TeacherFlow. Comece cadastrando seus locais, depois turmas e por último seus alunos. Boa aula! 🎓",
+      title: "✅ Pronto!",
+      description: "Comece cadastrando seus alunos. Boa aula! 🎓",
       side: "bottom",
       align: "center",
     },
@@ -171,10 +136,11 @@ export const driverConfig: Config = {
   },
   
   onPopoverRender: (popover, { config, state }) => {
-    // Add custom styling or behavior to popovers
+    // Add subtle shadow and light styling
     const popoverElement = popover.wrapper;
-    popoverElement.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.2)";
-    popoverElement.style.borderRadius = "12px";
+    popoverElement.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)";
+    popoverElement.style.borderRadius = "16px";
+    popoverElement.style.border = "1px solid rgba(0, 0, 0, 0.08)";
   },
 };
 
