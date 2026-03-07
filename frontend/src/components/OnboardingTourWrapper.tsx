@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { startOnboardingTour, shouldShowTour, resumeTourFromStep } from '@/utils/onboardingTour';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/UI/button';
 import { HelpCircle } from 'lucide-react';
 
 interface OnboardingTourWrapperProps {

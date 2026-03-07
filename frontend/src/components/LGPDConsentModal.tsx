@@ -6,11 +6,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+} from '@/components/UI/dialog';
+import { Button } from '@/components/UI/button';
+import { Checkbox } from '@/components/UI/checkbox';
+import { ScrollArea } from '@/components/UI/scroll-area';
+import { Alert, AlertDescription } from '@/components/UI/alert';
 import { Shield, Lock, FileText, Eye, Trash2, Download, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';

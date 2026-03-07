@@ -25,6 +25,7 @@
     "axios": "^1.13.6",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
+    "driver.js": "^1.4.0",
     "google-auth-library-nodejs": "^0.0.1-security.6",
     "lucide-react": "^0.293.0",
     "posthog-js": "^1.99.0",
