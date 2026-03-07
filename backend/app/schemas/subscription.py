@@ -53,7 +53,7 @@ class Subscription(SubscriptionBase):
     cancelled_at: Optional[datetime] = None
     trial_start: Optional[datetime] = None
     trial_end: Optional[datetime] = None
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata_json")
     created_at: datetime
     updated_at: Optional[datetime] = None
     
@@ -85,7 +85,7 @@ class SubscriptionPayment(SubscriptionPaymentBase):
     failure_reason: Optional[str] = None
     paid_at: Optional[datetime] = None
     refunded_at: Optional[datetime] = None
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, alias="metadata_json")
     created_at: datetime
     updated_at: Optional[datetime] = None
 

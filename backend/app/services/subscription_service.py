@@ -186,7 +186,7 @@ class SubscriptionService:
             current_period_end=datetime.utcnow() + timedelta(days=30),
             trial_start=trial_start,
             trial_end=trial_end,
-            metadata={"payment_method": data.payment_method}
+            metadata_json={"payment_method": data.payment_method}
         )
         
         self.db.add(subscription)

@@ -382,7 +382,8 @@ class Subscription(Base):
     trial_start = Column(DateTime, nullable=True)
     trial_end = Column(DateTime, nullable=True)
     
-    metadata = Column(JSONB, nullable=True)
+    # Keep DB column name as metadata, but use a safe ORM attribute name.
+    metadata_json = Column("metadata", JSONB, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -412,7 +413,8 @@ class SubscriptionPayment(Base):
     paid_at = Column(DateTime, nullable=True)
     refunded_at = Column(DateTime, nullable=True)
     
-    metadata = Column(JSONB, nullable=True)
+    # Keep DB column name as metadata, but use a safe ORM attribute name.
+    metadata_json = Column("metadata", JSONB, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
