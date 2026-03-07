@@ -51,9 +51,11 @@ const OnboardingWizard: React.FC = () => {
     try {
       setLoading(true);
       const response = await api.get<Category[]>('/api/onboarding/categories');
-      setCategories(response.data);
+      setCategories(response.data || []);
     } catch (error) {
       console.error('Failed to load categories:', error);
+      alert('Erro ao carregar categorias. Por favor, recarregue a página.');
+      setCategories([]);
     } finally {
       setLoading(false);
     }
@@ -100,7 +102,7 @@ const OnboardingWizard: React.FC = () => {
     navigate('/dashboard');
   };
 
-  const selectedCategoryData = categories.find((c) => c.key === selectedCategory);
+  const selectedCategoryData = categories?.find((c) => c.key === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
