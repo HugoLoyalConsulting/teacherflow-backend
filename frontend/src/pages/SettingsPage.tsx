@@ -3,6 +3,7 @@ import { useTheme } from '../hooks/useTheme'
 import { useState, useEffect } from 'react'
 import { api } from '../services/api'
 import { Button } from '../components/Form'
+import { Check } from 'lucide-react'
 
 interface SubscriptionTier {
   id: string
