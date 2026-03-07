@@ -8,7 +8,6 @@ import { FeedbackWidget } from './components/FeedbackWidget'
 import { Layout } from './components/Layout/Layout'
 import { GOOGLE_CLIENT_ID, isGoogleOAuthConfigured } from './config/googleAuth'
 import { LoginPage } from './pages/LoginPage'
-import { VerifyEmailPage } from './pages/VerifyEmailPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { StudentsPage } from './pages/StudentsPage'
 import { StudentDetailsPage } from './pages/StudentDetailsPage'
@@ -61,7 +60,6 @@ function AppContent() {
       ) : (
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       )}

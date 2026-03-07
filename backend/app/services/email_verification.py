@@ -13,12 +13,12 @@ from app.core.email import send_verification_email
 
 def generate_verification_code() -> str:
     """
-    Generate a 4-digit verification code
+    Generate a 6-digit verification code
     
     Returns:
-        4-digit string (e.g., '1234')
+        6-digit string (e.g., '123456')
     """
-    return ''.join(secrets.choice(string.digits) for _ in range(4))
+    return ''.join(secrets.choice(string.digits) for _ in range(6))
 
 
 def create_verification_code(user_id: str, db: Session) -> str:
@@ -31,7 +31,7 @@ def create_verification_code(user_id: str, db: Session) -> str:
         db: Database session
     
     Returns:
-        4-digit verification code
+        6-digit verification code
     """
     # Invalidate existing codes for this user
     db.query(VerificationCode).filter(
@@ -96,7 +96,7 @@ def send_verification_code(user_id: str, email: str, db: Session) -> dict:
 
 def verify_code(user_id: str, code: str, db: Session) -> dict:
     """
-    Verify a 4-digit code
+    Verify a 6-digit code
     
     Validation rules:
     - Code must exist and be valid
@@ -105,7 +105,7 @@ def verify_code(user_id: str, code: str, db: Session) -> dict:
     
     Args:
         user_id: User UUID
-        code: 4-digit code to verify
+        code: 6-digit code to verify
         db: Database session
     
     Returns:

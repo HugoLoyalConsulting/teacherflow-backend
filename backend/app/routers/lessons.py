@@ -181,3 +181,59 @@ async def delete_lesson(
     db.delete(lesson)
     db.commit()
     return {"message": "Lesson deleted successfully"}
+
+
+@router.get("/export/ics")
+async def export_lessons_ics(
+    date_from: date = None,
+    date_to: date = None,
+    current_user = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Export lessons to ICS format (iCalendar)
+    Compatible with Google Calendar, Outlook, Apple Calendar, etc.
+    """
+    from fastapi.responses import Response
+    from app.services.ics_export import ICSExportService
+    from app.models import User
+    
+    # Get user info
+    user = db.query(User).filter(User.id == current_user).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Query lessons
+    query = db.query(Lesson).filter(Lesson.teacher_id == current_user)
+    
+    if date_from:
+        query = query.filter(Lesson.lesson_date >= date_from)
+    if date_to:
+        query = query.filter(Lesson.lesson_date <= date_to)
+    
+    lessons = query.all()
+    
+    if not lessons:
+        raise HTTPException(
+            status_code=404,
+            detail="Nenhuma aula encontrada no período especificado"
+        )
+    
+    # Generate ICS file
+    ics_content = ICSExportService.create_calendar(
+        lessons=lessons,
+        teacher_name=user.full_name,
+        calendar_name=f"Aulas - {user.full_name}"
+    )
+    
+    # Generate filename
+    filename = ICSExportService.get_filename(user.full_name)
+    
+    # Return ICS file
+    return Response(
+        content=ics_content,
+        media_type="text/calendar",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"'
+        }
+    )

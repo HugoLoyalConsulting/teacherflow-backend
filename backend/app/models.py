@@ -306,12 +306,12 @@ class AuditLog(Base):
 
 
 class VerificationCode(Base):
-    """Email verification codes - 4-digit codes with expiration"""
+    """Email verification codes - 6-digit codes with expiration"""
     __tablename__ = "verification_codes"
     
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
-    code = Column(String(4), nullable=False)  # 4-digit code
+    code = Column(String(6), nullable=False)  # 6-digit code
     expires_at = Column(DateTime, nullable=False, index=True)  # Expires in 10 minutes
     attempts = Column(Integer, default=0, nullable=False)  # Max 3 attempts
     is_valid = Column(Boolean, default=True, nullable=False, index=True)  # Invalidated after use or expiration

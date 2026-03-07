@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useAppStore } from '../store/appStore'
 import { Card, Badge } from '../components/UI'
 import { Button, Select, Modal } from '../components/Form'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Download } from 'lucide-react'
+import { api } from '../services/api'
 import { 
   format, 
   addDays, 
@@ -29,6 +30,39 @@ export const CalendarPage = () => {
   const [view, setView] = useState<CalendarView>('week')
   const [selectedLesson, setSelectedLesson] = useState<LessonInstance | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  const handleExportICS = async () => {
+    setIsExporting(true)
+    try {
+      const token = localStorage.getItem('teacherflow-token')
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/lessons/export/ics`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to export calendar')
+      }
+      
+      // Create download link
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'aulas.ics')
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Error exporting calendar:', error)
+      alert('Erro ao exportar calendário. Tente novamente.')
+    } finally {
+      setIsExporting(false)
+    }
+  }
 
   const getLessonsForDay = (date: Date) => {
     return lessons.filter((l) => isSameDay(parseISO(l.date), date))
@@ -336,6 +370,16 @@ export const CalendarPage = () => {
           <p className="text-gray-600 dark:text-gray-400">Gerencie suas aulas</p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="secondary"
+            onClick={handleExportICS}
+            size="sm"
+            loading={isExporting}
+            className="flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Exportar ICS
+          </Button>
           <Button
             variant={view === 'day' ? 'primary' : 'secondary'}
             onClick={() => setView('day')}

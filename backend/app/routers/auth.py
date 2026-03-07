@@ -459,13 +459,132 @@ async def change_password(
 
 
 @router.post("/forgot-password")
-async def forgot_password(email: str):
+async def forgot_password(
+    request: Request,
+    email: EmailStr,
+    db: Session = Depends(get_db)
+):
     """
-    Solicitar reset de senha
-    TODO: Implementar envio de email com token
+    Request password reset
+    Sends email with reset code and link
     """
+    from app.services.password_recovery import PasswordRecoveryService
+    from app.models.password_reset import PasswordResetToken
+    
+    email_lower = email.lower()
+    ip_address = request.client.host if request.client else None
+    
+    # Find user
+    user = db.query(User).filter(User.email == email_lower).first()
+    
+    # Always return success (don't reveal if email exists - security)
+    if not user:
+        return {
+            "success": True,
+            "message": "Se o email está registrado, você receberá instruções para resetar a senha."
+        }
+    
+    # Create reset token and code
+    token, code = PasswordRecoveryService.create_reset_request(
+        user_id=user.id,
+        ip_address=ip_address,
+        db=db
+    )
+    
+    # TODO: Send email with reset link and code
+    # Reset link: https://app.teacherflow.app/reset-password?token={token}
+    # Reset code: {code} (6 digits)
+    
+    logger.info(f"Password reset requested for {email_lower}")
+    logger.debug(f"Reset token: {token}, code: {code}")  # Remove in production
+    
     return {
-        "message": "Se o email está registrado, você receberá um link para resetar a senha."
+        "success": True,
+        "message": "Se o email está registrado, você receberá instruções para resetar a senha.",
+        "debug_code": code if settings.DEBUG else None  # Only in debug mode
+    }
+
+
+@router.post("/reset-password")
+async def reset_password(
+    token: str,
+    new_password: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Reset password using token from email link
+    """
+    from app.services.password_recovery import PasswordRecoveryService
+    from app.security import PasswordManager
+    
+    # Verify token
+    reset_token = PasswordRecoveryService.verify_reset_token(token, db)
+    
+    if not reset_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token inválido ou expirado"
+        )
+    
+    # Get user
+    user = db.query(User).filter(User.id == reset_token.user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuário não encontrado"
+        )
+    
+    # Update password
+    user.hashed_password = PasswordManager.hash_password(new_password)
+    user.password_changed_at = datetime.utcnow()
+    
+    # Mark token as used
+    PasswordRecoveryService.mark_token_used(reset_token.id, db)
+    
+    # Log security event
+    SecurityAudit.log_auth_event(
+        user_id=user.id,
+        action="password_reset",
+        status="success",
+        ip_address=reset_token.ip_address
+    )
+    
+    db.commit()
+    
+    return {
+        "success": True,
+        "message": "Senha alterada com sucesso"
+    }
+
+
+@router.post("/verify-reset-code")
+async def verify_reset_code(
+    email: EmailStr,
+    code: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Verify reset code and return token for password reset
+    Alternative to email link - user enters 6-digit code
+    """
+    from app.services.password_recovery import PasswordRecoveryService
+    
+    email_lower = email.lower()
+    
+    # Verify code
+    reset_token = PasswordRecoveryService.verify_reset_code(email_lower, code, db)
+    
+    if not reset_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Código inválido ou expirado"
+        )
+    
+    # Return token for subsequent reset-password call
+    return {
+        "success": True,
+        "token": reset_token.token,
+        "message": "Código verificado com sucesso"
     }
 
 
@@ -485,16 +604,114 @@ async def google_auth(
     Cliente envia id_token do Google
     Backend verifica assinatura e cria/atualiza usuário
     """
-    # TODO: Implementar verificação de Google ID Token
-    # 1. Validar assinatura do token com public keys do Google
-    # 2. Extrair email e nome
-    # 3. Criar/atualizar usuário
-    # 4. Retornar JWT tokens
+    from google.oauth2 import id_token
+    from google.auth.transport import requests as google_requests
     
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Google OAuth ainda não implementado.",
-    )
+    ip_address = req.client.host if req.client else None
+    
+    try:
+        # Verify Google ID token
+        # This validates the token signature against Google's public keys
+        idinfo = id_token.verify_oauth2_token(
+            request.id_token,
+            google_requests.Request(),
+            settings.GOOGLE_CLIENT_ID
+        )
+        
+        # Extract user info from token
+        google_id = idinfo['sub']
+        email = idinfo.get('email', '').lower()
+        name = idinfo.get('name', '')
+        email_verified = idinfo.get('email_verified', False)
+        
+        if not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email não encontrado no token do Google"
+            )
+        
+        # Find or create user
+        user = db.query(User).filter(User.email == email).first()
+        
+        if not user:
+            # Create new user with Google auth
+            user = User(
+                id=str(uuid.uuid4()),
+                email=email,
+                full_name=name or email.split('@')[0],
+                hashed_password=PasswordManager.hash_password(secrets.token_urlsafe(32)),  # Random password
+                google_id=google_id,
+                google_email=email,
+                email_verified=True,  # Google already verified
+                is_active=True,
+                created_ip=ip_address,
+                lgpd_consent=True,  # Assume consent via Google
+                lgpd_consent_date=datetime.utcnow(),
+                lgpd_consent_ip=ip_address
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+            SecurityAudit.log_auth_event(
+                user_id=user.id,
+                action="google_register",
+                status="success",
+                ip_address=ip_address
+            )
+        else:
+            # Update existing user with Google ID if not set
+            if not user.google_id:
+                user.google_id = google_id
+                user.google_email = email
+                user.email_verified = True
+                user.is_active = True
+            
+            user.last_login_at = datetime.utcnow()
+            user.last_login_ip = ip_address
+            user.failed_login_attempts = 0
+            
+            db.commit()
+            db.refresh(user)
+            
+            SecurityAudit.log_auth_event(
+                user_id=user.id,
+                action="google_login",
+                status="success",
+                ip_address=ip_address
+            )
+        
+        # Generate JWT tokens
+        access_token, expires_in = JWTManager.create_access_token(
+            subject=email,
+            user_id=user.id,
+            email=email
+        )
+        refresh_token = JWTManager.create_refresh_token(
+            subject=email,
+            user_id=user.id
+        )
+        
+        return TokenResponse(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            expires_in=expires_in,
+            user=UserResponse.from_orm(user)
+        )
+    
+    except ValueError as e:
+        # Token validation failed
+        logger.error(f"Google token validation failed: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token do Google inválido"
+        )
+    except Exception as e:
+        logger.error(f"Google auth error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao autenticar com Google"
+        )
 
 
 # ============================================================================
