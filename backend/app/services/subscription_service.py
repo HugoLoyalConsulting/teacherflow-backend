@@ -191,9 +191,6 @@ class SubscriptionService:
         
         self.db.add(subscription)
         
-        # Update user
-        user.subscription_id = subscription.id
-        
         self.db.commit()
         self.db.refresh(subscription)
         

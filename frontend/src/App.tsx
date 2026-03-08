@@ -53,7 +53,7 @@ function AppContent() {
 
   const checkSubscription = async () => {
     try {
-      const response = await api.get('/api/v1/subscriptions/current')
+      const response = await api.get('/subscriptions/current')
       const subscription = response.data?.subscription
       
       // Check if user has a paid plan or is in trial

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { startOnboardingTour } from '@/utils/onboardingTour';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/store/authStore';
 import { HelpCircle, Play, X } from 'lucide-react';
+import { api } from '@/services/api';
 
 interface OnboardingTourWrapperProps {
   children: React.ReactNode;
@@ -10,27 +11,43 @@ interface OnboardingTourWrapperProps {
 const TOUR_STORAGE_KEY = 'teacherflow_tour_completed';
 
 export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) {
-  const { user, token } = useAuth();
+  const { user, setOnboardingComplete } = useAuthStore();
   const [tourStarted, setTourStarted] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
+
+  const token = localStorage.getItem('access_token');
 
   useEffect(() => {
     if (!user || !token || tourStarted) return;
 
-    // Check if tour has already been completed (using localStorage)
-    const tourCompleted = localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
-    
-    if (!tourCompleted) {
-      // Show banner first
-      setShowBanner(true);
-      
-      // Auto-start tour after 2 seconds
-      const timer = setTimeout(() => {
-        startTourWithTracking();
-      }, 2000);
+    const loadTourStatus = async () => {
+      try {
+        const response = await api.get('/tour/status');
+        const completedInBackend = !!response.data?.tour_completed;
+        const completedInStorage = localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
+        const tourCompleted = completedInBackend || completedInStorage;
 
-      return () => clearTimeout(timer);
-    }
+        if (tourCompleted) {
+          localStorage.setItem(TOUR_STORAGE_KEY, 'true');
+          setOnboardingComplete(true);
+          return;
+        }
+
+        setShowBanner(true);
+        const timer = setTimeout(() => {
+          startTourWithTracking();
+        }, 2000);
+
+        return () => clearTimeout(timer);
+      } catch {
+        const completedInStorage = localStorage.getItem(TOUR_STORAGE_KEY) === 'true';
+        if (!completedInStorage) {
+          setShowBanner(true);
+        }
+      }
+    };
+
+    loadTourStatus();
   }, [user, token, tourStarted]);
 
   const startTourWithTracking = () => {
@@ -40,7 +57,14 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
     setShowBanner(false);
     console.log('🎉 Starting onboarding tour for user:', user.email);
 
-    startOnboardingTour();
+    startOnboardingTour(async () => {
+      try {
+        await api.post('/tour/complete');
+      } catch {
+        // Keep local completion even if backend sync fails.
+      }
+      setOnboardingComplete(true);
+    });
   };
 
   const handleRestartTour = () => {

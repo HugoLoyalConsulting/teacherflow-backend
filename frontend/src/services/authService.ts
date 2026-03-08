@@ -51,7 +51,7 @@ class AuthService {
     email: string
     otp_code?: string // Apenas em DEBUG mode
   }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -73,7 +73,7 @@ class AuthService {
    * Retorna tokens JWT se bem-sucedido
    */
   async verifyEmail(data: VerifyEmailRequest): Promise<TokenResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/verify-email`, {
+    const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -99,7 +99,7 @@ class AuthService {
     message: string
     otp_code?: string
   }> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/resend-otp`, {
+    const response = await fetch(`${API_BASE_URL}/auth/resend-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -120,7 +120,7 @@ class AuthService {
    * Fazer login
    */
   async login(data: LoginRequest): Promise<TokenResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -152,7 +152,7 @@ class AuthService {
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/refresh`, {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken }),
@@ -180,7 +180,7 @@ class AuthService {
   ): Promise<{ message: string }> {
     const accessToken = this.getAccessToken()
 
-    const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+    const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -218,6 +218,7 @@ class AuthService {
   private storeTokens(response: TokenResponse): void {
     // Access token - compartilhado entre suposições
     localStorage.setItem('access_token', response.access_token)
+    localStorage.setItem('teacherflow-token', response.access_token)
 
     // Refresh token - mais seguro em sessionStorage (perdido ao fechar abas)
     sessionStorage.setItem('refresh_token', response.refresh_token)
@@ -227,10 +228,12 @@ class AuthService {
       'user',
       JSON.stringify({
         id: response.user.id,
+        name: response.user.full_name,
         email: response.user.email,
-        full_name: response.user.full_name,
-        email_verified: response.user.email_verified,
-        two_factor_enabled: response.user.two_factor_enabled,
+        role: 'OWNER',
+        tenantId: response.user.id,
+        onboardingComplete: false,
+        lessonTypes: [],
       })
     )
 
@@ -284,6 +287,7 @@ class AuthService {
    */
   private clearTokens(): void {
     localStorage.removeItem('access_token')
+    localStorage.removeItem('teacherflow-token')
     localStorage.removeItem('user')
     localStorage.removeItem('token_expires_at')
     sessionStorage.removeItem('refresh_token')

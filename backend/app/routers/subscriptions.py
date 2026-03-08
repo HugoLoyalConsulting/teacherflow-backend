@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
-from app.core.security import get_current_user
+from app.core.security import get_current_user_obj
 from app.models import User
 from app.services.subscription_service import SubscriptionService
 from app.schemas.subscription import (
@@ -31,7 +31,7 @@ def get_subscription_tiers(db: Session = Depends(get_db)):
 
 @router.get("/tiers/compare", response_model=TierComparison)
 def compare_tiers(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Compare all tiers with user's current tier"""
@@ -62,7 +62,7 @@ def compare_tiers(
 
 @router.get("/current", response_model=SubscriptionWithUsage)
 def get_current_subscription(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Get user's current subscription with usage stats"""
@@ -80,11 +80,13 @@ def get_current_subscription(
         
         # Create temporary subscription object
         from app.models import Subscription as SubscriptionModel
+        from datetime import datetime
         subscription = SubscriptionModel(
             id="temp",
             user_id=current_user.id,
             tier_id=free_tier.id,
             status="active",
+            created_at=datetime.utcnow(),
             tier=free_tier,
             cancel_at_period_end=False
         )
@@ -103,7 +105,7 @@ def get_current_subscription(
 
 @router.get("/usage", response_model=UsageStats)
 def get_usage_stats(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Get current usage statistics"""
@@ -114,7 +116,7 @@ def get_usage_stats(
 @router.post("/create", response_model=Subscription, status_code=status.HTTP_201_CREATED)
 def create_subscription(
     data: SubscriptionCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Create or upgrade subscription"""
@@ -135,7 +137,7 @@ def create_subscription(
 @router.post("/cancel", response_model=Subscription)
 def cancel_subscription(
     immediate: bool = False,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Cancel subscription (immediate or at period end)"""
@@ -145,7 +147,7 @@ def cancel_subscription(
 
 @router.post("/reactivate", response_model=Subscription)
 def reactivate_subscription(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Reactivate cancelled subscription"""
@@ -156,7 +158,7 @@ def reactivate_subscription(
 @router.get("/payments", response_model=List[SubscriptionPayment])
 def get_payment_history(
     limit: int = 50,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Get payment history"""
@@ -167,7 +169,7 @@ def get_payment_history(
 @router.post("/payments", response_model=SubscriptionPayment, status_code=status.HTTP_201_CREATED)
 def create_payment(
     data: SubscriptionPaymentCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """Create payment for subscription"""

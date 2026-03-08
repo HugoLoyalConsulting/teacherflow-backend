@@ -8,7 +8,6 @@ from typing import List, Dict, Optional
 from pydantic import BaseModel
 
 from app.core.database import get_db
-from app.core.security import get_current_user
 from app.models import User
 from app.services.onboarding import (
     get_all_categories,
@@ -16,6 +15,7 @@ from app.services.onboarding import (
     get_suggestions_for_category,
     update_user_profession
 )
+from app.core.security import get_current_user_obj
 
 
 router = APIRouter(prefix="/api/onboarding", tags=["Onboarding"])
@@ -118,7 +118,7 @@ async def get_category(category_key: str):
 @router.post("/complete", response_model=UpdateProfessionResponse)
 async def complete_onboarding(
     request: UpdateProfessionRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -170,7 +170,7 @@ async def complete_onboarding(
 
 @router.get("/status")
 async def get_onboarding_status(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user_obj)
 ):
     """
     Check if user has completed onboarding

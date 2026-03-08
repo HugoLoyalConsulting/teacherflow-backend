@@ -418,7 +418,6 @@ class PasswordResetToken(Base):
     def is_valid(self) -> bool:
         """Check if token is still valid"""
         return not self.is_expired() and not self.used
-    payments = relationship("SubscriptionPayment", back_populates="subscription", cascade="all, delete-orphan")
 
 
 class SubscriptionPayment(Base):

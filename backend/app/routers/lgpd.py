@@ -12,7 +12,7 @@ from sqlalchemy import func
 from pydantic import BaseModel, Field, EmailStr
 
 from app.core.database import get_db
-from app.core.security import get_current_user
+from app.core.security import get_current_user_obj
 from app.models import User, Student, Location, Group, Lesson, Payment
 
 router = APIRouter(prefix="/lgpd", tags=["LGPD Compliance"])
@@ -102,7 +102,7 @@ def log_data_access(user: User, action: str, db: Session):
 async def register_consent(
     request: Request,
     consent_request: LGPDConsentRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -154,7 +154,7 @@ async def register_consent(
 
 @router.get("/consent-status", response_model=LGPDConsentResponse)
 async def get_consent_status(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -182,7 +182,7 @@ async def get_consent_status(
 async def update_consent(
     request: Request,
     consent_request: LGPDConsentRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -232,7 +232,7 @@ async def update_consent(
 
 @router.get("/export-data", response_model=DataExportResponse)
 async def export_user_data(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -355,7 +355,7 @@ async def export_user_data(
 
 @router.post("/request-deletion", response_model=DeletionRequestResponse)
 async def request_data_deletion(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -404,7 +404,7 @@ async def request_data_deletion(
 
 @router.delete("/cancel-deletion", status_code=status.HTTP_200_OK)
 async def cancel_deletion_request(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -445,7 +445,7 @@ async def cancel_deletion_request(
 async def update_student_lgpd_settings(
     student_id: str,
     settings: StudentLGPDRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """

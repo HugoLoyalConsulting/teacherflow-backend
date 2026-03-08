@@ -170,7 +170,7 @@ export function createOnboardingTour() {
 /**
  * Start the onboarding tour
  */
-export function startOnboardingTour() {
+export function startOnboardingTour(onComplete?: () => void) {
   const tour = createOnboardingTour();
   
   // Start the tour
@@ -182,6 +182,9 @@ export function startOnboardingTour() {
     const listener = () => {
       console.log('✅ Tour completed! Marking in localStorage');
       localStorage.setItem('teacherflow_tour_completed', 'true');
+      if (onComplete) {
+        onComplete();
+      }
     };
     
     // Listen for when the tour overlay is removed from DOM

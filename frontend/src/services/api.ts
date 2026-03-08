@@ -22,7 +22,7 @@ interface ApiResponse<T = any> {
 
 class ApiClient {
   private instance: AxiosInstance
-  private tokenKey = 'teacherflow-token'
+  private tokenKey = 'access_token'
 
   constructor() {
     this.instance = axios.create({

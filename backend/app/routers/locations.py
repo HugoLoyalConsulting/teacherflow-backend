@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models import Location
+from app.services.subscription_service import SubscriptionService
 from app.schemas.locations import LocationCreate, LocationUpdate, LocationResponse
 
 router = APIRouter(prefix="/locations", tags=["locations"])
@@ -54,6 +55,15 @@ async def create_location(
     db: Session = Depends(get_db),
 ):
     """Create new location"""
+    subscription_service = SubscriptionService(db)
+    if not subscription_service.check_can_create_location(user_id):
+        usage = subscription_service.get_usage_stats(user_id)
+        limit_text = usage.locations_limit if usage.locations_limit is not None else 0
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Location limit reached for current plan ({limit_text}). Upgrade to add more locations.",
+        )
+
     location = Location(
         id=str(uuid.uuid4()),
         teacher_id=user_id,

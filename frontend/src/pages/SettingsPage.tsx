@@ -10,8 +10,8 @@ interface SubscriptionTier {
   tier_key: string
   name: string
   description: string
-  price_monthly: number
-  price_yearly: number
+  price_monthly_brl: number
+  price_yearly_brl: number
   max_students: number | null
   max_users: number
   max_locations: number | null
@@ -31,7 +31,7 @@ export const SettingsPage = () => {
 
   const loadTiers = async () => {
     try {
-      const response = await api.get('/api/v1/subscriptions/tiers')
+      const response = await api.get('/subscriptions/tiers')
       // Ensure tiers is always an array
       const tiersData = Array.isArray(response.data) ? response.data : response.data?.tiers || []
       setTiers(tiersData)
@@ -39,7 +39,7 @@ export const SettingsPage = () => {
       
       // Try to get current subscription
       try {
-        const currentResponse = await api.get('/api/v1/subscriptions/current')
+        const currentResponse = await api.get('/subscriptions/current')
         if (currentResponse.data?.subscription?.tier?.tier_key) {
           setCurrentTierKey(currentResponse.data.subscription.tier.tier_key)
         }
@@ -58,7 +58,7 @@ export const SettingsPage = () => {
     
     setLoading(true)
     try {
-      await api.post('/api/v1/subscriptions/create', { tier_key: tierKey })
+      await api.post('/subscriptions/create', { tier_key: tierKey })
       setCurrentTierKey(tierKey)
       alert(`Plano ${tierKey.toUpperCase()} ativado com sucesso!`)
     } catch (error) {
@@ -181,17 +181,25 @@ export const SettingsPage = () => {
                   </div>
 
                   <div className="mb-6">
+                    {(() => {
+                      const monthlyPrice = Number(tier.price_monthly_brl || 0)
+                      const yearlyPrice = Number(tier.price_yearly_brl || 0)
+                      return (
+                        <>
                     <div className="flex items-baseline gap-1">
                       <span className="text-3xl font-bold text-gray-900 dark:text-gray-50">
-                        R$ {tier.price_monthly}
+                        R$ {monthlyPrice}
                       </span>
                       <span className="text-sm text-gray-600 dark:text-gray-400">/mês</span>
                     </div>
-                    {tier.price_yearly > 0 && (
+                    {yearlyPrice > 0 && (
                       <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                        R$ {tier.price_yearly}/ano (economize {Math.round((1 - tier.price_yearly / (tier.price_monthly * 12)) * 100)}%)
+                        R$ {yearlyPrice}/ano (economize {Math.round((1 - yearlyPrice / (monthlyPrice * 12)) * 100)}%)
                       </p>
                     )}
+                        </>
+                      )
+                    })()}
                   </div>
 
                   <div className="space-y-3 mb-6">

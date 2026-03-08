@@ -14,8 +14,8 @@ interface Plan {
   id: string
   name: string
   tier_key: string
-  price_monthly: number
-  price_yearly: number
+  price_monthly_brl: number
+  price_yearly_brl: number
   description: string
   icon: React.ReactNode
   color: string
@@ -43,13 +43,13 @@ export const UpgradePage = () => {
   const loadPlans = async () => {
     try {
       setLoading(true)
-      const response = await api.get('/api/v1/subscriptions/tiers')
+      const response = await api.get('/subscriptions/tiers')
       
       // Map plans with icons and colors
       const plansData = response.data.map((plan: any) => ({
         ...plan,
-        icon: plan.tier_key === 'free' ? <Sparkles /> : plan.tier_key === 'basic' ? <Zap /> : <Crown />,
-        color: plan.tier_key === 'free' ? 'gray' : plan.tier_key === 'basic' ? 'blue' : 'purple',
+        icon: plan.tier_key === 'free' ? <Sparkles /> : plan.tier_key === 'pro' ? <Zap /> : <Crown />,
+        color: plan.tier_key === 'free' ? 'gray' : plan.tier_key === 'pro' ? 'blue' : 'purple',
         popular: plan.tier_key === 'pro',
         features: [
           { name: `${plan.max_students ?? '∞'} alunos`, included: true },
@@ -73,23 +73,21 @@ export const UpgradePage = () => {
   }
 
   const handleSelectPlan = async (tierKey: string) => {
-    if (tierKey === 'free') {
-      // Skip trial for free plan
-      navigate('/dashboard')
-      return
-    }
-
     try {
       setSelectedPlan(tierKey)
-      
-      // Create subscription with 7-day free trial
-      await api.post('/api/v1/subscriptions/create', { 
+
+      const payload: any = {
         tier_key: tierKey,
-        trial_days: 7 
-      })
-      
-      // Redirect to dashboard
-      navigate('/dashboard')
+      }
+
+      if (tierKey !== 'free') {
+        payload.trial_days = 7
+      }
+
+      await api.post('/subscriptions/create', payload)
+
+      // Redirect to app home
+      navigate('/')
     } catch (error) {
       console.error('Failed to create subscription:', error)
       alert('Erro ao criar assinatura. Tente novamente.')
@@ -100,7 +98,7 @@ export const UpgradePage = () => {
   const handleSkip = () => {
     // Allow skipping paywall in QA, but not in production
     if (isQA) {
-      navigate('/dashboard')
+      navigate('/')
     }
   }
 
@@ -160,7 +158,9 @@ export const UpgradePage = () => {
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           {plans.map((plan) => {
-            const price = billingCycle === 'monthly' ? plan.price_monthly : plan.price_yearly
+            const monthlyPrice = Number(plan.price_monthly_brl || 0)
+            const yearlyPrice = Number(plan.price_yearly_brl || 0)
+            const price = billingCycle === 'monthly' ? monthlyPrice : yearlyPrice
             const colorClasses = {
               gray: 'border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800',
               blue: 'border-blue-500 bg-blue-50 dark:bg-blue-950/30 shadow-lg scale-105',
@@ -211,7 +211,7 @@ export const UpgradePage = () => {
                       </div>
                       {billingCycle === 'yearly' && (
                         <div className="text-sm text-green-600 dark:text-green-400">
-                          Economize R$ {(plan.price_monthly * 12 - plan.price_yearly).toFixed(2)}/ano
+                          Economize R$ {(monthlyPrice * 12 - yearlyPrice).toFixed(2)}/ano
                         </div>
                       )}
                     </>

@@ -4,7 +4,7 @@ Administrative endpoints for demo data management
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.security import get_current_user
+from app.core.security import get_current_user_obj
 from app.models import User
 from app.seeds.seed_realistic import seed_realistic_data
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 @router.post("/reset-demo-data")
 async def reset_demo_data(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -97,7 +97,7 @@ async def reset_demo_data(
 
 @router.get("/demo-status")
 async def check_demo_status(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """

@@ -1,7 +1,7 @@
 """Advanced Authentication Routes - Enterprise Security"""
 import uuid
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import APIRouter, HTTPException, status, Depends, Request
 from fastapi.responses import JSONResponse
@@ -21,6 +21,7 @@ from app.security import (
     PasswordManager, JWTManager, OTPManager, SecurityAudit,
     RateLimiter, EmailVerification
 )
+from app.core.email import send_verification_email, send_welcome_email
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -98,9 +99,10 @@ async def register(
     
     # Gerar OTP e enviar por email
     otp_code = EmailVerification.create_verification(email)
-    
-    # TODO: Implementar envio de email real via SMTP
-    logger.info(f"OTP para {email}: {otp_code}")  # Apenas para dev
+
+    email_sent = send_verification_email(email, otp_code)
+    if not email_sent:
+        logger.warning(f"Failed to send verification email to {email}; OTP generated but not delivered")
     
     SecurityAudit.log_auth_event(
         user_id=user.id,
@@ -110,9 +112,10 @@ async def register(
     )
     
     return {
-        "message": "Usuário criado!  Confira seu email para confirmar.",
+        "message": "Usuário criado! Confira seu email para confirmar.",
         "email": email,
-        "otp_code": otp_code if settings.DEBUG else None,  # Apenas em dev
+        "otp_code": otp_code if settings.DEBUG or settings.ENVIRONMENT != "production" or not email_sent else None,
+        "email_sent": email_sent,
     }
 
 
@@ -165,7 +168,14 @@ async def verify_email(
     # Ativar usuário
     user.email_verified = True
     user.is_active = True
+    user.email_verified_at = user.email_verified_at or datetime.utcnow()
     db.commit()
+
+    # Send non-blocking welcome email
+    try:
+        send_welcome_email(user.email, user.full_name)
+    except Exception:
+        logger.warning("Failed to send welcome email", exc_info=True)
     
     # Resetar rate limiter
     RateLimiter.reset_limit(f"verify_email:{email}")
@@ -229,12 +239,15 @@ async def resend_otp(
     
     # Gerar novo OTP
     otp_code = EmailVerification.create_verification(email)
-    
-    logger.info(f"OTP reenviado para {email}: {otp_code}")
+
+    email_sent = send_verification_email(email, otp_code)
+    if not email_sent:
+        logger.warning(f"Failed to resend verification email to {email}")
     
     return {
         "message": "Novo código enviado para seu email.",
-        "otp_code": otp_code if settings.DEBUG else None,
+        "otp_code": otp_code if settings.DEBUG or settings.ENVIRONMENT != "production" or not email_sent else None,
+        "email_sent": email_sent,
     }
 
 

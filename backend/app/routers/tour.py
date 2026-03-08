@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 
 from app.core.database import get_db
-from app.core.security import get_current_user
+from app.core.security import get_current_user_obj
 from app.models import User
 
 router = APIRouter(prefix="/tour", tags=["Interactive Tour"])
@@ -45,7 +45,7 @@ class CompleteTourRequest(BaseModel):
 
 @router.get("/status", response_model=TourStatusResponse)
 async def get_tour_status(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -74,7 +74,7 @@ async def get_tour_status(
 @router.post("/step", status_code=status.HTTP_200_OK)
 async def update_tour_step(
     request: UpdateTourStepRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -105,7 +105,7 @@ async def update_tour_step(
 
 @router.post("/complete", status_code=status.HTTP_200_OK)
 async def complete_tour(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -139,7 +139,7 @@ async def complete_tour(
 
 @router.post("/skip", status_code=status.HTTP_200_OK)
 async def skip_tour(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -167,7 +167,7 @@ async def skip_tour(
 
 @router.post("/reset", status_code=status.HTTP_200_OK)
 async def reset_tour(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -200,7 +200,7 @@ async def reset_tour(
 @router.post("/admin/reset-user/{user_id}", status_code=status.HTTP_200_OK)
 async def admin_reset_user_tour(
     user_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """

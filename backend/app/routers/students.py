@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models import Student
+from app.services.subscription_service import SubscriptionService
 from app.schemas.students import StudentCreate, StudentUpdate, StudentResponse
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -54,6 +55,15 @@ async def create_student(
     db: Session = Depends(get_db),
 ):
     """Create new student"""
+    subscription_service = SubscriptionService(db)
+    if not subscription_service.check_can_create_student(user_id):
+        usage = subscription_service.get_usage_stats(user_id)
+        limit_text = usage.students_limit if usage.students_limit is not None else 0
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Student limit reached for current plan ({limit_text}). Upgrade to add more students.",
+        )
+
     student = Student(
         id=str(uuid.uuid4()),
         teacher_id=user_id,

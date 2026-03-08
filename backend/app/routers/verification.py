@@ -15,7 +15,7 @@ from app.services.email_verification import (
     check_verification_status
 )
 from app.models import User
-from app.core.security import get_current_user
+from app.core.security import get_current_user_obj
 
 
 router = APIRouter(prefix="/api/verification", tags=["Email Verification"])
@@ -119,7 +119,7 @@ async def send_code(
 @router.post("/verify", response_model=VerifyCodeResponse, status_code=status.HTTP_200_OK)
 async def verify_email_code(
     request: VerifyCodeRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -162,7 +162,7 @@ async def verify_email_code(
 
 @router.post("/resend-code", response_model=SendCodeResponse, status_code=status.HTTP_200_OK)
 async def resend_code(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
@@ -205,7 +205,7 @@ async def resend_code(
 
 @router.get("/status", response_model=VerificationStatusResponse, status_code=status.HTTP_200_OK)
 async def get_verification_status(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user_obj),
     db: Session = Depends(get_db)
 ):
     """
