@@ -1,0 +1,88 @@
+name: Deploy Railway Cloud
+
+on:
+  push:
+    branches: [main, staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+
+      - name: Deploy backend (production)
+        working-directory: ./backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up . \
+            --path-as-root \
+            --ci \
+            --service backend \
+            --environment production \
+            --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
+
+      - name: Deploy frontend (production)
+        working-directory: ./frontend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up . \
+            --path-as-root \
+            --ci \
+            --service frontend \
+            --environment production \
+            --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+
+      - name: Deploy backend (staging)
+        working-directory: ./backend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up . \
+            --path-as-root \
+            --ci \
+            --service backend \
+            --environment staging \
+            --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
+
+      - name: Deploy frontend (staging)
+        working-directory: ./frontend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          railway up . \
+            --path-as-root \
+            --ci \
+            --service frontend \
+            --environment staging \
+            --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373

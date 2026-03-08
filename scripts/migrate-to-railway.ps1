@@ -98,17 +98,9 @@ Write-Success "✓ Variáveis do backend configuradas"
 Write-Info "`nAguardando backend ficar disponível (30s)..."
 Start-Sleep -Seconds 30
 
-# Obter URL do backend
-Write-Info "Obtendo URL do backend..."
-$backendStatus = railway status --service backend --json 2>$null | ConvertFrom-Json
-$backendUrl = $backendStatus.url
-
-if (-not $backendUrl) {
-    Write-Warning "Não foi possível obter URL automaticamente."
-    $backendUrl = Read-Host "Cole a URL do backend do Railway Dashboard"
-}
-
-Write-Success "✓ Backend URL: $backendUrl"
+# Referência interna do Railway para criar dependência FE -> BE
+$backendRefApi = 'https://${{backend.RAILWAY_PUBLIC_DOMAIN}}/api/v1'
+Write-Success "✓ Backend API Reference: $backendRefApi"
 
 # Deploy frontend
 Write-Info "`n[7/8] Fazendo deploy do frontend..."
@@ -125,7 +117,7 @@ Write-Success "✓ Frontend em deploy"
 # Configurar variáveis frontend
 Write-Info "`n[8/8] Configurando variáveis de ambiente (frontend)..."
 railway variables set --service frontend `
-  "VITE_API_URL=$backendUrl/api/v1" `
+    "VITE_API_URL=$backendRefApi" `
   "VITE_ENVIRONMENT=production"
 
 if ($LASTEXITCODE -ne 0) {
@@ -160,7 +152,7 @@ Write-Success @"
 
 Write-Info "📊 Resumo:"
 Write-Host "  🗄️  Database:  PostgreSQL (Railway)" -ForegroundColor White
-Write-Host "  🔌 Backend:   $backendUrl" -ForegroundColor White
+Write-Host "  🔌 Backend API Ref:   $backendRefApi" -ForegroundColor White
 if ($frontendUrl) {
     Write-Host "  🌐 Frontend:  $frontendUrl" -ForegroundColor White
 }

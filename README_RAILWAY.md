@@ -109,9 +109,8 @@ cd ../frontend
 railway up --service frontend
 
 # Configurar variáveis frontend
-BACKEND_URL=$(railway status --service backend --json | jq -r '.url')
 railway variables set --service frontend \
-  VITE_API_URL="$BACKEND_URL/api/v1" \
+  VITE_API_URL='https://${{backend.RAILWAY_PUBLIC_DOMAIN}}/api/v1' \
   VITE_ENVIRONMENT="production"
 ```
 
@@ -159,9 +158,13 @@ railway variables set --service frontend \
 
 | Variável | Valor | Descrição |
 |----------|-------|-----------|
-| `VITE_API_URL` | `https://backend-xxx.up.railway.app/api/v1` | URL da API backend |
+| `VITE_API_URL` | `https://${{backend.RAILWAY_PUBLIC_DOMAIN}}/api/v1` | Referência entre serviços (gera dependência FE -> BE) |
 | `VITE_ENVIRONMENT` | `production` | Ambiente frontend |
 | `VITE_GOOGLE_CLIENT_ID` | `<seu-client-id>` | OAuth Google (opcional) |
+
+Exemplos por ambiente:
+- `production`: `VITE_API_URL=https://${{backend-production.RAILWAY_PUBLIC_DOMAIN}}/api/v1`
+- `staging`: `VITE_API_URL=https://${{backend-staging.RAILWAY_PUBLIC_DOMAIN}}/api/v1`
 
 ### **Como Configurar via CLI**
 
@@ -180,7 +183,7 @@ railway variables set --service backend \
 
 # Frontend
 railway variables set --service frontend \
-  VITE_API_URL="https://your-backend.up.railway.app/api/v1" \
+  VITE_API_URL='https://${{backend.RAILWAY_PUBLIC_DOMAIN}}/api/v1' \
   VITE_ENVIRONMENT="production"
 ```
 

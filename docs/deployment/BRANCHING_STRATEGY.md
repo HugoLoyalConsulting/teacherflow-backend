@@ -7,12 +7,14 @@
 
 ## 📋 Resumo Executivo
 
+**Modelo oficial (Railway-first):** `staging` (QA) -> `main` (Produção)
+
 | Branch | Propósito | Railway Env | Usuários | Status |
 |--------|----------|---------|----------|--------|
 | **main** | Produção | Production | ✅ SIM (Beta) | ✅ ATIVO |
-| **staging** | Testes/QA | (Opcional) | ❌ NÃO | ⚠️ EXISTE MAS NÃO DEPLOYADO |
+| **staging** | Testes/QA | Staging | ❌ NÃO | 🚧 EM IMPLANTAÇÃO |
 | **master** | Legado | Desativado | ❌ NÃO | ⚠️ OBSOLETO |
-| **feature/* | Desenvolvimento | Local | ❌ NÃO | 📝 NOVO FEATURES |
+| `feature/*` | Desenvolvimento | Local | ❌ NÃO | ✅ FLUXO PADRÃO |
 
 ---
 
