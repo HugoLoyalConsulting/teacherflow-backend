@@ -202,7 +202,7 @@ async def verify_email(
         access_token=access_token,
         refresh_token=refresh_token,
         expires_in=expires_in,
-        user=UserResponse.from_orm(user)
+           user=UserResponse.model_validate(user)
     )
 
 
