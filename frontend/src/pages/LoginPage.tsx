@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
 import { Button, Input } from '../components/Form'
-import { Sun, Moon, AlertCircle } from 'lucide-react'
+import { Sun, Moon, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import { GoogleLogin } from '@react-oauth/google'
 import { isGoogleOAuthConfigured } from '../config/googleAuth'
 import { authService, AuthError } from '../services/authService'
@@ -11,6 +11,7 @@ import { authService, AuthError } from '../services/authService'
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { setUser, loginWithGoogle, loginError, setLoginError } = useAuthStore()
@@ -112,7 +113,7 @@ export const LoginPage = () => {
             <div>
               <Input
                 label="Senha"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Mínimo 6 caracteres"
                 value={password}
                 onChange={(e) => {
@@ -122,6 +123,17 @@ export const LoginPage = () => {
                 disabled={isLoading}
                 required
                 autoComplete="current-password"
+                rightElement={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                }
               />
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
                 A senha deve ter letras e números (ex: senha123)

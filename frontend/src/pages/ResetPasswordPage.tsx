@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { Button, Input } from '../components/Form'
 import { Card } from '../components/UI'
-import { AlertCircle, CheckCircle } from 'lucide-react'
+import { AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react'
 
 export function ResetPasswordPage() {
   const [searchParams] = useSearchParams()
@@ -13,6 +13,8 @@ export function ResetPasswordPage() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [token, setToken] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     const tokenParam = searchParams.get('token')
@@ -101,13 +103,24 @@ export function ResetPasswordPage() {
               <div>
                 <Input
                   label="Nova senha"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Mínimo 12 caracteres"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading || !token}
                   required
                   autoComplete="new-password"
+                  rightElement={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                      aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  }
                 />
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
                   Use letras maiúsculas, minúsculas, números e símbolos
@@ -117,13 +130,24 @@ export function ResetPasswordPage() {
               <div>
                 <Input
                   label="Confirmar nova senha"
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Digite a senha novamente"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={isLoading || !token}
                   required
                   autoComplete="new-password"
+                  rightElement={
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                      aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                      title={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  }
                 />
               </div>
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Form'
 import { Card } from '../components/UI'
 import { authService, AuthError } from '../services/authService'
+import { Eye, EyeOff } from 'lucide-react'
 
 interface PasswordStrength {
   hasMinLength: boolean
@@ -217,8 +218,10 @@ export function RegisterPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 >
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
 
@@ -289,8 +292,10 @@ export function RegisterPage() {
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
+                  aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  title={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 >
-                  {showConfirmPassword ? '🙈' : '👁️'}
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 """Advanced Authentication Routes - Enterprise Security"""
 import uuid
+import secrets
 import logging
 from datetime import datetime, timedelta
 from typing import Optional
@@ -255,7 +256,7 @@ async def resend_otp(
 # LOGIN & TOKENS
 # ============================================================================
 
-@router.post("/login")  # Removed response_model temporarily to debug
+@router.post("/login", response_model=TokenResponse)
 async def login(
     request: LoginRequest,
     req: Request,
@@ -371,7 +372,7 @@ async def login(
         access_token=access_token,
         refresh_token=refresh_token,
         expires_in=expires_in,
-        user=UserResponse.from_orm(user)
+        user=UserResponse.model_validate(user)
     )
 
 
@@ -423,7 +424,7 @@ async def refresh_token(
         access_token=access_token,
         refresh_token=new_refresh_token,
         expires_in=expires_in,
-        user=UserResponse.from_orm(user)
+        user=UserResponse.model_validate(user)
     )
 
 
@@ -710,7 +711,7 @@ async def google_auth(
             access_token=access_token,
             refresh_token=refresh_token,
             expires_in=expires_in,
-            user=UserResponse.from_orm(user)
+            user=UserResponse.model_validate(user)
         )
     
     except ValueError as e:
@@ -782,4 +783,4 @@ async def get_me(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Usuário não encontrado."
         )
-    return UserResponse.from_orm(user)
+    return UserResponse.model_validate(user)

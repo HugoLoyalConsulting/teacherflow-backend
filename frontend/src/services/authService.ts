@@ -3,7 +3,18 @@
  * Incluí geração segura de OTP, validação, e gerenciamento de tokens
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const normalizeApiBaseUrl = (rawBaseUrl?: string): string => {
+  const base = (rawBaseUrl || 'http://localhost:8000').trim().replace(/\/+$/, '')
+  if (base.endsWith('/api/v1')) {
+    return base
+  }
+  if (base.endsWith('/api')) {
+    return `${base}/v1`
+  }
+  return `${base}/api/v1`
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_URL)
 
 export interface RegisterRequest {
   email: string
@@ -42,6 +53,32 @@ export interface AuthError {
 }
 
 class AuthService {
+  private async parseError(response: Response, fallbackMessage: string): Promise<AuthError> {
+    let detail = fallbackMessage
+
+    try {
+      const contentType = response.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        const errorBody = await response.json()
+        if (typeof errorBody?.detail === 'string' && errorBody.detail.trim()) {
+          detail = errorBody.detail
+        }
+      } else {
+        const textBody = (await response.text()).trim()
+        if (textBody) {
+          detail = textBody
+        }
+      }
+    } catch {
+      // Keep fallback message when body parsing fails.
+    }
+
+    return {
+      detail,
+      status: response.status,
+    }
+  }
+
   /**
    * Registrar novo usuário
    * Enviará código OTP para email
@@ -58,11 +95,7 @@ class AuthService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      throw {
-        detail: error.detail || 'Erro no registro',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Erro no registro')
     }
 
     return response.json()
@@ -80,11 +113,7 @@ class AuthService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      throw {
-        detail: error.detail || 'Erro na verificação',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Erro na verificação')
     }
 
     const result = await response.json()
@@ -106,11 +135,7 @@ class AuthService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      throw {
-        detail: error.detail || 'Erro ao reenviar OTP',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Erro ao reenviar OTP')
     }
 
     return response.json()
@@ -127,11 +152,7 @@ class AuthService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      throw {
-        detail: error.detail || 'Erro no login',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Erro no login')
     }
 
     const result = await response.json()
@@ -160,10 +181,7 @@ class AuthService {
 
     if (!response.ok) {
       this.clearTokens()
-      throw {
-        detail: 'Falha ao renovar token',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Falha ao renovar token')
     }
 
     const result = await response.json()
@@ -193,11 +211,7 @@ class AuthService {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      throw {
-        detail: error.detail || 'Erro ao mudar senha',
-        status: response.status,
-      }
+      throw await this.parseError(response, 'Erro ao mudar senha')
     }
 
     return response.json()
