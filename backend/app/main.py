@@ -27,6 +27,7 @@ try:
 except Exception as e:
     logger.warning(f"Auto-seed failed (non-critical): {e}")
 
+# DEPLOYMENT FORCED: 2026-04-01 03:40
 # Create FastAPI app
 app = FastAPI(
     title=settings.PROJECT_NAME,
