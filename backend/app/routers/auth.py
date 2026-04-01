@@ -306,8 +306,8 @@ async def login(
             detail="Email ou senha incorretos.",
         )
     
-    # Verificar se email foi validado
-    if not user.email_verified:
+    # Verificar se email foi validado (skip se email verification desativado via settings)
+    if settings.AUTH_REQUIRE_EMAIL_VERIFICATION and not user.email_verified:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Email não verificado. Verifique seu email.",

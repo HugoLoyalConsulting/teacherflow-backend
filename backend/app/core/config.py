@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
+    # Authentication Settings
+    AUTH_REQUIRE_EMAIL_VERIFICATION: bool = False  # Disabled by default - users can login immediately after register
+    
     # CORS
     CORS_ORIGINS: list = [
         "http://localhost:5176",
