@@ -255,7 +255,7 @@ async def resend_otp(
 # LOGIN & TOKENS
 # ============================================================================
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login")  # Removed response_model temporarily to debug
 async def login(
     request: LoginRequest,
     req: Request,
