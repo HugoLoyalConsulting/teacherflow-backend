@@ -784,3 +784,52 @@ async def get_me(
             detail="Usuário não encontrado."
         )
     return UserResponse.model_validate(user)
+
+
+# ============================================================================
+# DEBUG / QA ENDPOINT  (only active when QA_SECRET is configured)
+# ============================================================================
+
+@router.get("/debug/otp")
+async def debug_get_otp(
+    email: str,
+    req: Request,
+):
+    """
+    Recuperar OTP pendente para um e-mail (somente para QA automatizado).
+
+    Requer header  X-QA-Secret  igual ao valor de settings.QA_SECRET.
+    Endpoint fica disponível apenas quando QA_SECRET estiver definido
+    nas variáveis de ambiente do Railway.  Nunca expor em produção sem
+    essa variável configurada — sem ela a rota retorna 404.
+    """
+    if not settings.QA_SECRET:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+
+    provided = req.headers.get("X-QA-Secret", "")
+    if not secrets.compare_digest(provided, settings.QA_SECRET):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+
+    pending = EmailVerification._pending_verifications.get(email)
+    if not pending:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhum código pendente para este e-mail.",
+        )
+
+    from datetime import timezone
+    now = datetime.utcnow()
+    if now > pending["expires_at"]:
+        raise HTTPException(
+            status_code=status.HTTP_410_GONE,
+            detail="Código expirado.",
+        )
+
+    logger.info(f"[QA] debug/otp consultado para {email} via X-QA-Secret")
+
+    return {
+        "email": email,
+        "otp_code": pending["code"],
+        "expires_at": pending["expires_at"].isoformat(),
+        "attempts_used": pending["attempts"],
+    }

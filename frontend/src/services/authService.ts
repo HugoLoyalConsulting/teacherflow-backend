@@ -62,6 +62,13 @@ class AuthService {
         const errorBody = await response.json()
         if (typeof errorBody?.detail === 'string' && errorBody.detail.trim()) {
           detail = errorBody.detail
+        } else if (Array.isArray(errorBody?.detail) && errorBody.detail.length > 0) {
+          const firstDetail = errorBody.detail[0]
+          if (typeof firstDetail?.msg === 'string' && firstDetail.msg.trim()) {
+            detail = firstDetail.msg
+          } else {
+            detail = fallbackMessage
+          }
         }
       } else {
         const textBody = (await response.text()).trim()

@@ -65,3 +65,6 @@ htmlcov/
 *.log
 .cache/
 .vercel
+
+# Local runtime QA artifacts and temporary credentials
+.runtime/

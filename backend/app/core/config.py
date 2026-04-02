@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     
     # Authentication Settings
     AUTH_REQUIRE_EMAIL_VERIFICATION: bool = False  # Disabled by default - users can login immediately after register
+
+    # QA / Testing — set QA_SECRET in Railway env; used by debug endpoint for automated E2E
+    QA_SECRET: Optional[str] = None  # When set, enables /auth/debug/otp endpoint
     
     # CORS
     CORS_ORIGINS: list = [
