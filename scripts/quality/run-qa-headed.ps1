@@ -12,8 +12,27 @@
 $ErrorActionPreference = "Stop"
 
 $frontendDir = "c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow\frontend"
+$repoRoot    = "c:\Users\Hugo Souza\OneDrive\Documentos\Python Scripts\teacherflow"
 $runtimeDir  = Join-Path $env:LOCALAPPDATA "TeacherFlowQA"
 $artifactDir = Join-Path $runtimeDir "qa-artifacts"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 0. Load .env.qa if QA_SECRET not already set in session
+#    File lives at repo root, is gitignored, and never pushed to GitHub.
+# ─────────────────────────────────────────────────────────────────────────────
+$envQaPath = Join-Path $repoRoot ".env.qa"
+if (-not $env:QA_SECRET -and (Test-Path $envQaPath)) {
+    Get-Content $envQaPath | ForEach-Object {
+        if ($_ -match '^\s*([A-Z_]+)\s*=\s*(.+)\s*$') {
+            $key   = $Matches[1]
+            $value = $Matches[2].Trim()
+            if (-not (Get-Item "Env:\$key" -ErrorAction SilentlyContinue)) {
+                Set-Item -Path "Env:\$key" -Value $value
+            }
+        }
+    }
+    Write-Host "  Segredos carregados de .env.qa" -ForegroundColor DarkGray
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Banner
@@ -108,11 +127,13 @@ Write-Host "  Backend:  https://backend-production-c4f8f.up.railway.app" -Foregr
 Write-Host "  Artefatos: $artifactDir" -ForegroundColor DarkGray
 Write-Host ""
 
-# Inject QA_SECRET if already defined globally (set once in your shell profile or Railway)
-# To configure: $env:QA_SECRET = "your-secret-here"  (then add same value to Railway env vars)
+# Inject QA_SECRET if already defined globally (loaded from .env.qa above, or set manually)
 if (-not $env:QA_SECRET) {
-    Write-Host "  Nota: QA_SECRET não definido. O debug OTP endpoint não será usado." -ForegroundColor DarkYellow
-    Write-Host "  Para ativar: `$env:QA_SECRET = 'seu-segredo'; depois adicione em Railway > Variables > QA_SECRET" -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  AVISO: QA_SECRET não encontrado em .env.qa nem na sessão." -ForegroundColor DarkYellow
+    Write-Host "  O debug OTP endpoint não será usado — verifique se precisa de verificação de email." -ForegroundColor DarkGray
+    Write-Host "  Para configurar: adicione QA_SECRET=<valor> em $envQaPath" -ForegroundColor DarkGray
+    Write-Host "  E o mesmo valor em Railway > Variables > QA_SECRET" -ForegroundColor DarkGray
     Write-Host ""
 }
 

@@ -802,14 +802,29 @@ async def debug_get_otp(
     Endpoint fica disponível apenas quando QA_SECRET estiver definido
     nas variáveis de ambiente do Railway.  Nunca expor em produção sem
     essa variável configurada — sem ela a rota retorna 404.
+
+    Segurança adicional:
+    - Rate-limited: máx 10 chamadas / 60 s por IP (bloqueia brute-force de segredo)
+    - Comparação em tempo constante (sem timing-attack)
+    - Log de cada acesso (incluindo tentativas inválidas)
     """
+    # 1. Gate: endpoint só existe se QA_SECRET estiver configurado
     if not settings.QA_SECRET:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
+    # 2. Rate-limit por IP para bloquear enumeração/brute-force do segredo
+    ip_address = req.headers.get("X-Forwarded-For", req.client.host if req.client else "unknown")
+    if not RateLimiter.check_rate_limit(f"debug_otp_ip:{ip_address}", max_attempts=10, window_seconds=60):
+        logger.warning(f"[QA] debug/otp rate-limited para IP {ip_address}")
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Rate limit excedido.")
+
+    # 3. Validar segredo em tempo constante (previne timing attack)
     provided = req.headers.get("X-QA-Secret", "")
-    if not secrets.compare_digest(provided, settings.QA_SECRET):
+    if not provided or not secrets.compare_digest(provided, settings.QA_SECRET):
+        logger.warning(f"[QA] debug/otp tentativa com segredo inválido — IP {ip_address}, email {email}")
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
 
+    # 4. Verificar OTP pendente para o e-mail
     pending = EmailVerification._pending_verifications.get(email)
     if not pending:
         raise HTTPException(
@@ -817,7 +832,6 @@ async def debug_get_otp(
             detail="Nenhum código pendente para este e-mail.",
         )
 
-    from datetime import timezone
     now = datetime.utcnow()
     if now > pending["expires_at"]:
         raise HTTPException(
@@ -825,7 +839,7 @@ async def debug_get_otp(
             detail="Código expirado.",
         )
 
-    logger.info(f"[QA] debug/otp consultado para {email} via X-QA-Secret")
+    logger.info(f"[QA] debug/otp consultado para {email} via X-QA-Secret — IP {ip_address}")
 
     return {
         "email": email,
