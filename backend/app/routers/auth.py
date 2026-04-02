@@ -83,14 +83,19 @@ async def register(
             detail="Email já está registrado.",
         )
     
-    # Criar novo usuário (não ativo até verificar email)
+    # Quando AUTH_REQUIRE_EMAIL_VERIFICATION=False, ativa o user imediatamente.
+    # Quando True, is_active=False até o OTP ser confirmado em /verify-email.
+    auto_activate = not settings.AUTH_REQUIRE_EMAIL_VERIFICATION
+
+    # Criar novo usuário
     user = User(
         id=str(uuid.uuid4()),
         email=email,
         full_name=request.full_name,
         hashed_password=PasswordManager.hash_password(request.password),
-        is_active=False,  # Ativar após verificação de email
-        email_verified=False,
+        is_active=auto_activate,
+        email_verified=auto_activate,
+        email_verified_at=datetime.utcnow() if auto_activate else None,
         created_ip=ip_address,
     )
     
@@ -98,7 +103,7 @@ async def register(
     db.commit()
     db.refresh(user)
     
-    # Gerar OTP e enviar por email
+    # Gerar OTP e enviar por email (mesmo quando auto-ativo, para fins informativos)
     otp_code = EmailVerification.create_verification(email)
 
     email_sent = send_verification_email(email, otp_code)
@@ -113,8 +118,9 @@ async def register(
     )
     
     return {
-        "message": "Usuário criado! Confira seu email para confirmar.",
+        "message": "Conta criada com sucesso! Você já pode fazer login." if auto_activate else "Usuário criado! Confira seu email para confirmar.",
         "email": email,
+        "auto_activated": auto_activate,
         "otp_code": otp_code if settings.DEBUG or settings.ENVIRONMENT != "production" or not email_sent else None,
         "email_sent": email_sent,
     }
