@@ -14,8 +14,9 @@ engine = create_engine(
     pool_recycle=3600,  # Recycle connections after 1 hour (Neon default timeout)
     pool_timeout=30,  # Timeout waiting for a connection
     connect_args={
-        "connect_timeout": 10,  # Connection timeout in seconds
-        "options": "-c timezone=America/Sao_Paulo"  # Set timezone for all connections
+        "connect_timeout": 10,
+        "options": "-c timezone=America/Sao_Paulo",
+        "sslmode": "require",
     }
 )
 
