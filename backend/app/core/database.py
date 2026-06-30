@@ -4,19 +4,22 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import settings
 
-# Engine configuration with robust connection pooling
+# Use SSL only for public proxy URLs; private Railway hostnames don't need it
+_is_internal = ".railway.internal" in settings.DATABASE_URL
+_sslmode = "prefer" if _is_internal else "require"
+
 engine = create_engine(
     settings.DATABASE_URL,
     echo=settings.SQLALCHEMY_ECHO,
-    pool_pre_ping=True,  # Verify connections before using
-    pool_size=10,  # Number of connections to maintain in the pool
-    max_overflow=20,  # Additional connections that can be created on demand
-    pool_recycle=3600,  # Recycle connections after 1 hour (Neon default timeout)
-    pool_timeout=30,  # Timeout waiting for a connection
+    pool_pre_ping=True,
+    pool_size=10,
+    max_overflow=20,
+    pool_recycle=3600,
+    pool_timeout=30,
     connect_args={
         "connect_timeout": 10,
         "options": "-c timezone=America/Sao_Paulo",
-        "sslmode": "require",
+        "sslmode": _sslmode,
     }
 )
 
