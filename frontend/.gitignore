@@ -26,5 +26,18 @@ dist-ssr
 .env
 .env.local
 
+.env.*
+.env.qa
+.env.production
+
+# Local runtime and QA artifacts
+.runtime/
+qa-test-output.log
+*.log
+coverage/
+playwright-report/
+test-results/
+dist/
+node_modules/
 # OS
 Thumbs.db

@@ -57,6 +57,8 @@ export default defineConfig({
             '--disable-sync',
             '--disable-component-update',
             '--disable-default-apps',
+            '--disable-notifications',
+            '--deny-permission-prompts',
             '--no-default-browser-check',
             '--no-first-run',
             '--safebrowsing-disable-auto-update',

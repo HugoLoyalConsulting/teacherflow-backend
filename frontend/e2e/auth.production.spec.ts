@@ -87,15 +87,17 @@ test('auth e2e: register, verify otp, login, and negative login case', async ({ 
 
   const registerResponse = await registerResponsePromise
   const registerBody = await registerResponse.json()
+  const autoActivated = Boolean(registerBody.auto_activated)
   pushCheck('register_api_call', registerResponse.status() === 200 ? 'passed' : 'failed', {
     status: registerResponse.status(),
     email: registerBody.email,
+    auto_activated: autoActivated,
     email_sent: registerBody.email_sent,
     has_otp_code: !!registerBody.otp_code,
   })
   expect(registerResponse.status()).toBe(200)
 
-  let otpCode = registerBody.otp_code as string | undefined
+  let otpCode = autoActivated ? undefined : (registerBody.otp_code as string | undefined)
   let otpSource = otpCode ? 'register_response' : 'none'
 
   // ── Fallback 1: debug endpoint (requires QA_SECRET env var + Railway config) ──
@@ -146,10 +148,28 @@ test('auth e2e: register, verify otp, login, and negative login case', async ({ 
     note: 'User created during QA run',
   })
 
-  await page.waitForURL('**/verify-email**', { timeout: 20_000 })
+  await page.waitForURL(/\/verify-email|\/login/, { timeout: 20_000 })
   await page.screenshot({ path: path.join(evidenceDir, '02-verify-email-page.png'), fullPage: true })
 
-  if (otpCode) {
+  const redirectedDirectlyToLogin = page.url().includes('/login')
+  const verificationDisabledNotice = page.getByText('Verificação por código desativada')
+  const verificationDisabled =
+    autoActivated &&
+    (await verificationDisabledNotice.first().isVisible().catch(() => false))
+
+  if (redirectedDirectlyToLogin && autoActivated) {
+    pushCheck('verify_email_ui', 'passed', {
+      mode: 'auto_activated_login_redirect',
+      note: 'Frontend redirecionou direto para login quando a conta foi autoativada.',
+    })
+  } else if (verificationDisabled) {
+    pushCheck('verify_email_ui', 'passed', {
+      mode: 'auto_activated',
+      note: 'Frontend exibiu o aviso de verificacao desativada e liberou acesso direto ao login.',
+    })
+    await page.getByRole('button', { name: 'Ir para Login' }).click()
+    await page.waitForURL('**/login', { timeout: 20_000 })
+  } else if (otpCode) {
     await page.locator('#otp').fill(otpCode)
     await page.screenshot({ path: path.join(evidenceDir, '03-verify-email-filled.png'), fullPage: true })
     await page.getByRole('button', { name: 'Verificar Código' }).click()
@@ -201,10 +221,11 @@ test('auth e2e: register, verify otp, login, and negative login case', async ({ 
   })
   const expectedLoginBody = await expectedLoginResp.text()
 
-  if (otpCode) {
+  if (autoActivated || otpCode) {
     pushCheck('api_login_after_verification', expectedLoginResp.status() === 200 ? 'passed' : 'failed', {
       status: expectedLoginResp.status(),
       body: expectedLoginBody,
+      auto_activated: autoActivated,
     })
     expect(expectedLoginResp.status()).toBe(200)
   } else {
@@ -232,7 +253,7 @@ test('auth e2e: register, verify otp, login, and negative login case', async ({ 
   report.otp_obtained = !!otpCode
   fs.writeFileSync(path.join(evidenceDir, 'qa-report.json'), JSON.stringify(report, null, 2), 'utf-8')
 
-  if (otpCode) {
+  if (autoActivated || otpCode) {
     expect(loginSucceeded, 'Login nao concluiu no fluxo UI apos verificacao de email.').toBeTruthy()
   }
   expect(wrongLoginStatusOk, 'Caso negativo de senha incorreta retornou status inesperado.').toBeTruthy()

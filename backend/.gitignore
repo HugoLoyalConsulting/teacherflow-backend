@@ -26,7 +26,12 @@ wheels/
 # Environment
 .env
 .env.local
+.env.qa
+.env.production
 *.local
+.runtime/
+qa-*.log
+qa-*.jsonl
 
 # IDEs
 .vscode/
@@ -47,6 +52,7 @@ alembic/versions/*.py
 .pytest_cache/
 .coverage
 htmlcov/
+.coverage.*
 
 # Database
 *.db

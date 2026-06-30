@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
 import { Button, Input } from '../components/Form'
-import { Sun, Moon, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { Sun, Moon, AlertCircle } from 'lucide-react'
 import { GoogleLogin } from '@react-oauth/google'
 import { isGoogleOAuthConfigured } from '../config/googleAuth'
 import { authService, AuthError } from '../services/authService'
@@ -13,9 +13,27 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [registerMessage, setRegisterMessage] = useState<string | null>(null)
   const navigate = useNavigate()
+  const location = useLocation()
   const { setUser, loginWithGoogle, loginError, setLoginError } = useAuthStore()
   const { isDark, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const prefilledEmail = params.get('email')
+    const registered = params.get('registered')
+
+    if (prefilledEmail) {
+      setEmail(prefilledEmail)
+    }
+
+    if (registered === '1') {
+      setRegisterMessage('Conta criada com sucesso. Faça login para continuar.')
+    } else {
+      setRegisterMessage(null)
+    }
+  }, [location.search])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,6 +102,12 @@ export const LoginPage = () => {
           </div>
 
           {/* Error Display */}
+          {registerMessage && (
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900 rounded-lg">
+              <p className="text-sm font-medium text-green-900 dark:text-green-300">{registerMessage}</p>
+            </div>
+          )}
+
           {loginError && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 rounded-lg flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
@@ -102,6 +126,7 @@ export const LoginPage = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
+                  setRegisterMessage(null)
                   setLoginError(null)
                 }}
                 disabled={isLoading}
@@ -118,6 +143,7 @@ export const LoginPage = () => {
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
+                  setRegisterMessage(null)
                   setLoginError(null)
                 }}
                 disabled={isLoading}
@@ -127,11 +153,11 @@ export const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                    className="text-xs font-semibold px-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                     aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                     title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? 'Ocultar' : 'Mostrar'}
                   </button>
                 }
               />

@@ -21,12 +21,12 @@ const validatePasswordStrength = (password: string): PasswordStrength => {
     hasUppercase: /[A-Z]/.test(password),
     hasLowercase: /[a-z]/.test(password),
     hasNumber: /\d/.test(password),
-    hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+    hasSpecialChar: /[!@#$%^&*()_+=\[\]{};':"\\|,.<>/?-]/.test(password),
     isStrong: password.length >= 12 &&
       /[A-Z]/.test(password) &&
       /[a-z]/.test(password) &&
       /\d/.test(password) &&
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+      /[!@#$%^&*()_+=\[\]{};':"\\|,.<>/?-]/.test(password)
   }
 }
 
@@ -44,6 +44,7 @@ export function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [autoActivated, setAutoActivated] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -96,17 +97,23 @@ export function RegisterPage() {
       }
 
       // Fazer registro
-      await authService.register({
+      const registerResult = await authService.register({
         email: formData.email,
         full_name: formData.full_name,
         password: formData.password,
       })
 
       // Mostrar mensagem de sucesso
+      setAutoActivated(Boolean(registerResult.auto_activated))
       setSuccess(true)
 
-      // Redirecionar ao verify email em 2 segundos
+      // Seguir o fluxo real do ambiente: login direto quando a verificacao estiver desativada
       setTimeout(() => {
+        if (registerResult.auto_activated) {
+          navigate(`/login?email=${encodeURIComponent(formData.email)}&registered=1`)
+          return
+        }
+
         navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`)
       }, 2000)
     } catch (err) {
@@ -128,16 +135,29 @@ export function RegisterPage() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-2">
                 Conta criada com sucesso!
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Enviamos um código de verificação para<br />
-                <span className="font-semibold text-blue-600 dark:text-blue-400">{formData.email}</span>
-              </p>
+              {autoActivated ? (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Sua conta ja esta ativa. Voce pode fazer login com<br />
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">{formData.email}</span>
+                </p>
+              ) : (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Enviamos um código de verificação para<br />
+                  <span className="font-semibold text-blue-600 dark:text-blue-400">{formData.email}</span>
+                </p>
+              )}
             </div>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-700 dark:text-blue-300 text-sm">
-              O código é válido por 15 minutos. Verifique também sua pasta de spam.
-            </div>
+            {autoActivated ? (
+              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-700 dark:text-green-300 text-sm">
+                A verificacao por codigo esta desativada neste ambiente. Voce sera redirecionado para o login.
+              </div>
+            ) : (
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-700 dark:text-blue-300 text-sm">
+                O código é válido por 15 minutos. Verifique também sua pasta de spam.
+              </div>
+            )}
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Redirecionando para verificação...
+              {autoActivated ? 'Redirecionando para o login...' : 'Redirecionando para verificação...'}
             </p>
           </div>
         </Card>

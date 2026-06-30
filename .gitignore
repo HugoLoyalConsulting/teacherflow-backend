@@ -35,7 +35,16 @@ env/
 .env.local
 .env.*.local
 .env.qa
+.env.production
+.env.staging
 *.pem
+
+# Local secret material
+secrets.json
+credentials.json
+*.key
+*.p12
+*.crt
 
 # IDEs
 .vscode/
@@ -69,3 +78,10 @@ htmlcov/
 
 # Local runtime QA artifacts and temporary credentials
 .runtime/
+
+# Python and Node lock/cache artifacts generated locally
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+npm-debug.log*
+yarn-error.log*

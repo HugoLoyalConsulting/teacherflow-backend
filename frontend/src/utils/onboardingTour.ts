@@ -23,8 +23,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "body",
     popover: {
-      title: "🎉 Bem-vindo ao TeacherFlow!",
-      description: "📚 Tour interativo em 9 passos para você começar. Primeiro, me diga: qual é sua área de atuação? (Música 🎵, Idiomas 🗣️, Matérias Acadêmicas 📚, Esportes ⚽, Artes 🎨, Outro 📋)",
+      title: "Bem-vindo ao TeacherFlow",
+      description: "Este tour rapido mostra os pontos principais para voce comecar em poucos minutos.",
       side: "bottom",
       align: "center",
     },
@@ -34,8 +34,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-students",
     popover: {
-      title: "👥 Passo 1/6: Cadastre seus Alunos",
-      description: "Clique aqui agora para adicionar seu primeiro aluno! Nome, contato, valor da aula.",
+      title: "Passo 1 de 6: Cadastre seus alunos",
+      description: "Comece por aqui para criar o primeiro aluno com nome, contato e valor da aula.",
       side: "right",
       align: "center",
     },
@@ -45,8 +45,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-locations",
     popover: {
-      title: "📍 Passo 2/6: Cadastre Locais",
-      description: "Onde você dá aula? Sua casa, escola, online? Clique e cadastre!",
+      title: "Passo 2 de 6: Cadastre locais",
+      description: "Defina os locais de aula, como presencial, online ou unidades especificas.",
       side: "right",
       align: "center",
     },
@@ -56,8 +56,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-groups",
     popover: {
-      title: "👨‍🎓 Passo 3/6: Crie Turmas",
-      description: "Aulas em grupo? Crie turmas aqui e defina preços especiais. Clique para começar!",
+      title: "Passo 3 de 6: Crie turmas",
+      description: "Organize aulas em grupo e ajuste regras de preco para cada turma.",
       side: "right",
       align: "center",
     },
@@ -67,8 +67,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-calendar",
     popover: {
-      title: "📅 Passo 4/6: Agende Aulas",
-      description: "Aqui você marca aulas individuais ou recorrentes. Clique para agendar sua primeira aula!",
+      title: "Passo 4 de 6: Agende aulas",
+      description: "Use o calendario para criar aulas avulsas ou recorrentes de forma rapida.",
       side: "right",
       align: "center",
     },
@@ -78,8 +78,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-payments",
     popover: {
-      title: "💰 Passo 5/6: Controle Pagamentos",
-      description: "Veja quem pagou, quem está devendo, e receba alertas de inadimplência.",
+      title: "Passo 5 de 6: Controle pagamentos",
+      description: "Acompanhe quem pagou, pendencias e inadimplencia em um unico lugar.",
       side: "right",
       align: "center",
     },
@@ -89,8 +89,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "#nav-menu",
     popover: {
-      title: "📊 Passo 6/6: Seu Dashboard",
-      description: "Volte aqui sempre! Visão completa: próximas aulas, recebimentos, alunos ativos.",
+      title: "Passo 6 de 6: Painel principal",
+      description: "No painel voce acompanha proximas aulas, receitas e andamento geral da operacao.",
       side: "right",
       align: "start",
     },
@@ -100,8 +100,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "body",
     popover: {
-      title: "⚙️ Dica Extra: Configurações",
-      description: "No menu do seu perfil (canto superior direito), você pode trocar tema, alterar dados e refazer este tour quando quiser!",
+      title: "Dica extra: Configuracoes",
+      description: "No menu de perfil voce altera dados, tema e pode reiniciar o tour quando quiser.",
       side: "bottom",
       align: "center",
     },
@@ -111,8 +111,8 @@ export const onboardingSteps: TourStep[] = [
   {
     element: "body",
     popover: {
-      title: "✅ Tudo Pronto!",
-      description: "Agora é com você! Comece cadastrando seus primeiros alunos e agende suas aulas. Boa aula! 🎓📚🎉",
+      title: "Tudo pronto",
+      description: "Agora voce pode seguir para o dashboard e comecar o uso real do sistema.",
       side: "bottom",
       align: "center",
     },
@@ -127,7 +127,7 @@ export const driverConfig: Config = {
   showButtons: ["next", "previous", "close"],
   nextBtnText: "Próximo →",
   prevBtnText: "← Anterior",
-  doneBtnText: "Concluir ✓",
+  doneBtnText: "Concluir",
   // closeBtnText: "Pular Tour", // TODO: Fix driver.js API - not available in current version
   progressText: "{{current}} de {{total}}",
   
@@ -146,12 +146,20 @@ export const driverConfig: Config = {
     console.log("Tour finished or closed");
   },
   
-  onPopoverRender: (popover, { config, state }) => {
+  onPopoverRender: (popover) => {
     // Add subtle shadow and light styling
     const popoverElement = popover.wrapper;
     popoverElement.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08)";
     popoverElement.style.borderRadius = "16px";
     popoverElement.style.border = "1px solid rgba(0, 0, 0, 0.08)";
+
+    // Make close action explicit as "skip"
+    const closeButton = popoverElement.querySelector('.driver-popover-close-btn') as HTMLButtonElement | null;
+    if (closeButton) {
+      closeButton.textContent = 'Pular tour';
+      closeButton.setAttribute('aria-label', 'Pular tour');
+      closeButton.setAttribute('title', 'Pular tour');
+    }
   },
 };
 

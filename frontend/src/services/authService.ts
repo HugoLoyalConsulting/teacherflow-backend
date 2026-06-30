@@ -93,6 +93,8 @@ class AuthService {
   async register(data: RegisterRequest): Promise<{
     message: string
     email: string
+    auto_activated?: boolean
+    email_sent?: boolean
     otp_code?: string // Apenas em DEBUG mode
   }> {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -203,13 +205,13 @@ class AuthService {
     oldPassword: string,
     newPassword: string
   ): Promise<{ message: string }> {
-    const accessToken = this.getAccessToken()
+    const token = this.getAccessToken()
 
     const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         old_password: oldPassword,
@@ -291,8 +293,8 @@ class AuthService {
    * Verificar se está autenticado
    */
   isAuthenticated(): boolean {
-    const accessToken = this.getAccessToken()
-    return !!accessToken && !this.isTokenExpired()
+    const tok = this.getAccessToken()
+    return !!tok && !this.isTokenExpired()
   }
 
   /**
@@ -325,12 +327,12 @@ export async function authenticatedFetch(
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  const accessToken = authService.getAccessToken()
+  const token = authService.getAccessToken()
 
   // Adicionar Auth header
   const headers = {
     ...options.headers,
-    Authorization: accessToken ? `Bearer ${accessToken}` : '',
+    Authorization: token ? `Bearer ${token}` : '',
   } as Record<string, string>
 
   let response = await fetch(url, {
@@ -342,15 +344,15 @@ export async function authenticatedFetch(
   if (response.status === 401 && authService.getRefreshToken()) {
     try {
       await authService.refreshToken()
-      const newAccessToken = authService.getAccessToken()
+      const refreshedToken = authService.getAccessToken()
 
       // Tentar novamente com novo token
-      headers.Authorization = `Bearer ${newAccessToken}`
+      headers.Authorization = `Bearer ${refreshedToken}`
       response = await fetch(url, {
         ...options,
         headers,
       })
-    } catch (error) {
+    } catch {
       // Falha ao renovar - fazer logout
       authService.logout()
       window.location.href = '/login'

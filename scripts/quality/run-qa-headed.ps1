@@ -1,5 +1,9 @@
 #!/usr/bin/env pwsh
 
+param(
+    [switch]$OpenReport
+)
+
 <#
   run-qa-headed.ps1 — Executa o QA E2E do TeacherFlow com navegador visível
   - Gera senha única por execução (sem segredo fixo em código)
@@ -114,7 +118,7 @@ $runPass = $upper[(Get-Random -Maximum $upper.Length)] +
            $digits[(Get-Random -Maximum $digits.Length)] +
            $special[(Get-Random -Maximum $special.Length)] +
            (-join ((0..7) | ForEach-Object { $extra[(Get-Random -Maximum $extra.Length)] }))
-$env:QA_TEST_PASSWORD = $runPass
+$env:QA_RUN_PASS = $runPass
 Write-Host "     Gerada (mascarada): $($runPass.Substring(0,2))$('*' * ($runPass.Length - 4))$($runPass.Substring($runPass.Length - 2))" -ForegroundColor DarkGray
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -141,7 +145,7 @@ $env:QA_RUNTIME_DIR = $runtimeDir
 
 Push-Location $frontendDir
 try {
-    npx playwright test e2e/auth.production.spec.ts `
+    npx playwright test e2e/auth.production.spec.ts e2e/auth.use-cases.production.spec.ts `
         --config=playwright.config.ts `
         --headed `
         --reporter=list
@@ -167,12 +171,17 @@ Write-Host ""
 
 $htmlReport = Join-Path $artifactDir "html-report\index.html"
 if (Test-Path $htmlReport) {
-    Write-Host "  Abrindo relatório HTML..." -ForegroundColor Cyan
-    Start-Process $htmlReport
+    Write-Host "  Relatório HTML: $htmlReport" -ForegroundColor Cyan
+    if ($OpenReport) {
+        Write-Host "  Abrindo relatório HTML..." -ForegroundColor Cyan
+        Start-Process $htmlReport
+    } else {
+        Write-Host "  Dica: use -OpenReport para abrir automaticamente." -ForegroundColor DarkGray
+    }
 }
 
 # Clear per-run secret from env so it doesn't linger in the shell session
-Remove-Item Env:\QA_TEST_PASSWORD -ErrorAction SilentlyContinue
+Remove-Item Env:\QA_RUN_PASS -ErrorAction SilentlyContinue
 Remove-Item Env:\QA_RUNTIME_DIR   -ErrorAction SilentlyContinue
 
 exit $exitCode
