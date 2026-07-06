@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
 import { Button, Input } from '../components/Form'
@@ -11,9 +11,27 @@ export const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [registerMessage, setRegisterMessage] = useState<string | null>(null)
   const navigate = useNavigate()
+  const location = useLocation()
   const { login, loginWithGoogle, loginError, setLoginError } = useAuthStore()
   const { isDark, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const prefilledEmail = params.get('email')
+    const registered = params.get('registered')
+
+    if (prefilledEmail) {
+      setEmail(prefilledEmail)
+    }
+
+    if (registered === '1') {
+      setRegisterMessage('Conta criada com sucesso. Faça login para continuar.')
+    } else {
+      setRegisterMessage(null)
+    }
+  }, [location.search])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,6 +85,12 @@ export const LoginPage = () => {
           </div>
 
           {/* Error Display */}
+          {registerMessage && (
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900 rounded-lg">
+              <p className="text-sm font-medium text-green-900 dark:text-green-300">{registerMessage}</p>
+            </div>
+          )}
+
           {loginError && (
             <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 rounded-lg flex gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
@@ -85,6 +109,7 @@ export const LoginPage = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value)
+                  setRegisterMessage(null)
                   setLoginError(null)
                 }}
                 disabled={isLoading}
@@ -94,8 +119,23 @@ export const LoginPage = () => {
             </div>
 
             <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="font-medium text-gray-700 dark:text-gray-300 text-sm sm:text-base">Senha</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const input = document.querySelector('input[autocomplete="current-password"]') as HTMLInputElement | null
+                    if (input) {
+                      input.type = input.type === 'password' ? 'text' : 'password'
+                    }
+                  }}
+                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  Mostrar/Ocultar
+                </button>
+              </div>
               <Input
-                label="Senha"
+                label=""
                 type="password"
                 placeholder="Mínimo 6 caracteres"
                 value={password}
