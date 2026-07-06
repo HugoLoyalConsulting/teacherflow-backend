@@ -1,5 +1,6 @@
 """Seed QA users in all environments — idempotent, safe to run on every startup."""
 import os
+import uuid
 import logging
 from datetime import datetime
 from sqlalchemy.orm import Session
@@ -23,6 +24,7 @@ def seed_qa_users(db: Session) -> None:
         if db.query(User).filter(User.email == data["email"]).first():
             continue
         attrs: dict = {
+            "id": str(uuid.uuid4()),
             "email": data["email"],
             "full_name": data["full_name"],
             "is_active": True,
