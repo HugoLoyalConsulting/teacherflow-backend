@@ -20,8 +20,13 @@ def seed_qa_users(db: Session) -> None:
     qa_cred = os.getenv("QA_SEED_KEY", "TeacherFlow2026!QA")
     pw_hash = PasswordManager.hash_password(qa_cred)
     created = 0
+    updated = 0
     for data in _QA_USERS:
-        if db.query(User).filter(User.email == data["email"]).first():
+        existing = db.query(User).filter(User.email == data["email"]).first()
+        if existing:
+            if existing.is_admin != data["is_admin"]:
+                existing.is_admin = data["is_admin"]
+                updated += 1
             continue
         attrs: dict = {
             "id": str(uuid.uuid4()),
@@ -36,8 +41,11 @@ def seed_qa_users(db: Session) -> None:
         db.add(User(**attrs))
         created += 1
 
-    if created:
+    if created or updated:
         db.commit()
+    if created:
         logger.info(f"✓ {created} QA user(s) seeded")
-    else:
-        logger.info("✓ QA users already present — skipping")
+    if updated:
+        logger.info(f"✓ {updated} QA user(s) updated (is_admin patched)")
+    if not created and not updated:
+        logger.info("✓ QA users already present and correct")
