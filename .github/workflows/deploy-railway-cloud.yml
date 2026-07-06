@@ -9,22 +9,22 @@ permissions:
   contents: read
 
 jobs:
+  # ─────────────────────────────────── PRODUCTION ───────────────────────────
   deploy-production:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: production
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Railway CLI
         run: npm i -g @railway/cli
 
-      - name: Deploy backend (production)
+      - name: Deploy backend → production
         working-directory: ./backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
             --environment production \
             --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
 
-      - name: Deploy frontend (production)
+      - name: Deploy frontend → production
         working-directory: ./frontend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -48,22 +48,34 @@ jobs:
             --environment production \
             --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
 
+      - name: Health check — production backend
+        run: |
+          for i in $(seq 1 12); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              https://backend-production-c4f8f.up.railway.app/health --max-time 10)
+            echo "Attempt $i: HTTP $STATUS"
+            [ "$STATUS" = "200" ] && exit 0
+            sleep 15
+          done
+          echo "::error::Production backend health check failed after 3 minutes"
+          exit 1
+
+  # ─────────────────────────────────── STAGING ──────────────────────────────
   deploy-staging:
     if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
+    environment: staging
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Railway CLI
         run: npm i -g @railway/cli
 
-      - name: Deploy backend (staging)
+      - name: Deploy backend → staging
         working-directory: ./backend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -71,11 +83,11 @@ jobs:
           railway up . \
             --path-as-root \
             --ci \
-            --service backend \
+            --service backend-staging \
             --environment staging \
             --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
 
-      - name: Deploy frontend (staging)
+      - name: Deploy frontend → staging
         working-directory: ./frontend
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -83,6 +95,18 @@ jobs:
           railway up . \
             --path-as-root \
             --ci \
-            --service frontend \
+            --service frontend-staging \
             --environment staging \
             --project 9725c5e6-070f-4ad5-9ec4-cbdbb76f9373
+
+      - name: Health check — staging backend
+        run: |
+          for i in $(seq 1 12); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              https://backend-staging-staging-4973.up.railway.app/health --max-time 10)
+            echo "Attempt $i: HTTP $STATUS"
+            [ "$STATUS" = "200" ] && exit 0
+            sleep 15
+          done
+          echo "::error::Staging backend health check failed after 3 minutes"
+          exit 1
