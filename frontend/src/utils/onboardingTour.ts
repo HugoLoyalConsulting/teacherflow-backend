@@ -140,12 +140,6 @@ export const driverConfig: Config = {
   smoothScroll: true,
   disableActiveInteraction: false, // Allow interaction with highlighted elements
   
-  // Callbacks
-  onDestroyStarted: () => {
-    // Save tour progress when user closes or completes
-    console.log("Tour finished or closed");
-  },
-  
   onPopoverRender: (popover) => {
     // Add subtle shadow and light styling
     const popoverElement = popover.wrapper;
@@ -167,15 +161,15 @@ export const driverConfig: Config = {
  * Start the onboarding tour
  */
 export function startOnboardingTour(onComplete?: () => void) {
-  const markDone = () => {
-    localStorage.setItem('teacherflow_tour_completed', 'true');
-    if (onComplete) onComplete();
-  };
-
   const tour = driver({
     ...driverConfig,
     steps: onboardingSteps,
-    onDestroyStarted: markDone,
+    // driver.js v1.4 does NOT auto-destroy when onDestroyStarted fires — must call destroy() explicitly.
+    onDestroyStarted: (_el, _step, opts) => {
+      localStorage.setItem('teacherflow_tour_completed', 'true');
+      if (onComplete) onComplete();
+      opts.driver.destroy();
+    },
   });
 
   tour.drive();
