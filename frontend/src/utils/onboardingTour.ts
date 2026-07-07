@@ -164,52 +164,21 @@ export const driverConfig: Config = {
 };
 
 /**
- * Create and initialize the tour
- */
-export function createOnboardingTour() {
-  const driverObj = driver({
-    ...driverConfig,
-    steps: onboardingSteps,
-  });
-  
-  return driverObj;
-}
-
-/**
  * Start the onboarding tour
  */
 export function startOnboardingTour(onComplete?: () => void) {
-  const tour = createOnboardingTour();
-  
-  // Start the tour
+  const markDone = () => {
+    localStorage.setItem('teacherflow_tour_completed', 'true');
+    if (onComplete) onComplete();
+  };
+
+  const tour = driver({
+    ...driverConfig,
+    steps: onboardingSteps,
+    onDestroyStarted: markDone,
+  });
+
   tour.drive();
-  
-  // Mark as completed when tour is destroyed (closed/finished)
-  // This persists the setting in localStorage so it doesn't show again
-  setTimeout(() => {
-    const listener = () => {
-      console.log('✅ Tour completed! Marking in localStorage');
-      localStorage.setItem('teacherflow_tour_completed', 'true');
-      if (onComplete) {
-        onComplete();
-      }
-    };
-    
-    // Listen for when the tour overlay is removed from DOM
-    const observer = new MutationObserver((mutations) => {
-      const driverOverlay = document.querySelector('[data-driver-popover]');
-      if (!driverOverlay) {
-        observer.disconnect();
-        listener();
-      }
-    });
-    
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  }, 100);
-  
   return tour;
 }
 
@@ -217,7 +186,7 @@ export function startOnboardingTour(onComplete?: () => void) {
  * Resume tour from a specific step
  */
 export function resumeTourFromStep(stepIndex: number) {
-  const tour = createOnboardingTour();
+  const tour = driver({ ...driverConfig, steps: onboardingSteps });
   tour.drive(stepIndex);
   return tour;
 }

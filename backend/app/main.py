@@ -82,7 +82,8 @@ async def startup_event():
             subscription_service = SubscriptionService(db)
             subscription_service.seed_subscription_tiers()
             logger.info("✓ Subscription tiers verified/seeded")
-            seed_qa_users(db)
+            if settings.ENVIRONMENT != "production":
+                seed_qa_users(db)
         finally:
             db.close()
     except Exception as e:
