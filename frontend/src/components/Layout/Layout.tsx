@@ -47,24 +47,25 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex h-screen bg-white dark:bg-slate-950">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar - Desktop Only */}
       <aside
         className={`${
           sidebarOpen ? 'w-64' : 'w-20'
-        } bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 transition-all duration-300 flex-col hidden md:flex`}
+        } glass-sidebar transition-all duration-300 flex-col hidden md:flex flex-shrink-0 z-20`}
       >
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-slate-700">
-          <button 
+        <div className="p-4 sm:p-6 border-b border-white/30 dark:border-white/06">
+          <button
             onClick={() => navigate('/')}
-            className="font-bold text-lg sm:text-xl text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors w-full text-left"
+            className="font-extrabold text-lg sm:text-xl w-full text-left transition-opacity hover:opacity-80"
             title="Ir para o Dashboard"
+            style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
           >
             {sidebarOpen ? 'TeacherFlow' : 'TF'}
           </button>
         </div>
 
-        <nav className="flex-1 p-3 sm:p-4 space-y-2">
+        <nav className="flex-1 p-3 sm:p-4 space-y-1">
           {menuItems.map((item) => (
             <NavLink
               key={item.href}
@@ -73,15 +74,16 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               label={item.label}
               href={item.href}
               collapsed={!sidebarOpen}
+              active={location.pathname === item.href}
               onClick={() => navigate(item.href)}
             />
           ))}
         </nav>
 
-        <div className="border-t border-gray-200 dark:border-slate-700 p-3 sm:p-4">
+        <div className="border-t border-white/30 dark:border-white/06 p-3 sm:p-4">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-full p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 flex justify-center dark:text-gray-300"
+            className="w-full p-2 rounded-xl hover:bg-white/30 dark:hover:bg-white/08 flex justify-center text-gray-500 dark:text-gray-400 transition-colors"
             title={sidebarOpen ? 'Fechar' : 'Abrir'}
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -92,7 +94,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header - Desktop Only */}
-        <header className="hidden md:flex bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-4 sm:px-8 py-3 sm:py-4 flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <header className="hidden md:flex glass-header px-4 sm:px-8 py-3 sm:py-4 flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 z-10">
           <div className="min-w-0 flex-1">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-50">TeacherFlow</h2>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Gestão inteligente de aulas</p>
@@ -100,13 +102,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             {/* Mock Mode Selector - Top Right */}
-            <div className="flex gap-1 bg-gray-100 dark:bg-slate-800 rounded-lg p-1 flex-shrink-0">
+            <div className="flex gap-1 bg-black/06 dark:bg-white/06 backdrop-blur-sm rounded-xl p-1 flex-shrink-0 border border-white/40 dark:border-white/06">
               <button
                 onClick={() => loadMockMode('demo')}
-                className={`px-3 py-1 text-xs sm:text-sm font-medium rounded transition-colors ${
+                className={`px-3 py-1 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 ${
                   mockMode === 'demo'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                    ? 'btn-gradient'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/08'
                 }`}
                 title="Carregar modo demo com dados de exemplo"
               >
@@ -114,10 +116,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               </button>
               <button
                 onClick={() => loadMockMode('empty')}
-                className={`px-3 py-1 text-xs sm:text-sm font-medium rounded transition-colors ${
+                className={`px-3 py-1 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 ${
                   mockMode === 'empty'
-                    ? 'bg-gray-400 text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                    ? 'bg-slate-400 text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-white/08'
                 }`}
                 title="Carregar modo vazio"
               >
@@ -129,10 +131,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center gap-2 p-2 rounded-xl hover:bg-white/40 dark:hover:bg-white/08 transition-colors border border-transparent hover:border-white/40 dark:hover:border-white/10"
                 title="Perfil e configurações"
               >
-                <User className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'var(--gradient-primary)' }}>
+                  {user.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
                 <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               </button>
 
@@ -143,8 +147,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                     className="fixed inset-0 z-10"
                     onClick={() => setProfileDropdownOpen(false)}
                   ></div>
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-20">
-                    <div className="p-3 border-b border-gray-200 dark:border-slate-700">
+                  <div className="absolute right-0 mt-2 w-56 glass-card rounded-2xl z-20 overflow-hidden">
+                    <div className="p-3 border-b border-white/30 dark:border-white/06">
                       <p className="font-semibold text-gray-900 dark:text-gray-50 truncate text-sm">{user.name}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                     </div>
@@ -154,7 +158,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                           setProfileDropdownOpen(false)
                           navigate('/profile')
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-white/06 transition-colors"
                       >
                         <User className="w-4 h-4" />
                         Perfil
@@ -164,19 +168,19 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                           setProfileDropdownOpen(false)
                           navigate('/settings')
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-white/06 transition-colors"
                       >
                         <Settings className="w-4 h-4" />
                         Configurações
                       </button>
                     </div>
-                    <div className="border-t border-gray-200 dark:border-slate-700 py-1">
+                    <div className="border-t border-white/30 dark:border-white/06 py-1">
                       <button
                         onClick={() => {
                           setProfileDropdownOpen(false)
                           handleLogout()
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50/60 dark:hover:bg-red-900/15 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         Sair
@@ -190,86 +194,63 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         </header>
 
         {/* Mobile Header - Compact */}
-        <header className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-4 py-2 flex justify-between items-center">
-          <h2 className="text-lg font-bold text-blue-600 dark:text-blue-400">TeacherFlow</h2>
+        <header className="md:hidden glass-header px-4 py-2 flex justify-between items-center z-10">
+          <h2
+            className="text-lg font-extrabold"
+            style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+          >
+            TeacherFlow
+          </h2>
           <div className="flex items-center gap-2">
-            {/* Mock Mode Selector - Mobile */}
-            <div className="flex gap-1 bg-gray-100 dark:bg-slate-800 rounded p-1">
+            <div className="flex gap-1 bg-black/05 dark:bg-white/06 rounded-lg p-0.5 border border-white/40 dark:border-white/06">
               <button
                 onClick={() => loadMockMode('demo')}
-                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
-                  mockMode === 'demo'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  mockMode === 'demo' ? 'btn-gradient' : 'text-gray-600 dark:text-gray-300'
                 }`}
               >
                 Demo
               </button>
               <button
                 onClick={() => loadMockMode('empty')}
-                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
-                  mockMode === 'empty'
-                    ? 'bg-gray-400 text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  mockMode === 'empty' ? 'bg-slate-400 text-white' : 'text-gray-600 dark:text-gray-300'
                 }`}
               >
                 Vazio
               </button>
             </div>
-            
-            {/* Profile Dropdown - Mobile */}
+
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
+                className="p-1.5 rounded-xl hover:bg-white/40 dark:hover:bg-white/08 transition-colors"
                 title="Perfil"
               >
-                <User className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'var(--gradient-primary)' }}>
+                  {user.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
               </button>
 
               {profileDropdownOpen && (
                 <>
-                  <div
-                    className="fixed inset-0 z-10"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  ></div>
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-20">
-                    <div className="p-3 border-b border-gray-200 dark:border-slate-700">
+                  <div className="fixed inset-0 z-10" onClick={() => setProfileDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-52 glass-card rounded-2xl z-20 overflow-hidden">
+                    <div className="p-3 border-b border-white/30 dark:border-white/06">
                       <p className="font-semibold text-gray-900 dark:text-gray-50 truncate text-sm">{user.name}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                     </div>
                     <div className="py-1">
-                      <button
-                        onClick={() => {
-                          setProfileDropdownOpen(false)
-                          navigate('/profile')
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                      >
-                        <User className="w-4 h-4" />
-                        Perfil
+                      <button onClick={() => { setProfileDropdownOpen(false); navigate('/profile') }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-white/06">
+                        <User className="w-4 h-4" /> Perfil
                       </button>
-                      <button
-                        onClick={() => {
-                          setProfileDropdownOpen(false)
-                          navigate('/settings')
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
-                      >
-                        <Settings className="w-4 h-4" />
-                        Configurações
+                      <button onClick={() => { setProfileDropdownOpen(false); navigate('/settings') }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-white/40 dark:hover:bg-white/06">
+                        <Settings className="w-4 h-4" /> Configurações
                       </button>
                     </div>
-                    <div className="border-t border-gray-200 dark:border-slate-700 py-1">
-                      <button
-                        onClick={() => {
-                          setProfileDropdownOpen(false)
-                          handleLogout()
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sair
+                    <div className="border-t border-white/30 dark:border-white/06 py-1">
+                      <button onClick={() => { setProfileDropdownOpen(false); handleLogout() }} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50/60 dark:hover:bg-red-900/15">
+                        <LogOut className="w-4 h-4" /> Sair
                       </button>
                     </div>
                   </div>
@@ -280,14 +261,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         </header>
 
         {/* Content */}
-        <main ref={mainContentRef} className="flex-1 overflow-auto pb-20 md:pb-0">
+        <main ref={mainContentRef} className="flex-1 overflow-auto pb-20 md:pb-0 relative z-0">
           <OnboardingTourWrapper>
             <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">{children}</div>
           </OnboardingTourWrapper>
         </main>
 
         {/* Bottom Navigation - Mobile Only */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 z-50">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 glass-header border-t z-50" style={{ borderTop: '1px solid rgba(255,255,255,0.25)' }}>
           <div className="grid grid-cols-6 h-16">
             {mobileBottomTabs.map((item) => {
               const Icon = item.icon
@@ -296,15 +277,18 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 <button
                   key={item.href}
                   onClick={() => navigate(item.href)}
-                  className={`flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                  className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 ${
                     isActive
-                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-slate-800'
+                      ? 'text-blue-600 dark:text-blue-400'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
                   }`}
                   title={item.label}
                 >
+                  {isActive && (
+                    <span className="absolute inset-x-0 top-0 h-0.5 mx-4 rounded-b-full" style={{ background: 'var(--gradient-primary)' }} />
+                  )}
                   <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-[2]'}`} />
-                  <span className={`text-[9px] font-medium leading-tight ${isActive ? 'font-semibold' : ''}`}>
+                  <span className={`text-[9px] font-medium leading-tight ${isActive ? 'font-bold' : ''}`}>
                     {item.shortLabel || item.label}
                   </span>
                 </button>
@@ -323,17 +307,18 @@ interface NavLinkProps {
   label: string
   href: string
   collapsed: boolean
+  active?: boolean
   onClick: () => void
 }
 
-const NavLink: FC<NavLinkProps> = ({ id, icon, label, collapsed, onClick }) => (
+const NavLink: FC<NavLinkProps> = ({ id, icon, label, collapsed, active, onClick }) => (
   <button
     id={id}
     onClick={onClick}
-    className="w-full flex items-center gap-3 px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-xs sm:text-sm"
+    className={`nav-item w-full ${active ? 'active' : ''}`}
     title={label}
   >
     <span className="text-lg sm:text-xl flex-shrink-0">{icon}</span>
-    {!collapsed && <span className="font-medium">{label}</span>}
+    {!collapsed && <span className="font-medium text-sm">{label}</span>}
   </button>
 )

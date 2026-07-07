@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────
+   DESIGN SYSTEM — GLASSMORPHISM + MODERNIDADE
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --glass-bg-light:      rgba(255, 255, 255, 0.75);
+  --glass-border-light:  rgba(255, 255, 255, 0.5);
+  --glass-bg-dark:       rgba(15, 23, 42, 0.55);
+  --glass-border-dark:   rgba(255, 255, 255, 0.08);
+  --glass-blur:          20px;
+  --shadow-glass:        0 8px 32px rgba(0, 0, 0, 0.12), 0 1px 0 rgba(255,255,255,0.15) inset;
+  --shadow-glass-dark:   0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255,255,255,0.06) inset;
+  --gradient-primary:    linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  --gradient-bg-light:   linear-gradient(135deg, #eff6ff 0%, #eef2ff 40%, #f5f3ff 100%);
+  --gradient-bg-dark:    linear-gradient(135deg, #020617 0%, #0f172a 30%, #1e1b4b 60%, #0f172a 100%);
+}
+
 * {
   @apply transition-colors duration-200;
 }
@@ -10,89 +27,296 @@ html {
   @apply scroll-smooth;
 }
 
+/* ── Background ── */
 body {
-  @apply bg-white text-gray-900;
-  @apply dark:bg-slate-950 dark:text-gray-50;
-  /* Gradientes MUITO suaves apenas em dark mode */
+  @apply text-gray-900 dark:text-gray-50;
+  background: var(--gradient-bg-light);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
-/* Gradiente sutil só no dark mode */
 html.dark body {
-  background-image: radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.03), transparent 35%),
-    radial-gradient(circle at 85% 10%, rgba(236, 72, 153, 0.03), transparent 40%);
+  background: var(--gradient-bg-dark);
+  background-attachment: fixed;
 }
 
-/* Garantir que TUDO em dark mode tenha texto claro */
+/* Orbs decorativos — visíveis só em dark mode */
+html.dark body::before,
+html.dark body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+html.dark body::before {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, transparent 65%);
+  top: -250px;
+  left: -200px;
+  animation: orb-drift-a 22s ease-in-out infinite;
+}
+
+html.dark body::after {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 65%);
+  bottom: -200px;
+  right: -150px;
+  animation: orb-drift-b 28s ease-in-out infinite;
+}
+
+@keyframes orb-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(60px, 80px) scale(1.05); }
+  66%       { transform: translate(-40px, 40px) scale(0.97); }
+}
+
+@keyframes orb-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-70px, -60px) scale(1.08); }
+  70%       { transform: translate(30px, -30px) scale(0.95); }
+}
+
+/* ── Typography ── */
 html.dark {
-  color: rgb(243, 244, 246); /* gray-50 */
+  color: rgb(241, 245, 249);
 }
 
-html.dark * {
-  @apply dark:text-gray-50;
+h1, h2, h3, h4, h5, h6 {
+  @apply text-gray-900 dark:text-gray-50;
 }
 
-/* Inputs, textareas e selects com texto claro em dark mode */
+p, label {
+  @apply text-gray-700 dark:text-gray-300;
+}
+
+/* ── Form elements ── */
+input, textarea, select {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400;
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select {
-  @apply dark:text-gray-50;
+  @apply text-gray-50;
 }
 
-input, textarea, select {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500;
-  @apply dark:focus:ring-blue-400;
+select option {
+  background-color: #ffffff;
+  color: #111827;
 }
 
-/* Dark mode adjustments for common elements */
+html.dark select option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
+html.dark select option:checked {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   COMPONENTES GLASSMORPHISM
+   ───────────────────────────────────────────────────────────── */
 @layer components {
-  .card {
-    @apply bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700 shadow-lg;
+
+  /* ── Glass Card ── */
+  .glass-card {
+    background: var(--glass-bg-light);
+    border: 1px solid var(--glass-border-light);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--shadow-glass);
+    @apply rounded-2xl;
   }
 
+  html.dark .glass-card {
+    background: var(--glass-bg-dark);
+    border-color: var(--glass-border-dark);
+    box-shadow: var(--shadow-glass-dark);
+  }
+
+  /* ── Glass Panel (mais leve) ── */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    @apply rounded-xl shadow-md;
+  }
+
+  html.dark .glass-panel {
+    background: rgba(15, 23, 42, 0.45);
+    border-color: rgba(255, 255, 255, 0.07);
+  }
+
+  /* ── Glass Sidebar ── */
+  .glass-sidebar {
+    background: rgba(255, 255, 255, 0.85);
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+  }
+
+  html.dark .glass-sidebar {
+    background: rgba(15, 23, 42, 0.75);
+    border-right-color: rgba(255, 255, 255, 0.07);
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ── Glass Header ── */
+  .glass-header {
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  html.dark .glass-header {
+    background: rgba(15, 23, 42, 0.75);
+    border-bottom-color: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 1px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ── Glass Input ── */
+  .glass-input {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    @apply rounded-xl text-gray-900 placeholder-gray-400;
+    @apply focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400/60 focus:outline-none;
+    @apply transition-all duration-200;
+  }
+
+  html.dark .glass-input {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    @apply text-gray-50 placeholder-gray-500;
+  }
+
+  /* ── Nav Item ── */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium;
+    @apply text-gray-600 dark:text-gray-400;
+    @apply hover:text-gray-900 dark:hover:text-gray-50;
+    @apply transition-all duration-200 cursor-pointer;
+  }
+
+  .nav-item:hover {
+    background: rgba(59, 130, 246, 0.08);
+  }
+
+  html.dark .nav-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav-item.active {
+    background: var(--gradient-primary);
+    @apply text-white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+  }
+
+  html.dark .nav-item.active {
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.45);
+  }
+
+  /* ── Gradient Button ── */
+  .btn-gradient {
+    background: var(--gradient-primary);
+    @apply text-white font-semibold rounded-xl px-6 py-3;
+    @apply transition-all duration-300;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  }
+
+  .btn-gradient:active {
+    transform: translateY(0);
+  }
+
+  /* ── Legacy card (compatibilidade) ── */
+  .card {
+    @apply glass-card;
+  }
+
+  /* ── Badge ── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  /* ── Input base ── */
   .input-base {
-    @apply bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-900 dark:text-gray-50;
+    @apply glass-input;
   }
 
   .btn-base {
     @apply transition-all duration-200 shadow-sm hover:shadow-md;
   }
+}
 
-  /* Garantir todas as tags semânticas */
-  h1, h2, h3, h4, h5, h6 {
-    @apply text-gray-900 dark:text-gray-50;
-  }
+/* ─────────────────────────────────────────────────────────────
+   ANIMAÇÕES
+   ───────────────────────────────────────────────────────────── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  p, span, div {
-    @apply text-gray-900 dark:text-gray-50;
-  }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
-  label {
-    @apply text-gray-900 dark:text-gray-50;
-  }
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
-  /* Select options em dark mode - TEXTO CLARO */
-  select option {
-    background-color: #ffffff;
-    color: #111827;
-  }
+.animate-fade-in-up { animation: fade-in-up 0.5s ease both; }
+.animate-fade-in    { animation: fade-in 0.4s ease both; }
 
-  html.dark select option {
-    background-color: #1e293b;
-    color: #f3f4f6;
-  }
+/* ─────────────────────────────────────────────────────────────
+   SCROLLBAR CUSTOMIZADA
+   ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
 
-  /* Selected option também em dark mode */
-  select option:checked {
-    background: linear-gradient(#3b82f6, #3b82f6);
-    background-color: #3b82f6;
-    color: #ffffff;
-  }
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.5);
+}
 
-  html.dark select option:checked {
-    background: linear-gradient(#3b82f6, #3b82f6);
-    background-color: #3b82f6;
-    color: #ffffff;
-  }
+/* ─────────────────────────────────────────────────────────────
+   PALETTE VAPORWAVE (override)
+   ───────────────────────────────────────────────────────────── */
+html.palette-vaporwave {
+  --gradient-primary: linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #ec4899 100%);
+}
+
+html.palette-vaporwave .btn-gradient {
+  background: var(--gradient-primary);
+  box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+}
+
+html.palette-vaporwave .nav-item.active {
+  background: var(--gradient-primary);
+  box-shadow: 0 4px 20px rgba(217, 70, 239, 0.45);
 }
 
 html.palette-vaporwave .bg-blue-600,
@@ -101,9 +325,7 @@ html.palette-vaporwave .dark\:bg-blue-500 {
   background-color: #d946ef !important;
 }
 
-html.palette-vaporwave .hover\:bg-blue-700:hover,
-html.palette-vaporwave .dark\:hover\:bg-blue-700:hover,
-html.palette-vaporwave .dark\:hover\:bg-blue-400:hover {
+html.palette-vaporwave .hover\:bg-blue-700:hover {
   background-color: #c026d3 !important;
 }
 

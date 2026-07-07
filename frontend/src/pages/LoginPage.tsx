@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useTheme } from '../hooks/useTheme'
-import { Button, Input } from '../components/Form'
-import { Sun, Moon, AlertCircle } from 'lucide-react'
+import { Sun, Moon, AlertCircle, CheckCircle, Eye, EyeOff, LogIn } from 'lucide-react'
 import { GoogleLogin } from '@react-oauth/google'
 import { isGoogleOAuthConfigured } from '../config/googleAuth'
 import { authService, AuthError } from '../services/authService'
@@ -23,42 +22,20 @@ export const LoginPage = () => {
     const params = new URLSearchParams(location.search)
     const prefilledEmail = params.get('email')
     const registered = params.get('registered')
-
-    if (prefilledEmail) {
-      setEmail(prefilledEmail)
-    }
-
-    if (registered === '1') {
-      setRegisterMessage('Conta criada com sucesso. Faça login para continuar.')
-    } else {
-      setRegisterMessage(null)
-    }
+    if (prefilledEmail) setEmail(prefilledEmail)
+    if (registered === '1') setRegisterMessage('Conta criada com sucesso. Faça login para continuar.')
+    else setRegisterMessage(null)
   }, [location.search])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!email.trim()) { setLoginError({ field: 'email', message: 'Email é obrigatório' }); return }
+    if (!password.trim()) { setLoginError({ field: 'password', message: 'Senha é obrigatória' }); return }
+
     setIsLoading(true)
     setLoginError(null)
-
-    // Validate inputs before sending
-    if (!email.trim()) {
-      setLoginError({ field: 'email', message: 'Email é obrigatório' })
-      setIsLoading(false)
-      return
-    }
-
-    if (!password.trim()) {
-      setLoginError({ field: 'password', message: 'Senha é obrigatória' })
-      setIsLoading(false)
-      return
-    }
-
     try {
-      const response = await authService.login({
-        email: email.trim(),
-        password,
-      })
-
+      const response = await authService.login({ email: email.trim(), password })
       setUser({
         id: response.user.id,
         name: response.user.full_name,
@@ -68,142 +45,173 @@ export const LoginPage = () => {
         onboardingComplete: false,
         lessonTypes: [],
       })
-
       navigate('/')
     } catch (err) {
       const authErr = err as AuthError
-      setLoginError({
-        field: 'form',
-        message: authErr.detail || 'Falha ao autenticar. Verifique email e senha.',
-      })
+      setLoginError({ field: 'form', message: authErr.detail || 'Falha ao autenticar. Verifique email e senha.' })
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 dark:from-blue-900 to-blue-800 dark:to-slate-950 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-md">
-        {/* Theme Toggle */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors flex items-center gap-2"
-            title={isDark ? 'Modo claro' : 'Modo escuro'}
-          >
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+    <div
+      className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden"
+      style={{ background: 'var(--gradient-bg-dark)' }}
+    >
+      {/* Orbs decorativos */}
+      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'orb-drift-a 20s ease-in-out infinite' }} />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 65%)', filter: 'blur(60px)', animation: 'orb-drift-b 26s ease-in-out infinite' }} />
+      <div className="absolute top-[40%] right-[20%] w-[300px] h-[300px] rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 65%)', filter: 'blur(50px)' }} />
+
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10">
+        <button
+          onClick={toggleTheme}
+          className="p-2.5 rounded-xl border border-white/15 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
+          title={isDark ? 'Modo claro' : 'Modo escuro'}
+        >
+          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {/* Card principal */}
+      <div className="w-full max-w-md animate-fade-in-up relative z-10">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
+            style={{ background: 'var(--gradient-primary)', boxShadow: '0 8px 32px rgba(99,102,241,0.45)' }}>
+            <span className="text-white text-2xl font-black">TF</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 tracking-tight">TeacherFlow</h1>
+          <p className="text-white/50 text-sm">Gestão inteligente de aulas</p>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl p-6 sm:p-8">
-          <div className="text-center mb-6 sm:mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">TeacherFlow</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">Gestão inteligente de aulas</p>
-          </div>
-
-          {/* Error Display */}
+        {/* Glass Form */}
+        <div
+          className="rounded-3xl p-6 sm:p-8"
+          style={{
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset',
+          }}
+        >
+          {/* Mensagens */}
           {registerMessage && (
-            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900 rounded-lg">
-              <p className="text-sm font-medium text-green-900 dark:text-green-300">{registerMessage}</p>
+            <div className="mb-5 flex items-center gap-2.5 p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/25">
+              <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <p className="text-sm text-emerald-300">{registerMessage}</p>
             </div>
           )}
 
           {loginError && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 rounded-lg flex gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium text-red-900 dark:text-red-300">{loginError.message}</p>
-              </div>
+            <div className="mb-5 flex items-start gap-2.5 p-3.5 rounded-xl bg-red-500/15 border border-red-500/25">
+              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-300">{loginError.message}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email */}
             <div>
-              <Input
-                label="Email"
+              <label className="block text-xs font-semibold text-white/60 mb-1.5 uppercase tracking-wide">Email</label>
+              <input
                 type="email"
                 placeholder="seu@email.com"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  setRegisterMessage(null)
-                  setLoginError(null)
-                }}
+                onChange={(e) => { setEmail(e.target.value); setRegisterMessage(null); setLoginError(null) }}
                 disabled={isLoading}
                 required
                 autoComplete="email"
-              />
-            </div>
-
-            <div>
-              <Input
-                label="Senha"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Mínimo 6 caracteres"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  setRegisterMessage(null)
-                  setLoginError(null)
+                className="w-full px-4 py-3 rounded-xl text-white placeholder-white/30 text-sm transition-all duration-200 focus:outline-none"
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  backdropFilter: 'blur(8px)',
                 }}
-                disabled={isLoading}
-                required
-                autoComplete="current-password"
-                rightElement={
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="text-xs font-semibold px-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                    title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                  >
-                    {showPassword ? 'Ocultar' : 'Mostrar'}
-                  </button>
-                }
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.15)' }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = 'none' }}
               />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
-                A senha deve ter letras e números (ex: senha123)
-              </p>
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              loading={isLoading}
-              className="w-full"
-              disabled={isLoading || !email || !password}
-            >
-              {isLoading ? 'Entrando...' : 'Entrar'}
-            </Button>
-          </form>
+            {/* Senha */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-white/60 uppercase tracking-wide">Senha</label>
+                <Link to="/forgot-password" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
+                  Esqueceu?
+                </Link>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setRegisterMessage(null); setLoginError(null) }}
+                  disabled={isLoading}
+                  required
+                  autoComplete="current-password"
+                  className="w-full px-4 py-3 pr-11 rounded-xl text-white placeholder-white/30 text-sm transition-all duration-200 focus:outline-none"
+                  style={{
+                    background: 'rgba(255,255,255,0.07)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    backdropFilter: 'blur(8px)',
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.15)' }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(p => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors"
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
 
-          {/* Additional Links */}
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
-            <Link
-              to="/forgot-password"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+            {/* Botão */}
+            <button
+              type="submit"
+              disabled={isLoading || !email || !password}
+              className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-semibold text-white text-sm transition-all duration-300 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: 'var(--gradient-primary)',
+                boxShadow: '0 4px 20px rgba(99,102,241,0.45)',
+                ...((!isLoading && email && password) ? { transform: 'translateY(0)' } : {}),
+              }}
+              onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(99,102,241,0.6)' }}}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.45)' }}
             >
-              Esqueci minha senha
-            </Link>
-            <Link
-              to="/register"
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-            >
-              Criar conta
-            </Link>
-          </div>
+              {isLoading ? (
+                <>
+                  <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  Entrar
+                </>
+              )}
+            </button>
+          </form>
 
           {/* Google Sign-In */}
           {isGoogleOAuthConfigured() && (
             <>
-              <div className="mt-6 flex items-center">
-                <div className="flex-1 border-t border-gray-200 dark:border-slate-700"></div>
-                <span className="px-4 text-sm text-gray-600 dark:text-gray-400">ou</span>
-                <div className="flex-1 border-t border-gray-200 dark:border-slate-700"></div>
+              <div className="my-5 flex items-center gap-3">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-xs text-white/40">ou continue com</span>
+                <div className="flex-1 h-px bg-white/10" />
               </div>
-
-              <div className="mt-6 flex justify-center">
+              <div className="flex justify-center">
                 <GoogleLogin
                   onSuccess={(credentialResponse) => {
                     if (credentialResponse.credential) {
@@ -211,34 +219,25 @@ export const LoginPage = () => {
                       setTimeout(() => {
                         loginWithGoogle(credentialResponse.credential as string)
                         setIsLoading(false)
-
-                        // Check if login was successful
-                        const state = useAuthStore.getState()
-                        if (state.user) {
-                          navigate('/')
-                        }
+                        if (useAuthStore.getState().user) navigate('/')
                       }, 500)
                     }
                   }}
-                  onError={() => {
-                    setLoginError({
-                      field: 'google',
-                      message: 'Falha ao fazer login com o Google. Tente novamente.',
-                    })
-                  }}
+                  onError={() => setLoginError({ field: 'google', message: 'Falha ao fazer login com o Google.' })}
                 />
               </div>
             </>
           )}
 
-          <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
-            <p className="text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-              Faça login com sua conta verificada para acessar dashboard, planos e onboarding.
-            </p>
-          </div>
+          {/* Rodapé */}
+          <p className="mt-6 text-center text-sm text-white/40">
+            Não tem conta?{' '}
+            <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+              Criar agora
+            </Link>
+          </p>
         </div>
       </div>
     </div>
   )
 }
-
