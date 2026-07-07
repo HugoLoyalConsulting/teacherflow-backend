@@ -38,7 +38,6 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
-    open: true,
     headers: {
       'Cache-Control': 'no-store',
     },
