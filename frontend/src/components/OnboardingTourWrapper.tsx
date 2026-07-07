@@ -68,12 +68,9 @@ export function OnboardingTourWrapper({ children }: OnboardingTourWrapperProps) 
   };
 
   const handleRestartTour = () => {
-    // Reset tour completion flag
     localStorage.removeItem(TOUR_STORAGE_KEY);
-    setTourStarted(false);
     setShowBanner(false);
-
-    // Start tour after a small delay
+    // Keep tourStarted=true so useEffect does NOT re-fire and create a second instance
     setTimeout(() => {
       startTourWithTracking();
     }, 300);
