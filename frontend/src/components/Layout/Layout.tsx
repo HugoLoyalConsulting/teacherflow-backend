@@ -101,7 +101,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-            {/* Mock Mode Selector - Top Right */}
+            {/* Mock Mode Selector - hidden in production */}
+            {!import.meta.env.PROD && (
             <div className="flex gap-1 bg-black/06 dark:bg-white/06 backdrop-blur-sm rounded-xl p-1 flex-shrink-0 border border-white/40 dark:border-white/06">
               <button
                 onClick={() => loadMockMode('demo')}
@@ -126,6 +127,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 Vazio
               </button>
             </div>
+            )}
 
             {/* Profile Dropdown */}
             <div className="relative">
