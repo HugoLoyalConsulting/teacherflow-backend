@@ -155,15 +155,15 @@ export const Modal: FC<ModalProps> = ({ isOpen, title, onClose, children, footer
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-2xl max-w-md w-full">
-        <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-slate-700">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-slate-700 flex-shrink-0">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-50">{title}</h3>
           <button onClick={onClose} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
             <X className="w-5 h-5" />
           </button>
         </div>
-        <div className="p-4 sm:p-6">{children}</div>
-        {footer && <div className="border-t border-gray-200 dark:border-slate-700 p-4 sm:p-6 flex gap-2 justify-end">{footer}</div>}
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">{children}</div>
+        {footer && <div className="border-t border-gray-200 dark:border-slate-700 p-4 sm:p-6 flex gap-2 justify-end flex-shrink-0">{footer}</div>}
       </div>
     </div>
   )
